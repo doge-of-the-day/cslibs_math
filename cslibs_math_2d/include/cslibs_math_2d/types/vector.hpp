@@ -4,55 +4,55 @@
 #include <cmath>
 #include <eigen3/Eigen/Core>
 
-namespace muse_mcl_math_2d {
-class Vector2D {
+namespace cslibs_math_2d {
+class Vector2d {
 public:
-    inline Vector2D() :
+    inline Vector2d() :
         x_(0.0),
         y_(0.0)
     {
     }
 
-    inline Vector2D(const double x,
+    inline Vector2d(const double x,
                     const double y) :
         x_(x),
         y_(y)
     {
     }
 
-    inline Vector2D(const Vector2D &other) :
+    inline Vector2d(const Vector2d &other) :
         x_(other.x_),
         y_(other.y_)
     {
     }
 
-    inline Vector2D(Vector2D &&other) :
+    inline Vector2d(Vector2d &&other) :
         x_(other.x_),
         y_(other.y_)
     {
     }
 
-    inline Vector2D operator * (const double d) const
+    inline Vector2d operator * (const double d) const
     {
-        return Vector2D(x_ * d, y_ * d);
+        return Vector2d(x_ * d, y_ * d);
     }
 
-    inline Vector2D operator / (const double d) const
+    inline Vector2d operator / (const double d) const
     {
-        return Vector2D(x_ / d, y_ / d);
+        return Vector2d(x_ / d, y_ / d);
     }
 
-    inline Vector2D operator + (const Vector2D &other) const
+    inline Vector2d operator + (const Vector2d &other) const
     {
-        return Vector2D(x_ + other.x_, y_ + other.y_);
+        return Vector2d(x_ + other.x_, y_ + other.y_);
     }
 
-    inline Vector2D operator - (const Vector2D &other) const
+    inline Vector2d operator - (const Vector2d &other) const
     {
-        return Vector2D(x_ - other.x_, y_ - other.y_);
+        return Vector2d(x_ - other.x_, y_ - other.y_);
     }
 
-    inline double dot (const Vector2D &other) const
+    inline double dot (const Vector2d &other) const
     {
         return x_ * other.x_ + y_ * other.y_;
     }
@@ -92,57 +92,64 @@ public:
         return y_;
     }
 
-    inline Vector2D & operator += (const Vector2D &other)
+    inline Vector2d & operator += (const Vector2d &other)
     {
         x_ += other.x_;
         y_ += other.y_;
         return *this;
     }
 
-    inline Vector2D & operator -= (const Vector2D &other)
+    inline Vector2d & operator -= (const Vector2d &other)
     {
         x_ -= other.x_;
         y_ -= other.y_;
         return *this;
     }
 
-    inline Vector2D & operator *= (const double d)
+    inline Vector2d & operator *= (const double d)
     {
         x_ *= d;
         y_ *= d;
         return *this;
     }
 
-    inline Vector2D & operator /= (const double d)
+    inline Vector2d & operator /= (const double d)
     {
         x_ /= d;
         y_ /= d;
         return *this;
     }
 
-    inline Vector2D& operator = (const Vector2D &other)
+    inline Vector2d& operator = (const Vector2d &other)
     {
         x_ = other.x_;
         y_ = other.y_;
         return *this;
     }
 
-    inline Vector2D& operator = (Vector2D &&other)
+    inline Vector2d& operator = (const Eigen::Vector2d &other)
+    {
+        x_ = other(0);
+        y_ = other(1);
+        return *this;
+    }
+
+    inline Vector2d& operator = (Vector2d &&other)
     {
         x_ = other.x_;
         y_ = other.y_;
         return *this;
     }
 
-    inline Vector2D normalized() const
+    inline Vector2d normalized() const
     {
         const double len = length();
-        return Vector2D(x_ / len, y_ / len);
+        return Vector2d(x_ / len, y_ / len);
     }
 
-    inline Vector2D operator -() const
+    inline Vector2d operator -() const
     {
-        return Vector2D(-x_, -y_);
+        return Vector2d(-x_, -y_);
     }
 
     inline Eigen::Vector2d toEigen() const
@@ -150,24 +157,24 @@ public:
         return Eigen::Vector2d(x_, y_);
     }
 
-    inline Vector2D min(const Vector2D &other) const
+    inline Vector2d min(const Vector2d &other) const
     {
-        return Vector2D(fmin(x_, other.x_),
+        return Vector2d(fmin(x_, other.x_),
                         fmin(y_, other.y_));
     }
 
-    inline Vector2D max(const Vector2D &other) const
+    inline Vector2d max(const Vector2d &other) const
     {
-        return Vector2D(fmax(x_, other.x_),
+        return Vector2d(fmax(x_, other.x_),
                         fmax(y_, other.y_));
     }
 
-    inline double distance(const Vector2D &other) const
+    inline double distance(const Vector2d &other) const
     {
         return  hypot(x_ - other.x_, y_ - other.y_);
     }
 
-    inline double distance2(const Vector2D &other) const
+    inline double distance2(const Vector2d &other) const
     {
         return  hypot2(x_ - other.x_, y_ - other.y_);
     }
@@ -188,7 +195,7 @@ private:
 } __attribute__ ((aligned (16)));
 }
 
-inline std::ostream & operator << (std::ostream &out, const muse_mcl_math_2d::Vector2D &v)
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Vector2d &v)
 {
     out << "[" << v.x() << "," << v.y() << "]";
     return out;

@@ -22,17 +22,17 @@ public:
     Normal() = delete;
     Normal(const Normal &other) = delete;
 
-    Normal(const typename rng_t::Vector &pose,
-           const typename rng_t::Matrix &covariance,
+    Normal(const typename rng_t::sample_t   &pose,
+           const typename rng_t::matrix_t &covariance,
            const unsigned int seed = 0) :
         rng_(pose, covariance, seed)
     {
     }
 
-    inline typename rng_t::Vector get()
+    inline typename rng_t::sample_t get()
     {
-        typename rng_t::Vector sample = rng_.get();
-        Arguments<Dimension, typename rng_t::Vector, Types...>::normalize(sample);
+        typename rng_t::sample_t sample = rng_.get();
+        Arguments<Dimension, typename rng_t::sample_t, Types...>::normalize(sample);
         return sample;
     }
 

@@ -1,16 +1,16 @@
 #ifndef BOX_2D_HPP
 #define BOX_2D_HPP
 
-#include <cslibs_math_2d/line_2d.hpp>
+#include <cslibs_math_2d/types/line.hpp>
 
 #include <limits>
 #include <set>
 
-namespace muse_mcl_math_2d {
+namespace cslibs_math_2d {
 class Box2D
 {
 public:
-    using point_set_t    = std::set<Point2D>;
+    using point_set_t    = std::set<Point2d>;
     using coefficients_t = std::array<double, 2>;
 
     inline Box2D() :
@@ -28,34 +28,34 @@ public:
     {
     }
 
-    inline Box2D(const Point2D &min,
-          const Point2D &max) :
+    inline Box2D(const Point2d &min,
+          const Point2d &max) :
         min_(min),
         max_(max)
     {
     }
 
-    inline void setMin(const Point2D &min)
+    inline void setMin(const Point2d &min)
     {
         min_ = min;
     }
 
-    inline void setMax(const Point2D &max)
+    inline void setMax(const Point2d &max)
     {
         max_ = max;
     }
 
-    inline Point2D const & getMin() const
+    inline Point2d const & getMin() const
     {
         return min_;
     }
 
-    inline Point2D const & getMax() const
+    inline Point2d const & getMax() const
     {
         return max_;
     }
 
-    inline bool intersects(const Line2D &line) const
+    inline bool intersects(const Line2d &line) const
     {
         //// LIANG BARSKY
         const auto p0 = line[0];
@@ -99,8 +99,8 @@ public:
         return true;
     }
 
-    inline bool intersection(const Line2D &line,
-                             Line2D &clipped)
+    inline bool intersection(const Line2d &line,
+                             Line2d &clipped)
     {
         const auto p0 = line[0];
         const auto p1 = line[1];
@@ -150,13 +150,13 @@ public:
     }
 
 private:
-    Point2D min_;
-    Point2D max_;
+    Point2d min_;
+    Point2d max_;
 
 }__attribute__ ((aligned (32)));
 }
 
-inline std::ostream & operator << (std::ostream &out, const muse_mcl_math_2d::Box2D &b)
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Box2D &b)
 {
     out << "[" << b.getMin() << "," << b.getMax() << "]";
     return out;

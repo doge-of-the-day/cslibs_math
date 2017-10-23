@@ -5,19 +5,19 @@
 #include <vector>
 #include <eigen3/Eigen/Core>
 
-namespace muse_mcl_math_2d {
-class Covariance2D {
+namespace cslibs_math_2d {
+class Covariance2d {
 public:
     const static std::size_t step_ = 3;
     const static std::size_t size_ = step_ * step_;
     using data_t = std::array<double, size_>;
 
-    inline Covariance2D()
+    inline Covariance2d()
     {
         data_.fill(0.0);
     }
 
-    inline Covariance2D(const data_t &data) :
+    inline Covariance2d(const data_t &data) :
         data_(data)
     {
     }

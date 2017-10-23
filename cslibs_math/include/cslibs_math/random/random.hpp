@@ -45,44 +45,44 @@ template<std::size_t Dim>
 class Uniform : public RandomGenerator
 {
 public:
-    typedef std::shared_ptr<Uniform>               Ptr;
-    typedef Eigen::Matrix<double, Dim, 1>          Vector;
-    typedef std::uniform_real_distribution<double> Distribution;
+    using Ptr            = std::shared_ptr<Uniform>;
+    using distribution_t = std::uniform_real_distribution<double>;
+    using sample_t       = Eigen::Matrix<double, Dim, 1>;
 
     Uniform() = delete;
 
-    Uniform(const Vector &min,
-            const Vector &max)
+    Uniform(const sample_t &min,
+            const sample_t &max)
     {
         set(min, max);
     }
 
-    Uniform(const Vector &min,
-            const Vector &max,
+    Uniform(const sample_t &min,
+            const sample_t &max,
             const unsigned int seed) :
         RandomGenerator(seed)
     {
         set(min, max);
     }
 
-    inline void set(const Vector &min,
-                    const Vector &max)
+    inline void set(const sample_t &min,
+                    const sample_t &max)
     {
         for(std::size_t i = 0 ;  i < Dim ; ++i) {
-            distributions_[i] = Distribution(min[i], max[i]);
+            distributions_[i] = distribution_t(min[i], max[i]);
         }
     }
 
-    inline Vector get()
+    inline sample_t get()
     {
-        Vector sample;
+        sample_t sample;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             sample[i] = distributions_[i](random_engine_);
         }
         return sample;
     }
 
-    inline void get(Vector &sample)
+    inline void get(sample_t &sample)
     {
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             sample[i] = distributions_[i](random_engine_);
@@ -90,7 +90,7 @@ public:
     }
 
 private:
-    std::array<Distribution, Dim> distributions_;
+    std::array<distribution_t, Dim> distributions_;
 };
 
 /**
@@ -100,8 +100,8 @@ template<>
 class Uniform<1> : public RandomGenerator
 {
 public:
-    typedef std::shared_ptr<Uniform> Ptr;
-    typedef std::uniform_real_distribution<double> Distribution;
+    using Ptr            = std::shared_ptr<Uniform>;
+    using distribution_t = std::uniform_real_distribution<double>;
 
     Uniform() = delete;
 
@@ -123,7 +123,7 @@ public:
     inline void set(const double min,
                     const double max)
     {
-        distribution_ = Distribution(min, max);
+        distribution_ = distribution_t(min, max);
     }
 
     inline double get()
@@ -137,7 +137,7 @@ public:
     }
 
 private:
-    Distribution distribution_;
+    distribution_t distribution_;
 
 };
 
@@ -148,48 +148,48 @@ template<std::size_t Dim>
 class Normal : public RandomGenerator
 {
 public:
-    typedef std::shared_ptr<Normal>                Ptr;
-    typedef Eigen::Matrix<double, Dim, 1>          Vector;
-    typedef Eigen::Matrix<double, Dim, Dim>        Matrix;
-    typedef std::normal_distribution<double>       Distribution;
-    typedef Eigen::EigenSolver<Matrix>             EigenSolver;
+    using Ptr = std::shared_ptr<Normal>;
+    using sample_t       = Eigen::Matrix<double, Dim, 1>;
+    using matrix_t       = Eigen::Matrix<double, Dim, Dim>;
+    using distribution_t = std::normal_distribution<double>;
+    using solver_t       = Eigen::EigenSolver<matrix_t>;
 
     Normal() = delete;
 
-    Normal(const Vector &mean,
-           const Matrix &covariance)
+    Normal(const sample_t &mean,
+           const matrix_t &covariance)
     {
         set(mean, covariance);
     }
 
-    Normal(const Vector &mean,
-           const Matrix &covariance,
+    Normal(const sample_t &mean,
+           const matrix_t &covariance,
            const unsigned int seed) :
         RandomGenerator(seed)
     {
         set(mean, covariance);
     }
 
-    inline void set(const Vector &mean,
-                    const Matrix &covariance)
+    inline void set(const sample_t &mean,
+                    const matrix_t &covariance)
     {
         mean_ = mean;
         covariance_ = covariance;
 
-        EigenSolver eigen(covariance_);
+        solver_t eigen(covariance_);
         rotation_ = eigen.eigenvectors().real();           /// rotation into the "world_frame"
         scale_ = eigen.eigenvalues().real().cwiseSqrt();   /// scale along the main axis of distribution
     }
 
-    inline Vector get()
+    inline sample_t get()
     {
-        Vector sample;
+        sample_t sample;
         for(std::size_t i = 0 ; i < Dim ; ++i)
             sample(i) = distribution_(random_engine_) * scale_(i);
         return rotation_ * sample + mean_;
     }
 
-    inline void get(Vector &sample)
+    inline void get(sample_t &sample)
     {
         for(std::size_t i = 0 ; i < Dim ; ++i)
             sample(i) = distribution_(random_engine_) * scale_(i);
@@ -197,11 +197,11 @@ public:
     }
 
 private:
-    Distribution distribution_;
-    Vector mean_;
-    Matrix covariance_;
-    Matrix rotation_;
-    Vector scale_;
+    distribution_t                  distribution_;
+    Eigen::Matrix<double, Dim, 1>   mean_;
+    matrix_t                        covariance_;
+    Eigen::Matrix<double, Dim, Dim> rotation_;
+    Eigen::Matrix<double, Dim, 1>   scale_;
 };
 
 /**
@@ -211,8 +211,8 @@ template<>
 class Normal<1> : public RandomGenerator
 {
 public:
-    typedef std::shared_ptr<Normal> Ptr;
-    typedef std::normal_distribution<double> Distribution;
+    using Ptr            = std::shared_ptr<Normal>;
+    using distribution_t = std::normal_distribution<double> ;
 
     Normal() = delete;
 
@@ -233,7 +233,7 @@ public:
     inline void set(const double mean,
                     const double _sigma)
     {
-        distribution_ = Distribution(mean, _sigma);
+        distribution_ = distribution_t(mean, _sigma);
     }
 
     inline double get()
@@ -247,7 +247,7 @@ public:
     }
 
 private:
-    Distribution distribution_;
+    distribution_t distribution_;
 };
 }
 }

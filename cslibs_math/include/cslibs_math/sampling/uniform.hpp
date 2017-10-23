@@ -18,28 +18,28 @@ public:
 
     static const std::size_t Dimension = sizeof...(Types);
 
-    using RNG = cslibs_math::random::Uniform<Dimension>;
-    using Vector = typename RNG::Vector;
+    using rng_t    = cslibs_math::random::Uniform<Dimension>;
+    using sample_t = typename rng_t::sample_t;
 
     Uniform() = delete;
     Uniform(const Uniform &other) = delete;
 
-    Uniform(const Vector &min,
-            const Vector &max,
+    Uniform(const sample_t &min,
+            const sample_t &max,
             const unsigned int seed = 0) :
         rng_(min, max, seed)
     {
     }
 
-    inline Vector get()
+    inline sample_t get()
     {
-        Vector sample = rng_.get();
-        Arguments<Dimension, Vector, Types...>::normalize(sample);
+        sample_t sample = rng_.get();
+        Arguments<Dimension, sample_t, Types...>::normalize(sample);
         return sample;
     }
 
 private:
-    RNG rng_;
+    rng_t rng_;
 };
 }
 }
