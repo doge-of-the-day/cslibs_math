@@ -92,14 +92,14 @@ public:
                                          other.yaw_,
                                          other.sin_,
                                          other.cos_)
-                           : other.yaw_ == 0.0 ?              Transform2d((*this) * other.translation_,
-                                                                          yaw_,
-                                                                          sin_,
-                                                                          cos_)
-                                                            : Transform2d ((*this) * other.translation_,
-                                                                           cslibs_math::common::angle::normalize(yaw_ + other.yaw_),
-                                                                           sin_ * other.cos_ + cos_ * other.sin_,
-                                                                           cos_ * other.cos_ - sin_ * other.sin_);
+                           : other.yaw_ == 0.0 ? Transform2d((*this) * other.translation_,
+                                                             yaw_,
+                                                             sin_,
+                                                             cos_)
+                                               : Transform2d ((*this) * other.translation_,
+                                                              cslibs_math::common::angle::normalize(yaw_ + other.yaw_),
+                                                              sin_ * other.cos_ + cos_ * other.sin_,
+                                                              cos_ * other.cos_ - sin_ * other.sin_);
     }
 
 

@@ -179,6 +179,12 @@ public:
         return  hypot2(x_ - other.x_, y_ - other.y_);
     }
 
+    inline bool isNormal() const
+    {
+        return std::isnormal(x_) && std::isnormal(y_);
+    }
+
+
 private:
     static inline double hypot2(const double x, const double y)
     {

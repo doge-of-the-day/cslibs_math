@@ -8,55 +8,17 @@ namespace cslibs_math_2d {
 class Pointcloud2d
 {
 public:
-    struct Point2d {
-        const cslibs_math_2d::Point2d point;
-        const bool                    valid;
-
-        inline Point2d() :
-            point(std::numeric_limits<double>::infinity(),
-                  std::numeric_limits<double>::infinity()),
-            valid(false)
-        {
-        }
-
-        inline Point2d(const cslibs_math_2d::Point2d &point,
-                       const bool valid = true) :
-                point(point),
-                valid(valid)
-        {
-        }
-
-        inline Point2d(const Point2d &other) :
-            point(other.point),
-            valid(other.valid)
-        {
-        }
-
-        inline Point2d(Point2d &&other) :
-            point(std::move(other.point)),
-            valid(other.valid)
-        {
-        }
-    } __attribute__ ((aligned (32)));
-
     using Ptr              = std::shared_ptr<Pointcloud2d>;
     using points_t         = std::vector<Point2d>;
     using const_iterator_t = points_t::const_iterator;
+    using iterator_t       = points_t::iterator;
 
-    Pointcloud2d() :
-        min_(std::numeric_limits<double>::max(),
-             std::numeric_limits<double>::max()),
-        max_(std::numeric_limits<double>::lowest(),
-             std::numeric_limits<double>::lowest())
+    Pointcloud2d()
     {
     }
 
     Pointcloud2d(const std::size_t size) :
-        points_(size),
-        min_(std::numeric_limits<double>::max(),
-             std::numeric_limits<double>::max()),
-        max_(std::numeric_limits<double>::lowest(),
-             std::numeric_limits<double>::lowest())
+        data_(size)
     {
     }
 
@@ -64,48 +26,77 @@ public:
     {
     }
 
-    inline void insert(const cslibs_math_2d::Point2d &pt)
+    inline void insert(const Point2d &pt)
     {
-        min_ = min_.min(pt);
-        max_ = max_.max(pt);
-        points_.emplace_back(pt);
+        data_.emplace_back(pt);
     }
 
     inline void insertInvalid()
     {
-        points_.emplace_back(Point2d());
+        data_.emplace_back(Point2d(std::numeric_limits<double>::infinity(),
+                                   std::numeric_limits<double>::infinity()));
     }
 
     inline void clear()
     {
-        min_.x() = std::numeric_limits<double>::max();
-        min_.y() = std::numeric_limits<double>::max();
-        max_.x() = std::numeric_limits<double>::lowest();
-        max_.y() = std::numeric_limits<double>::lowest();
-        points_.clear();
+        data_.clear();
     }
 
     inline const_iterator_t begin() const
     {
-        return points_.begin();
+        return data_.begin();
     }
 
     inline const_iterator_t end() const
     {
-        return points_.end();
+        return data_.end();
     }
+
+
+    inline iterator_t begin()
+    {
+        return data_.begin();
+    }
+
+    inline iterator_t end()
+    {
+        return data_.end();
+    }
+
 
     inline std::vector<Point2d> const & getPoints() const
     {
-        return points_;
+        return data_;
+    }
+
+    inline Point2d min() const
+    {
+        Point2d min(std::numeric_limits<double>::max(),
+                    std::numeric_limits<double>::max());
+        std::for_each(data_.begin(), data_.end(),
+                      [&min](const Point2d &p){min = min.min(p);});
+    }
+
+    inline Point2d max() const
+    {
+        Point2d min(std::numeric_limits<double>::min(),
+                    std::numeric_limits<double>::min());
+        std::for_each(data_.begin(), data_.end(),
+                      [&min](const Point2d &p){min = min.max(p);});
+    }
+
+    virtual inline void transform(const Transform2d &t)
+    {
+        std::for_each(data_.begin(), data_.end(),
+                      [&t](Point2d &p){p = t * p;});
     }
 
 protected:
-    std::vector<Point2d>        points_;
-    cslibs_math_2d::Point2d     min_;
-    cslibs_math_2d::Point2d     max_;
+    std::vector<Point2d>        data_;
 
 };
 }
+
+
 
 #endif // POINTCLOUD_HPP
