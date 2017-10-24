@@ -75,14 +75,16 @@ public:
                     std::numeric_limits<double>::max());
         std::for_each(data_.begin(), data_.end(),
                       [&min](const Point2d &p){min = min.min(p);});
+        return min;
     }
 
     inline Point2d max() const
     {
-        Point2d min(std::numeric_limits<double>::min(),
+        Point2d max(std::numeric_limits<double>::min(),
                     std::numeric_limits<double>::min());
         std::for_each(data_.begin(), data_.end(),
-                      [&min](const Point2d &p){min = min.max(p);});
+                      [&max](const Point2d &p){max = max.max(p);});
+        return max;
     }
 
     virtual inline void transform(const Transform2d &t)
