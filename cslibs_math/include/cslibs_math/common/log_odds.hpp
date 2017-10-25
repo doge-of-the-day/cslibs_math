@@ -8,12 +8,12 @@ namespace common {
 struct LogOdds {
     inline static double to(const double p)
     {
-        return std::log(1.0 / (1.0 - p));
+        return std::log(p / (1.0 - p));
     }
 
     inline static double from(const double l)
     {
-        return 1.0 - 1.0 / (1.0 - std::exp(l));
+        return 1.0 / (1.0 + std::exp(-l));
     }
 };
 }
