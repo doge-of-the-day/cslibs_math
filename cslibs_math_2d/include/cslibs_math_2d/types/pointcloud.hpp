@@ -1,7 +1,7 @@
 #ifndef POINTCLOUD_HPP
 #define POINTCLOUD_HPP
 
-#include <cslibs_math_2d/types/point.hpp>
+#include <cslibs_math_2d/types/box.hpp>
 #include <cslibs_math_2d/types/transform.hpp>
 
 namespace cslibs_math_2d {
@@ -85,6 +85,11 @@ public:
         std::for_each(data_.begin(), data_.end(),
                       [&max](const Point2d &p){max = max.max(p);});
         return max;
+    }
+
+    inline Box2d boundingBox() const
+    {
+        return Box2d(min(), max());
     }
 
     virtual inline void transform(const Transform2d &t)

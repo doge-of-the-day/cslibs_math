@@ -32,7 +32,7 @@ struct Index : public std::array<int, _Nm>
      * @param other - the other index
      */
     Index(const std::array<int, _Nm> &arr) :
-        std::array<int, _Nm>(arr)
+                std::array<int, _Nm>(arr)
     {
     }
 
@@ -117,6 +117,16 @@ struct Index : public std::array<int, _Nm>
 
 //// primitive mathematical operators
 template<std::size_t _Nm>
+inline cslibs_math::common::Index<_Nm> operator * (const cslibs_math::common::Index<_Nm> &__arr,
+                                                   const int __s)
+{
+    cslibs_math::common::Index<_Nm> __res;
+    for(std::size_t i = 0 ; i < _Nm; ++i)
+        __res[i] = __arr[i] * __s;
+    return __res;
+}
+
+template<std::size_t _Nm>
 inline cslibs_math::common::Index<_Nm> operator - (const cslibs_math::common::Index<_Nm>& __one,
                                                const cslibs_math::common::Index<_Nm>& __two)
 {
@@ -162,7 +172,7 @@ inline cslibs_math::common::Index<_Nm> operator + (const cslibs_math::common::In
 
 template<std::size_t _Nm>
 inline cslibs_math::common::Index<_Nm> operator < (const cslibs_math::common::Index<_Nm> &__one,
-                                              const cslibs_math::common::Index<_Nm> &__two)
+                                                   const cslibs_math::common::Index<_Nm> &__two)
 {
     bool less = true;
     for(std::size_t i = 0 ; i< _Nm; ++i)

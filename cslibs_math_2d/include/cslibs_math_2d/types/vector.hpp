@@ -13,6 +13,12 @@ public:
     {
     }
 
+    inline Vector2d(const double xy) :
+        x_(xy),
+        y_(xy)
+    {
+    }
+
     inline Vector2d(const double x,
                     const double y) :
         x_(x),
