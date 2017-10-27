@@ -75,7 +75,7 @@ public:
 
     inline double angle() const
     {
-        return atan2(y_, x_);
+        return std::atan2(y_, x_);
     }
 
     inline double & x()
@@ -165,14 +165,14 @@ public:
 
     inline Vector2d min(const Vector2d &other) const
     {
-        return Vector2d(fmin(x_, other.x_),
-                        fmin(y_, other.y_));
+        return Vector2d(std::min(x_, other.x_),
+                        std::min(y_, other.y_));
     }
 
     inline Vector2d max(const Vector2d &other) const
     {
-        return Vector2d(fmax(x_, other.x_),
-                        fmax(y_, other.y_));
+        return Vector2d(std::max(x_, other.x_),
+                        std::max(y_, other.y_));
     }
 
     inline double distance(const Vector2d &other) const

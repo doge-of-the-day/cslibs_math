@@ -2,8 +2,6 @@
 #define TRANSFORM_2D_HPP
 
 #include <cslibs_math_2d/types/vector.hpp>
-
-#include <muse_smc/utility/stamped.hpp>
 #include <cslibs_math/common/angle.hpp>
 
 namespace cslibs_math_2d {
