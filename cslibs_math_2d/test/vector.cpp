@@ -12,7 +12,7 @@ using rng_t = cslibs_math::random::Uniform<1>;
 
 const std::size_t REPETITIONS = 10000;
 
-TEST(Test_muse_mcl_2d, testInitialization)
+TEST(Test_cslibs_math_2d, testInitialization)
 {
     rng_t rng(-10.0, 10.0);
 
@@ -37,7 +37,7 @@ TEST(Test_muse_mcl_2d, testInitialization)
     }
 }
 
-TEST(Test_muse_mcl_2d, testMul)
+TEST(Test_cslibs_math_2d, testMul)
 {
     rng_t rng(-10.0, 10.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
@@ -57,7 +57,7 @@ TEST(Test_muse_mcl_2d, testMul)
     }
 }
 
-TEST(Test_muse_mcl_2d, testDiv)
+TEST(Test_cslibs_math_2d, testDiv)
 {
     rng_t rng(-10.0, 10.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
@@ -80,7 +80,7 @@ TEST(Test_muse_mcl_2d, testDiv)
     }
 }
 
-TEST(Test_muse_mcl_2d, testAdd)
+TEST(Test_cslibs_math_2d, testAdd)
 {
     rng_t rng(-10.0, 10.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
@@ -107,7 +107,7 @@ TEST(Test_muse_mcl_2d, testAdd)
     }
 }
 
-TEST(Test_muse_mcl_2d, testSub)
+TEST(Test_cslibs_math_2d, testSub)
 {
     rng_t rng(-10.0, 10.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
@@ -134,7 +134,7 @@ TEST(Test_muse_mcl_2d, testSub)
     }
 }
 
-TEST(Test_muse_mcl_2d, testDot)
+TEST(Test_cslibs_math_2d, testDot)
 {
     rng_t rng(-10.0, 10.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
@@ -152,7 +152,7 @@ TEST(Test_muse_mcl_2d, testDot)
     }
 }
 
-TEST(Test_muse_mcl_2d, testLenAngNorm)
+TEST(Test_cslibs_math_2d, testLenAngNorm)
 {
     rng_t rng_dir(-M_PI, M_PI);
     rng_t rng_len(0.0, 10.0);
@@ -173,7 +173,7 @@ TEST(Test_muse_mcl_2d, testLenAngNorm)
     }
 }
 
-TEST(Test_muse_mcl_2d, testAssign)
+TEST(Test_cslibs_math_2d, testAssign)
 {
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
         rng_t rng(-10.0, 10.0);
@@ -190,7 +190,7 @@ TEST(Test_muse_mcl_2d, testAssign)
     }
 }
 
-TEST(Test_muse_mcl_2d, testMinMax)
+TEST(Test_cslibs_math_2d, testMinMax)
 {
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
         rng_t rng(-10.0, 10.0);
@@ -224,7 +224,7 @@ TEST(Test_muse_mcl_2d, testMinMax)
 }
 
 
-TEST(Test_muse_mcl_2d, testDistance)
+TEST(Test_cslibs_math_2d, testDistance)
 {
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
         rng_t rng(-10.0, 10.0);
