@@ -36,10 +36,10 @@ include_directories(
 
 cslibs_math_show_headers()
 
-cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_common
+cslibs_math_add_unit_test_gtest(test_common
     SRCS test/common.cpp
 )
 
-cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_array
+cslibs_math_add_unit_test_gtest(test_array
     SRCS test/array.cpp
 )

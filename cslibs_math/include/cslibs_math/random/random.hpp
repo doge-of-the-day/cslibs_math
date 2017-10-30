@@ -131,6 +131,15 @@ public:
         return distribution_(random_engine_);
     }
 
+    inline double getNEQ(const double neq)
+    {
+        double r = get();
+        while(r == neq) {
+            r = get();
+        }
+        return r;
+    }
+
     inline void get(double &sample)
     {
         sample = distribution_(random_engine_);

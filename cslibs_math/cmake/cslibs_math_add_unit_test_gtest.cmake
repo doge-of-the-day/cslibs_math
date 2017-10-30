@@ -4,7 +4,6 @@
 #   UNIT_TEST_LIBS : a list of libraries to link - make sure to wrap into quotes
 #                    and use semicoli as delimiters.
 function(${PROJECT_NAME}_add_unit_test_gtest)
-    set(unit_test_NAME ${PROJECT_NAME}_${ARGV0})
     cmake_parse_arguments(unit_test
         ""          # list of names of the boolean arguments (only defined ones will be true)
         ""          # list of names of mono-valued arguments
@@ -13,6 +12,7 @@ function(${PROJECT_NAME}_add_unit_test_gtest)
     )
 
     if(${catkin_FOUND})
+        set(unit_test_NAME ${ARGV0})
         find_package(Boost REQUIRED COMPONENTS system)
         add_definitions(-pthread)
         catkin_add_gtest(${unit_test_NAME}
@@ -25,6 +25,7 @@ function(${PROJECT_NAME}_add_unit_test_gtest)
             -lpthread
         )
     else()
+        set(unit_test_NAME ${PROJECT_NAME}_${ARGV0})
         enable_testing()
         add_executable(${unit_test_NAME}
             ${unit_test_SRCS}
