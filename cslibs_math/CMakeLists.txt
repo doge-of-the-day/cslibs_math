@@ -10,6 +10,7 @@ include(cmake/cslibs_math_show_headers.cmake)
 include(cmake/cslibs_math_add_unit_test_gtest.cmake)
 
 find_package(catkin QUIET)
+if(${catkin_FOUND})
 catkin_package(
     INCLUDE_DIRS    include
     DEPENDS         Eigen3
@@ -20,9 +21,9 @@ catkin_package(
                     cslibs_math_add_unit_test_gtest.cmake)
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+endif()
 
 find_package(Eigen3 REQUIRED)
-
 find_package(tf                    QUIET)
 find_package(cslibs_boost_geometry QUIET)
 
