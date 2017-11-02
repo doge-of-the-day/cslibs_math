@@ -6,7 +6,8 @@ namespace common {
 template<typename T>
 T mod(const T a, const T b)
 {
-  return a < 0 ? (a+b)%b : a%b;
+    auto r = [b](const T x) { return x < 0 ? x + b : x;};
+    return r(a % b);
 }
 }
 }

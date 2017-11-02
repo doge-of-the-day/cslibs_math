@@ -68,11 +68,15 @@ std::array<_Tp, _Nm> operator / (const std::array<_Tp, _Nm> &__one,
 template<typename _Tp, std::size_t _Nm>
 std::ostream & operator << (std::ostream &__out, const std::array<_Tp, _Nm> &__arr)
 {
-    __out << "[";
-    for(std::size_t i = 0 ; i < _Nm-1 ; ++i) {
-        __out << __arr[i] << ",";
+    if(_Nm != 0ul) {
+        __out << "[";
+        for(std::size_t i = 0 ; i < _Nm-1 ; ++i) {
+            __out << __arr[i] << ",";
+        }
+        __out << __arr.back() << "]";
+    } else {
+        __out << "[]";
     }
-    __out << *(__arr.end()) << "]";
     return __out;
 }
 
