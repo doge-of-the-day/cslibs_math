@@ -14,17 +14,17 @@ public:
     using coefficients_t = std::array<double, 2>;
 
     inline Box2d() :
-        min_{std::numeric_limits<double>::lowest(),
-             std::numeric_limits<double>::lowest()},
-        max_{std::numeric_limits<double>::max(),
-             std::numeric_limits<double>::max()}
+        min_(std::numeric_limits<double>::lowest(),
+             std::numeric_limits<double>::lowest()),
+        max_(std::numeric_limits<double>::max(),
+             std::numeric_limits<double>::max())
     {
     }
 
     inline Box2d(const double min_x, const double min_y,
                  const double max_x, const double max_y) :
-        min_{min_x, min_y},
-        max_{max_x, max_y}
+        min_(min_x, min_y),
+        max_(max_x, max_y)
     {
     }
 
