@@ -44,7 +44,7 @@ public:
     {
         for(std::size_t i = 0 ; i < step_ ; ++i) {
             for(std::size_t j = 0 ; j < step_ ; ++j) {
-                 data_[step_ * i + j] = e(i,j);
+                 data_[step_ * i + j] = e(static_cast<long>(i), static_cast<long>(j));
             }
         }
     }
@@ -54,7 +54,7 @@ public:
         Eigen::Matrix3d e;
         for(std::size_t i = 0 ; i < step_ ; ++i) {
             for(std::size_t j = 0 ; j < step_ ; ++j) {
-                e(i,j) = data_[step_ * i + j];
+                e(static_cast<long>(i),static_cast<long>(j)) = data_[step_ * i + j];
             }
         }
         return e;
@@ -64,11 +64,10 @@ public:
     {
         for(std::size_t i = 0 ; i < step_ ; ++i) {
             for(std::size_t j = 0 ; j < step_ ; ++j) {
-                e(i,j) = data_[step_ * i + j];
+                e(static_cast<long>(i),static_cast<long>(j)) = data_[step_ * i + j];
             }
         }
     }
-
 private:
     data_t data_;
 }__attribute__ ((aligned (128)));

@@ -167,7 +167,7 @@ public:
     }
 
     inline void getEigenValues(EigenValueSetType &eigen_values,
-                               const double abs = false) const
+                               const bool abs = false) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
@@ -282,7 +282,7 @@ private:
 
     inline void update() const
     {
-        double scale = n_1_ / (double)(n_1_ - 1);
+        double scale = n_1_ / static_cast<double>(n_1_ - 1);
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
                 covariance_(i, j) = (correlated_(i, j) - (mean_(i) * mean_(j))) * scale;

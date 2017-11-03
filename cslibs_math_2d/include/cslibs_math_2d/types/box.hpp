@@ -3,6 +3,8 @@
 
 #include <cslibs_math_2d/types/line.hpp>
 
+#include <cslibs_math/common/equal.hpp>
+
 #include <limits>
 #include <set>
 
@@ -88,7 +90,7 @@ public:
         auto clip = [] (const double p, const double q,
                         double &t0, double &t1)
         {
-            if(p == 0 && q < 0)
+            if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
                 return false;
 
             const double r = q / p;
@@ -132,7 +134,7 @@ public:
         auto clip = [] (const double p, const double q,
                         double &t0, double &t1)
         {
-            if(p == 0 && q < 0)
+            if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
                 return false;
 
             const double r = q / p;

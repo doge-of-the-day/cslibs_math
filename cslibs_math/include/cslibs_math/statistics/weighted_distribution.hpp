@@ -167,7 +167,7 @@ public:
     }
 
     inline void getEigenValues(EigenValueSetType &eigen_values,
-                               const double abs = false) const
+                               const bool abs = false) const
     {
         if(W_ > 0.0) {
             if(dirty_)

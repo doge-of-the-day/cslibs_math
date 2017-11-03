@@ -8,7 +8,6 @@
 
 namespace cslibs_math_2d {
 namespace conversion {
-
 inline Point2d from(const cslibs_boost_geometry::types::Point2d &p)
 {
     return Point2d(p.x(), p.y());
@@ -16,7 +15,7 @@ inline Point2d from(const cslibs_boost_geometry::types::Point2d &p)
 
 inline Line2d from(const cslibs_boost_geometry::types::Line2d &l)
 {
-    return {from(l.first), from(l.second)};
+    return {{from(l.first), from(l.second)}};
 }
 
 
@@ -27,7 +26,7 @@ inline cslibs_boost_geometry::types::Point2d from(const Point2d &p)
 
 inline cslibs_boost_geometry::types::Line2d from(const Line2d &l)
 {
-    return {from(l.first), from(l.second)};
+    return {from(l[0]), from(l[1])};
 }
 
 inline void from(const cslibs_boost_geometry::types::PointSet2d &src,
@@ -36,7 +35,7 @@ inline void from(const cslibs_boost_geometry::types::PointSet2d &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [t](const cslibs_boost_geometry::types::Point2d &p){return from(p);});
+                   [](const cslibs_boost_geometry::types::Point2d &p){return from(p);});
 }
 
 inline void from(const cslibs_boost_geometry::types::Line2dSet &src,
@@ -45,7 +44,7 @@ inline void from(const cslibs_boost_geometry::types::Line2dSet &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [t](const cslibs_boost_geometry::types::Line2d &l){return from(l);});
+                   [](const cslibs_boost_geometry::types::Line2d &l){return from(l);});
 }
 
 inline void from(const std::vector<Point2d> &src,
@@ -54,18 +53,17 @@ inline void from(const std::vector<Point2d> &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [t](const Point2d &p){return from(p);});
+                   [](const Point2d &p){return from(p);});
 }
 
-inline void from(std::vector<Line2d> &src,
-                 const cslibs_boost_geometry::types::Line2dSet &dst)
+inline void from(const std::vector<Line2d> &src,
+                 cslibs_boost_geometry::types::Line2dSet &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [t](const Line2d &l){return from(l);});
+                   [](const Line2d &l){return from(l);});
 }
-
 }
 }
 
