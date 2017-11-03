@@ -4,11 +4,9 @@
 
 TEST(Test_cslibs_math, testMod)
 {
-    const int a = -11101;
-    const int b = 100;
-
-    EXPECT_EQ(cslibs_math::common::mod(a,b), 99);
-
+    EXPECT_EQ(cslibs_math::common::mod(-11101,100), 99);
+    EXPECT_EQ(cslibs_math::common::mod(5, 3), 2);
+    EXPECT_EQ(cslibs_math::common::mod(3, 5), 3);
 }
 
 int main(int argc, char *argv[])

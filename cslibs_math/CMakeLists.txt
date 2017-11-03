@@ -41,6 +41,10 @@ cslibs_math_add_unit_test_gtest(test_mod
     SRCS test/mod.cpp
 )
 
+cslibs_math_add_unit_test_gtest(test_div
+    SRCS test/div.cpp
+)
+
 cslibs_math_add_unit_test_gtest(test_array
     SRCS test/array.cpp
 )

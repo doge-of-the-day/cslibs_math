@@ -154,44 +154,44 @@ TEST(Test_cslibs_math, testArrayDiv)
         std::array<int, 2> i_2_0 = {irand(),irand()};
         std::array<int, 2> i_2_1 = {irand(),irand()};
         std::array<int, 2> i_2_2 = i_2_1  / i_2_0;
-        EXPECT_EQ(i_2_2[0], i_2_1[0]  / i_2_0[0]);
-        EXPECT_EQ(i_2_2[1], i_2_1[1]  / i_2_0[1]);
+        EXPECT_NEAR(i_2_2[0], i_2_1[0]  / i_2_0[0], 1e-9);
+        EXPECT_NEAR(i_2_2[1], i_2_1[1]  / i_2_0[1], 1e-9);
         const int mi = irand();
         i_2_2 = i_2_2 / mi;
-        EXPECT_EQ(i_2_2[0], i_2_1[0]  / i_2_0[0]  / mi);
-        EXPECT_EQ(i_2_2[1], i_2_1[1]  / i_2_0[1]  / mi);
+        EXPECT_NEAR(i_2_2[0], i_2_1[0]  / i_2_0[0]  / mi, 1e-9);
+        EXPECT_NEAR(i_2_2[1], i_2_1[1]  / i_2_0[1]  / mi, 1e-9);
 
         std::array<double, 2> d_2_0 = {rng.get(), rng.getNEQ(0.0)};
         std::array<double, 2> d_2_1 = {rng.get(), rng.getNEQ(0.0)};
         std::array<double, 2> d_2_2 = d_2_1  / d_2_0;
-        EXPECT_EQ(d_2_2[0], d_2_1[0]  / d_2_0[0]);
-        EXPECT_EQ(d_2_2[1], d_2_1[1]  / d_2_0[1]);
+        EXPECT_NEAR(d_2_2[0], d_2_1[0]  / d_2_0[0], 1e-9);
+        EXPECT_NEAR(d_2_2[1], d_2_1[1]  / d_2_0[1], 1e-9);
         const double md = rng.getNEQ(0.0);
         d_2_2 = d_2_2 / md;
-        EXPECT_EQ(d_2_2[0], d_2_1[0]  / d_2_0[0]  / md);
-        EXPECT_EQ(d_2_2[1], d_2_1[1]  / d_2_0[1]  / md);
+        EXPECT_NEAR(d_2_2[0], d_2_1[0]  / d_2_0[0]  / md, 1e-9);
+        EXPECT_NEAR(d_2_2[1], d_2_1[1]  / d_2_0[1]  / md, 1e-9);
 
         std::array<int, 3> i_3_0 = {irand(), irand(), irand()};
         std::array<int, 3> i_3_1 = {irand(), irand(), irand()};
         std::array<int, 3> i_3_2  = i_3_1  / i_3_0;
-        EXPECT_EQ(i_3_2[0], i_3_1[0]  / i_3_0[0]);
-        EXPECT_EQ(i_3_2[1], i_3_1[1]  / i_3_0[1]);
-        EXPECT_EQ(i_3_2[2], i_3_1[2]  / i_3_0[2]);
+        EXPECT_NEAR(i_3_2[0], i_3_1[0]  / i_3_0[0], 1e-9);
+        EXPECT_NEAR(i_3_2[1], i_3_1[1]  / i_3_0[1], 1e-9);
+        EXPECT_NEAR(i_3_2[2], i_3_1[2]  / i_3_0[2], 1e-9);
         i_3_2 = i_3_2 / mi;
-        EXPECT_EQ(i_3_2[0], i_3_1[0]  / i_3_0[0]  / mi);
-        EXPECT_EQ(i_3_2[1], i_3_1[1]  / i_3_0[1]  / mi);
-        EXPECT_EQ(i_3_2[2], i_3_1[2]  / i_3_0[2]  / mi);
+        EXPECT_NEAR(i_3_2[0], i_3_1[0]  / i_3_0[0]  / mi, 1e-9);
+        EXPECT_NEAR(i_3_2[1], i_3_1[1]  / i_3_0[1]  / mi, 1e-9);
+        EXPECT_NEAR(i_3_2[2], i_3_1[2]  / i_3_0[2]  / mi, 1e-9);
 
         std::array<double, 3> d_3_0 = {rng.get(), rng.get(), rng.get()};
         std::array<double, 3> d_3_1 = {rng.get(), rng.get(), rng.get()};
         std::array<double, 3> d_3_2 = d_3_1  / d_3_0;
-        EXPECT_EQ(d_3_2[0], d_3_1[0]  / d_3_0[0]);
-        EXPECT_EQ(d_3_2[1], d_3_1[1]  / d_3_0[1]);
-        EXPECT_EQ(d_3_2[2], d_3_1[2]  / d_3_0[2]);
+        EXPECT_NEAR(d_3_2[0], d_3_1[0]  / d_3_0[0], 1e-9);
+        EXPECT_NEAR(d_3_2[1], d_3_1[1]  / d_3_0[1], 1e-9);
+        EXPECT_NEAR(d_3_2[2], d_3_1[2]  / d_3_0[2], 1e-9);
         d_3_2 = d_3_2 / md;
-        EXPECT_EQ(d_3_2[0], d_3_1[0]  / d_3_0[0]  / md);
-        EXPECT_EQ(d_3_2[1], d_3_1[1]  / d_3_0[1]  / md);
-        EXPECT_EQ(d_3_2[2], d_3_1[2]  / d_3_0[2]  / md);
+        EXPECT_NEAR(d_3_2[0], d_3_1[0]  / d_3_0[0]  / md, 1e-9);
+        EXPECT_NEAR(d_3_2[1], d_3_1[1]  / d_3_0[1]  / md, 1e-9);
+        EXPECT_NEAR(d_3_2[2], d_3_1[2]  / d_3_0[2]  / md, 1e-9);
     }
 }
 
