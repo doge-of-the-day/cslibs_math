@@ -1,5 +1,5 @@
-#ifndef DISTRIBUTION_HPP
-#define DISTRIBUTION_HPP
+#ifndef CSLIBS_MATH_DISTRIBUTION_HPP
+#define CSLIBS_MATH_DISTRIBUTION_HPP
 
 #undef NDEBUG
 #include <assert.h>
@@ -331,4 +331,4 @@ private:
 }
 }
 
-#endif /* DISTRIBUTION_HPP */
+#endif /* CSLIBS_MATH_DISTRIBUTION_HPP */

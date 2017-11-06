@@ -9,8 +9,11 @@ include(cmake/cslibs_math_openmp.cmake)
 include(cmake/cslibs_math_show_headers.cmake)
 include(cmake/cslibs_math_add_unit_test_gtest.cmake)
 
-find_package(catkin QUIET)
-if(${catkin_FOUND})
+find_package(catkin REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(tf                    QUIET)
+find_package(cslibs_boost_geometry QUIET)
+
 catkin_package(
     INCLUDE_DIRS    include
     DEPENDS         Eigen3
@@ -19,18 +22,11 @@ catkin_package(
                     cslibs_math_openmp.cmake
                     cslibs_math_show_headers.cmake
                     cslibs_math_add_unit_test_gtest.cmake)
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-endif()
-
-find_package(Eigen3 REQUIRED)
-find_package(tf                    QUIET)
-find_package(cslibs_boost_geometry QUIET)
 
 include_directories(
+   include
   ${Eigen3_INCLUDE_DIR}
   ${catkin_INCLUDE_DIRS}
-  include
   ${tf_INCLUDE_DIRS}
   ${cslibs_boost_geometry_INCLUDE_DIRS}
 )
@@ -48,3 +44,6 @@ cslibs_math_add_unit_test_gtest(test_div
 cslibs_math_add_unit_test_gtest(test_array
     SRCS test/array.cpp
 )
+
+install(DIRECTORY include/${PROJECT_NAME}/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

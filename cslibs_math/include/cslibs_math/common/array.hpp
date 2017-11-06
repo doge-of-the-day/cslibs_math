@@ -1,5 +1,5 @@
-#ifndef ARRAY_HPP
-#define ARRAY_HPP
+#ifndef CSLIBS_MATH_ARRAY_HPP
+#define CSLIBS_MATH_ARRAY_HPP
 
 #include <array>
 #include <iostream>
@@ -104,4 +104,4 @@ std::array<_Tp, _Nm> max(const std::array<_Tp, _Nm> &__one,
 }
 }
 
-#endif // ARRAY_HPP
+#endif // CSLIBS_MATH_ARRAY_HPP

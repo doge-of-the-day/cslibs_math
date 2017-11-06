@@ -1,5 +1,5 @@
-#ifndef BOX_2D_HPP
-#define BOX_2D_HPP
+#ifndef CSLIBS_MATH_2D_BOX_2D_HPP
+#define CSLIBS_MATH_2D_BOX_2D_HPP
 
 #include <cslibs_math_2d/types/line.hpp>
 
@@ -184,4 +184,4 @@ inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Box2
     return out;
 }
 
-#endif // BOX_2D_HPP
+#endif // CSLIBS_MATH_2D_BOX_2D_HPP

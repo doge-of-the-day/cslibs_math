@@ -1,5 +1,5 @@
-#ifndef UNIFORM_SAMPLER_HPP
-#define UNIFORM_SAMPLER_HPP
+#ifndef CSLIBS_MATH_UNIFORM_SAMPLER_HPP
+#define CSLIBS_MATH_UNIFORM_SAMPLER_HPP
 
 #include <memory>
 
@@ -44,4 +44,4 @@ private:
 }
 }
 
-#endif /* UNIFORM_SAMPLER_HPP */
+#endif /* CSLIBS_MATH_UNIFORM_SAMPLER_HPP */

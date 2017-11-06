@@ -1,8 +1,11 @@
-#ifndef POINTCLOUD_HPP
-#define POINTCLOUD_HPP
+#ifndef CSLIBS_MATH_2D_POINTCLOUD2D_HPP
+#define CSLIBS_MATH_2D_POINTCLOUD2D_HPP
 
 #include <cslibs_math_2d/types/box.hpp>
 #include <cslibs_math_2d/types/transform.hpp>
+
+#include <memory>
+#include <vector>
 
 namespace cslibs_math_2d {
 class Pointcloud2d
@@ -106,4 +109,4 @@ protected:
 
 
 
-#endif // POINTCLOUD_HPP
+#endif // CSLIBS_MATH_2D_POINTCLOUD2D_HPP

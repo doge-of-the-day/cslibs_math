@@ -1,5 +1,5 @@
-#ifndef COVARIANCE_2D_HPP
-#define COVARIANCE_2D_HPP
+#ifndef CSLIBS_MATH_2D_COVARIANCE_2D_HPP
+#define CSLIBS_MATH_2D_COVARIANCE_2D_HPP
 
 #include <array>
 #include <vector>
@@ -73,4 +73,4 @@ private:
 }__attribute__ ((aligned (128)));
 }
 
-#endif // COVARIANCE_2D_HPP
+#endif // CSLIBS_MATH_2D_COVARIANCE_2D_HPP

@@ -1,5 +1,5 @@
-#ifndef NORMAL_SAMPLER_HPP
-#define NORMAL_SAMPLER_HPP
+#ifndef CSLIBS_MATH_NORMAL_SAMPLER_HPP
+#define CSLIBS_MATH_NORMAL_SAMPLER_HPP
 
 #include <memory>
 #include <cslibs_math/random/random.hpp>
@@ -42,4 +42,4 @@ private:
 }
 }
 
-#endif /* NORMAL_SAMPLER_HPP */
+#endif /* CSLIBS_MATH_NORMAL_SAMPLER_HPP */

@@ -1,5 +1,5 @@
-#ifndef RANDOM_HPP
-#define RANDOM_HPP
+#ifndef CSLIBS_MATH_RANDOM_HPP
+#define CSLIBS_MATH_RANDOM_HPP
 
 #include <cmath>
 #include <random>

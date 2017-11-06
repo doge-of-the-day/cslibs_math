@@ -1,5 +1,5 @@
-#ifndef MEAN_HPP
-#define MEAN_HPP
+#ifndef CSLIBS_MATH_MEAN_HPP
+#define CSLIBS_MATH_MEAN_HPP
 
 #include <eigen3/Eigen/Core>
 
@@ -68,4 +68,4 @@ private:
 }
 }
 
-#endif // MEAN_HPP
+#endif // CSLIBS_MATH_MEAN_HPP

@@ -1,5 +1,5 @@
-#ifndef WEIGHTED_ANGULAR_MEAN_HPP
-#define WEIGHTED_ANGULAR_MEAN_HPP
+#ifndef CSLIBS_MATH_WEIGHTED_ANGULAR_MEAN_HPP
+#define CSLIBS_MATH_WEIGHTED_ANGULAR_MEAN_HPP
 
 #include <memory>
 #include <complex>
@@ -126,4 +126,4 @@ private:
 }__attribute__ ((aligned (64)));
 }
 }
-#endif // WEIGHTED_ANGULAR_MEAN_HPP
+#endif // CSLIBS_MATH_WEIGHTED_ANGULAR_MEAN_HPP

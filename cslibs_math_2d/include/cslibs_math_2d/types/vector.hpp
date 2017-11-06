@@ -1,5 +1,5 @@
-#ifndef VECTOR_2D_HPP
-#define VECTOR_2D_HPP
+#ifndef CSLIBS_MATH_2D_VECTOR_2D_HPP
+#define CSLIBS_MATH_2D_VECTOR_2D_HPP
 
 #include <cmath>
 #include <eigen3/Eigen/Core>
@@ -213,4 +213,4 @@ inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Vect
     return out;
 }
 
-#endif // VECTOR_2D_HPP
+#endif // CSLIBS_MATH_2D_VECTOR_2D_HPP

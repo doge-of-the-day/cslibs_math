@@ -1,5 +1,5 @@
-#ifndef ANGULAR_MEAN_HPP
-#define ANGULAR_MEAN_HPP
+#ifndef CSLIBS_MATH_ANGULAR_MEAN_HPP
+#define CSLIBS_MATH_ANGULAR_MEAN_HPP
 
 #include <memory>
 #include <cslibs_math/common/angle.hpp>

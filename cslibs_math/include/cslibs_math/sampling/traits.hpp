@@ -1,5 +1,5 @@
-#ifndef SAMPLER_ARGUMENTS_HPP
-#define SAMPLER_ARGUMENTS_HPP
+#ifndef CSLIBS_MATH_SAMPLER_ARGUMENTS_HPP
+#define CSLIBS_MATH_SAMPLER_ARGUMENTS_HPP
 
 #include <cslibs_math/common/angle.hpp>
 
@@ -118,4 +118,4 @@ struct is_valid_type<T1, T2, Ts...> : is_valid_type<T2, Ts...> { };
 }
 }
 
-#endif /* SAMPLER_ARGUMENTS_HPP */
+#endif /* CSLIBS_MATH_SAMPLER_ARGUMENTS_HPP */

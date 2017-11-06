@@ -1,5 +1,5 @@
-#ifndef TRANSFORM_2D_HPP
-#define TRANSFORM_2D_HPP
+#ifndef CSLIBS_MATH_2D_TRANSFORM_2D_HPP
+#define CSLIBS_MATH_2D_TRANSFORM_2D_HPP
 
 #include <cslibs_math_2d/types/vector.hpp>
 #include <cslibs_math/common/angle.hpp>
@@ -278,4 +278,4 @@ inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Tran
     return out;
 }
 
-#endif // TRANSFORM_2D_HPP
+#endif // CSLIBS_MATH_2D_TRANSFORM_2D_HPP

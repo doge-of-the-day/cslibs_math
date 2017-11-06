@@ -1,5 +1,5 @@
-#ifndef EQUAL_HPP
-#define EQUAL_HPP
+#ifndef CSLIBS_MATH_EQUAL_HPP
+#define CSLIBS_MATH_EQUAL_HPP
 
 #include <limits>
 #include <cmath>

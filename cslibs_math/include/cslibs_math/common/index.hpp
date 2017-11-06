@@ -1,5 +1,5 @@
-#ifndef INDEX_HPP
-#define INDEX_HPP
+#ifndef CSLIBS_MATH_INDEX_HPP
+#define CSLIBS_MATH_INDEX_HPP
 
 #include <array>
 #include <algorithm>

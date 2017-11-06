@@ -1,5 +1,5 @@
-#ifndef ANGLE_HPP
-#define ANGLE_HPP
+#ifndef CSLIBS_MATH_ANGLE_HPP
+#define CSLIBS_MATH_ANGLE_HPP
 
 #include <cmath>
 #include <complex>
@@ -88,4 +88,4 @@ inline double fromComplex(const std::complex<double> &complex)
 }
 }
 
-#endif /* ANGLE_HPP */
+#endif /* CSLIBS_MATH_ANGLE_HPP */

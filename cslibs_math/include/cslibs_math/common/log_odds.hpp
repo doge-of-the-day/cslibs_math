@@ -1,5 +1,5 @@
-#ifndef LOG_ODDS_HPP
-#define LOG_ODDS_HPP
+#ifndef CSLIBS_MATH_LOG_ODDS_HPP
+#define CSLIBS_MATH_LOG_ODDS_HPP
 
 #include <cmath>
 
