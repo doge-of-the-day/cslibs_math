@@ -65,7 +65,7 @@ public:
         mean_ = (mean_ * W_1_ + w * p) / W_;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
-                correlated_(i, j) = (correlated_(i, j) * W_1_ + w * p(i) * p(j)) / (double) W_;
+                correlated_(i, j) = (correlated_(i, j) * W_1_ + w * p(i) * p(j)) / static_cast<double>(W_);
             }
         }
         ++sample_count_;

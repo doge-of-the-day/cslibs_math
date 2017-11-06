@@ -63,7 +63,7 @@ public:
         mean_ = (mean_ * n_1_ + p) / n_;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
-                correlated_(i, j) = (correlated_(i, j) * n_1_ + p(i) * p(j)) / (double) n_;
+                correlated_(i, j) = (correlated_(i, j) * n_1_ + p(i) * p(j)) / static_cast<double>(n_);
             }
         }
         ++n_;
@@ -81,8 +81,8 @@ public:
     inline Distribution& operator+=(const Distribution &other)
     {
         std::size_t _n = n_1_ + other.n_1_;
-        PointType   _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / (double) _n;
-        MatrixType  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / (double) _n;
+        PointType   _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
+        MatrixType  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<double>(_n);
         n_   = _n + 1;
         n_1_ = _n;
         mean_ = _mean;

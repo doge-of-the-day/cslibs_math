@@ -69,7 +69,7 @@ public:
 
     inline void add(const double rad)
     {
-        complex_mean_ = (complex_mean_ * static_cast<double>(n_1_) + angle::toComplex(rad)) /
+        complex_mean_ = (complex_mean_ * static_cast<double>(n_1_) + common::angle::toComplex(rad)) /
                          static_cast<double>(n_);
         ++n_;
         ++n_1_;
@@ -97,7 +97,7 @@ public:
     inline double getMean() const
     {
         if(dirty_) {
-            mean_ = angle::fromComplex(complex_mean_);
+            mean_ = common::angle::fromComplex(complex_mean_);
             dirty_ = false;
         }
         return mean_;
@@ -105,7 +105,7 @@ public:
 
     inline void getMean(double &mean) {
         if(dirty_) {
-            mean_ = angle::fromComplex(complex_mean_);
+            mean_ = common::angle::fromComplex(complex_mean_);
             dirty_ = false;
         }
         mean = mean_;

@@ -8,6 +8,8 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigen>
 
+#include <cslibs_math/common/equal.hpp>
+
 namespace cslibs_math {
 namespace random {
 
@@ -134,7 +136,7 @@ public:
     inline double getNEQ(const double neq)
     {
         double r = get();
-        while(r == neq) {
+        while(cslibs_math::common::eq(r,neq)) {
             r = get();
         }
         return r;
