@@ -23,10 +23,6 @@ before_script:
   - cd /build/ws
   - ln -s $CI_PROJECT_DIR src/$CI_PROJECT_NAME
   # clone dependencies here:
-  - cd src
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:hanten/cslibs_math.git cslibs_math
-  - cd cslibs_math
-  - git checkout devel
   - cd /build/ws/
 
 stages:
