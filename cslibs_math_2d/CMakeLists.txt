@@ -30,11 +30,11 @@ if(${tf_FOUND})
     cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_transform
         SRCS test/transform.cpp
     )
+    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_vector
+        SRCS test/vector.cpp
+    )
 endif()
 
-cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_vector
-    SRCS test/vector.cpp
-)
 cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_box
     SRCS test/box.cpp
 )
