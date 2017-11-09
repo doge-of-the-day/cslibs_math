@@ -11,10 +11,10 @@ TEST( Test_cslibs_math_2d, testBoxConstructors)
     rng_t rng(-10.0, 10.0);
 
     cslibs_math_2d::Box2d b0;
-    EXPECT_EQ(b0.getMin().x(), std::numeric_limits<double>::lowest());
-    EXPECT_EQ(b0.getMin().y(), std::numeric_limits<double>::lowest());
-    EXPECT_EQ(b0.getMax().x(), std::numeric_limits<double>::max());
-    EXPECT_EQ(b0.getMax().y(), std::numeric_limits<double>::max());
+    EXPECT_EQ(b0.getMin()(0), std::numeric_limits<double>::lowest());
+    EXPECT_EQ(b0.getMin()(1), std::numeric_limits<double>::lowest());
+    EXPECT_EQ(b0.getMax()(0), std::numeric_limits<double>::max());
+    EXPECT_EQ(b0.getMax()(1), std::numeric_limits<double>::max());
 
     double x0 = rng.get();
     double y0 = rng.get();
@@ -25,16 +25,16 @@ TEST( Test_cslibs_math_2d, testBoxConstructors)
     if(y0 > y1)
         std::swap(y0, y1);
     cslibs_math_2d::Box2d b1(x0,y0,x1,y1);
-    EXPECT_EQ(b1.getMin().x(), x0);
-    EXPECT_EQ(b1.getMin().y(), y0);
-    EXPECT_EQ(b1.getMax().x(), x1);
-    EXPECT_EQ(b1.getMax().y(), y1);
+    EXPECT_EQ(b1.getMin()(0), x0);
+    EXPECT_EQ(b1.getMin()(1), y0);
+    EXPECT_EQ(b1.getMax()(0), x1);
+    EXPECT_EQ(b1.getMax()(1), y1);
 
     cslibs_math_2d::Box2d b2({x0,y0},{x1,y1});
-    EXPECT_EQ(b1.getMin().x(), x0);
-    EXPECT_EQ(b1.getMin().y(), y0);
-    EXPECT_EQ(b1.getMax().x(), x1);
-    EXPECT_EQ(b1.getMax().y(), y1);
+    EXPECT_EQ(b1.getMin()(0), x0);
+    EXPECT_EQ(b1.getMin()(1), y0);
+    EXPECT_EQ(b1.getMax()(0), x1);
+    EXPECT_EQ(b1.getMax()(1), y1);
 }
 
 TEST( Test_cslibs_math_2d, testBoxIntersects)

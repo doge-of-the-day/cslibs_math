@@ -17,23 +17,23 @@ TEST(Test_cslibs_math_2d, testInitialization)
     rng_t rng(-10.0, 10.0);
 
     cslibs_math_2d::Vector2d v0;
-    EXPECT_EQ(v0.x(), 0.0);
-    EXPECT_EQ(v0.y(), 0.0);
+    EXPECT_EQ(v0(0), 0.0);
+    EXPECT_EQ(v0(1), 0.0);
 
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
         const double val1 = rng.get();
         cslibs_math_2d::Vector2d v1(val1);
-        EXPECT_EQ(v1.x(), val1);
-        EXPECT_EQ(v1.y(), val1);
+        EXPECT_EQ(v1(0), val1);
+        EXPECT_EQ(v1(1), val1);
 
         const double val2 = rng.get();
         cslibs_math_2d::Vector2d v2(val1,val2);
-        EXPECT_EQ(v2.x(), val1);
-        EXPECT_EQ(v2.y(), val2);
+        EXPECT_EQ(v2(0), val1);
+        EXPECT_EQ(v2(1), val2);
 
         cslibs_math_2d::Vector2d v3(v2);
-        EXPECT_EQ(v3.x(), v2.x());
-        EXPECT_EQ(v3.y(), v2.y());
+        EXPECT_EQ(v3(0), v2(0));
+        EXPECT_EQ(v3(1), v2(1));
     }
 }
 
@@ -48,12 +48,12 @@ TEST(Test_cslibs_math_2d, testMul)
         cslibs_math_2d::Vector2d v0(x,y);
         cslibs_math_2d::Vector2d v1 = v0 * s;
 
-        EXPECT_EQ(v1.x(), s * x);
-        EXPECT_EQ(v1.y(), s * y);
+        EXPECT_EQ(v1(0), s * x);
+        EXPECT_EQ(v1(1), s * y);
 
         v0 *= s;
-        EXPECT_EQ(v0.x(), s * x);
-        EXPECT_EQ(v0.y(), s * y);
+        EXPECT_EQ(v0(0), s * x);
+        EXPECT_EQ(v0(1), s * y);
     }
 }
 
@@ -71,12 +71,12 @@ TEST(Test_cslibs_math_2d, testDiv)
         cslibs_math_2d::Vector2d v0(x,y);
         cslibs_math_2d::Vector2d v1 = v0 / s;
 
-        EXPECT_EQ(v1.x(), x / s);
-        EXPECT_EQ(v1.y(), y / s);
+        EXPECT_EQ(v1(0), x / s);
+        EXPECT_EQ(v1(1), y / s);
 
         v0 /= s;
-        EXPECT_EQ(v0.x(), x / s);
-        EXPECT_EQ(v0.y(), y / s);
+        EXPECT_EQ(v0(0), x / s);
+        EXPECT_EQ(v0(1), y / s);
     }
 }
 
@@ -94,16 +94,16 @@ TEST(Test_cslibs_math_2d, testAdd)
         cslibs_math_2d::Vector2d v1(x1,y1);
 
         cslibs_math_2d::Vector2d v2 = v0 + v1;
-        EXPECT_EQ(v2.x(), x0 + x1);
-        EXPECT_EQ(v2.y(), y0 + y1);
+        EXPECT_EQ(v2(0), x0 + x1);
+        EXPECT_EQ(v2(1), y0 + y1);
 
         cslibs_math_2d::Vector2d v3 = v1 + v0;
-        EXPECT_EQ(v3.x(), x0 + x1);
-        EXPECT_EQ(v3.y(), y0 + y1);
+        EXPECT_EQ(v3(0), x0 + x1);
+        EXPECT_EQ(v3(1), y0 + y1);
 
         v1 += v0;
-        EXPECT_EQ(v1.x(), x0 + x1);
-        EXPECT_EQ(v1.y(), y0 + y1);
+        EXPECT_EQ(v1(0), x0 + x1);
+        EXPECT_EQ(v1(1), y0 + y1);
     }
 }
 
@@ -121,16 +121,16 @@ TEST(Test_cslibs_math_2d, testSub)
         cslibs_math_2d::Vector2d v1(x1,y1);
 
         cslibs_math_2d::Vector2d v2 = v0 - v1;
-        EXPECT_EQ(v2.x(), x0 - x1);
-        EXPECT_EQ(v2.y(), y0 - y1);
+        EXPECT_EQ(v2(0), x0 - x1);
+        EXPECT_EQ(v2(1), y0 - y1);
 
         cslibs_math_2d::Vector2d v3 = v1 - v0;
-        EXPECT_EQ(v3.x(), x1 - x0);
-        EXPECT_EQ(v3.y(), y1 - y0);
+        EXPECT_EQ(v3(0), x1 - x0);
+        EXPECT_EQ(v3(1), y1 - y0);
 
         v1 -= v0;
-        EXPECT_EQ(v1.x(), x1 - x0);
-        EXPECT_EQ(v1.y(), y1 - y0);
+        EXPECT_EQ(v1(0), x1 - x0);
+        EXPECT_EQ(v1(1), y1 - y0);
     }
 }
 
@@ -185,8 +185,8 @@ TEST(Test_cslibs_math_2d, testAssign)
         cslibs_math_2d::Vector2d v1;
         v1 = v0;
 
-        EXPECT_EQ(v1.x(), v0.x());
-        EXPECT_EQ(v1.y(), v1.y());
+        EXPECT_EQ(v1(0), v0(0));
+        EXPECT_EQ(v1(1), v1(1));
     }
 }
 
@@ -206,20 +206,20 @@ TEST(Test_cslibs_math_2d, testMinMax)
         cslibs_math_2d::Vector2d min = v0.min(v1);
         cslibs_math_2d::Vector2d max = v0.max(v1);
 
-        EXPECT_EQ(min.x(), std::min(v0.x(), v1.x()));
-        EXPECT_EQ(min.y(), std::min(v0.y(), v1.y()));
+        EXPECT_EQ(min(0), std::min(v0(0), v1(0)));
+        EXPECT_EQ(min(1), std::min(v0(1), v1(1)));
 
-        EXPECT_EQ(max.x(), std::max(v0.x(), v1.x()));
-        EXPECT_EQ(max.y(), std::max(v0.y(), v1.y()));
+        EXPECT_EQ(max(0), std::max(v0(0), v1(0)));
+        EXPECT_EQ(max(1), std::max(v0(1), v1(1)));
 
         min = v1.min(v0);
         max = v1.max(v0);
 
-        EXPECT_EQ(min.x(), std::min(v0.x(), v1.x()));
-        EXPECT_EQ(min.y(), std::min(v0.y(), v1.y()));
+        EXPECT_EQ(min(0), std::min(v0(0), v1(0)));
+        EXPECT_EQ(min(1), std::min(v0(1), v1(1)));
 
-        EXPECT_EQ(max.x(), std::max(v0.x(), v1.x()));
-        EXPECT_EQ(max.y(), std::max(v0.y(), v1.y()));
+        EXPECT_EQ(max(0), std::max(v0(0), v1(0)));
+        EXPECT_EQ(max(1), std::max(v0(1), v1(1)));
     }
 }
 

@@ -205,10 +205,10 @@ TEST(Test_muse_mcl_2d, testTransformTranslation)
 
     p    = t_0 * p;
     p_tf = t_0_tf * p_tf;
-    EXPECT_EQ(p.x(), p_x + x_0);
-    EXPECT_EQ(p.y(), p_y + y_0);
-    EXPECT_EQ(p.x(), p_tf.x());
-    EXPECT_EQ(p.y(), p_tf.y());
+    EXPECT_EQ(p(0), p_x + x_0);
+    EXPECT_EQ(p(1), p_y + y_0);
+    EXPECT_EQ(p(0), p_tf(0));
+    EXPECT_EQ(p(1), p_tf(1));
 
     const double x_1 = rng.get();
     const double y_1 = rng.get();
@@ -222,8 +222,8 @@ TEST(Test_muse_mcl_2d, testTransformTranslation)
 
     EXPECT_EQ(t_1.tx(), x_1 + x_0);
     EXPECT_EQ(t_1.ty(), y_1 + y_0);
-    EXPECT_EQ(t_1.tx(), t_1_tf.getOrigin().x());
-    EXPECT_EQ(t_1.ty(), t_1_tf.getOrigin().y());
+    EXPECT_EQ(t_1.tx(), t_1_tf.getOrigin()(0));
+    EXPECT_EQ(t_1.ty(), t_1_tf.getOrigin()(1));
     EXPECT_EQ(t_1.cosine(), 1.0);
     EXPECT_EQ(t_1.sine(), 0.0);
     EXPECT_EQ(t_1.yaw(), 0.0);
@@ -251,14 +251,14 @@ TEST(Test_muse_mcl_2d, testTransformRotation)
     cslibs_math_2d::Point2d   p(p_x, p_y);
     tf::Point p_tf(p_x, p_y, 0.0);
 
-    EXPECT_EQ(p.x(), p_tf.x());
-    EXPECT_EQ(p.y(), p_tf.y());
+    EXPECT_EQ(p(0), p_tf(0));
+    EXPECT_EQ(p(1), p_tf(1));
 
     p    = t_0 * p;
     p_tf = t_0_tf * p_tf;
 
-    EXPECT_NEAR(p.x(), p_tf.x(), 1e-5);
-    EXPECT_NEAR(p.y(), p_tf.y(), 1e-5);
+    EXPECT_NEAR(p(0), p_tf(0), 1e-5);
+    EXPECT_NEAR(p(1), p_tf(1), 1e-5);
 
     const double yaw_1 = cslibs_math::common::angle::normalize(rng.get());
 
@@ -307,14 +307,14 @@ TEST(Test_muse_mcl_2d, testTransformFull)
     cslibs_math_2d::Point2d   p(p_x, p_y);
     tf::Point p_tf(p_x, p_y, 0.0);
 
-    EXPECT_EQ(p.x(), p_tf.x());
-    EXPECT_EQ(p.y(), p_tf.y());
+    EXPECT_EQ(p(0), p_tf(0));
+    EXPECT_EQ(p(1), p_tf(1));
 
     p    = t_0 * p;
     p_tf = t_0_tf * p_tf;
 
-    EXPECT_NEAR(p.x(), p_tf.x(), 1e-5);
-    EXPECT_NEAR(p.y(), p_tf.y(), 1e-5);
+    EXPECT_NEAR(p(0), p_tf(0), 1e-5);
+    EXPECT_NEAR(p(1), p_tf(1), 1e-5);
 
     const double yaw_1 = cslibs_math::common::angle::normalize(rng.get());
     const double x_1 = rng.get();
@@ -336,8 +336,8 @@ TEST(Test_muse_mcl_2d, testTransformFull)
     EXPECT_EQ(t_0.ty(),  y_0);
     EXPECT_NE(t_1.tx(),  x_1);
     EXPECT_NE(t_1.ty(),  y_1);
-    EXPECT_NEAR(t_1.tx(),  t_1_tf_.getOrigin().x(), 1e-5);
-    EXPECT_NEAR(t_1.ty(),  t_1_tf_.getOrigin().y(), 1e-5);
+    EXPECT_NEAR(t_1.tx(),  t_1_tf_.getOrigin()(0), 1e-5);
+    EXPECT_NEAR(t_1.ty(),  t_1_tf_.getOrigin()(1), 1e-5);
     EXPECT_NEAR(t_1.yaw(), tf::getYaw(t_1_tf_.getRotation()), 1e-5);
 
     cslibs_math_2d::Transform2d t_2 = t_0 * t_1;
@@ -365,8 +365,8 @@ TEST(Test_muse_mcl_2d, testTransformInterpolation)
     cslibs_math_2d::Transform2d t_0(x_0, y_0, yaw_0);
     cslibs_math_2d::Transform2d t_0_inverse = t_0.inverse();
 
-    EXPECT_NEAR(t_0_inverse.tx(), tf_0_inverse.getOrigin().x(), 1e-5);
-    EXPECT_NEAR(t_0_inverse.ty(), tf_0_inverse.getOrigin().y(), 1e-5);
+    EXPECT_NEAR(t_0_inverse.tx(), tf_0_inverse.getOrigin()(0), 1e-5);
+    EXPECT_NEAR(t_0_inverse.ty(), tf_0_inverse.getOrigin()(1), 1e-5);
     EXPECT_NEAR(t_0_inverse.yaw(), tf::getYaw(tf_0_inverse.getRotation()), 1e-5);
 }
 
@@ -383,8 +383,8 @@ TEST(Test_muse_mcl_2d, testTransformInverse)
     cslibs_math_2d::Transform2d t_0_inverse = t_0.inverse();
     tf::Transform tf_0_inverse = tf_0.inverse();
 
-    EXPECT_NEAR(t_0_inverse.tx(), tf_0_inverse.getOrigin().x(), 1e-5);
-    EXPECT_NEAR(t_0_inverse.ty(), tf_0_inverse.getOrigin().y(), 1e-5);
+    EXPECT_NEAR(t_0_inverse.tx(), tf_0_inverse.getOrigin()(0), 1e-5);
+    EXPECT_NEAR(t_0_inverse.ty(), tf_0_inverse.getOrigin()(1), 1e-5);
     EXPECT_NEAR(t_0_inverse.tx(), -x_0, 1e-5);
     EXPECT_NEAR(t_0_inverse.ty(), -y_0, 1e-5);
     EXPECT_NEAR(t_0_inverse.yaw(), 0.0, 1e-5);
@@ -401,8 +401,8 @@ TEST(Test_muse_mcl_2d, testTransformInverse)
     cslibs_math_2d::Transform2d t_1_inverse = t_1.inverse();
     tf::Transform tf_1_inverse = tf_1.inverse();
 
-    EXPECT_NEAR(t_1_inverse.tx(), tf_1_inverse.getOrigin().x(), 1e-5);
-    EXPECT_NEAR(t_1_inverse.ty(), tf_1_inverse.getOrigin().y(), 1e-5);
+    EXPECT_NEAR(t_1_inverse.tx(), tf_1_inverse.getOrigin()(0), 1e-5);
+    EXPECT_NEAR(t_1_inverse.ty(), tf_1_inverse.getOrigin()(1), 1e-5);
     EXPECT_NEAR(t_1_inverse.yaw(),tf::getYaw(tf_1_inverse.getRotation()), 1e-5);
 
 
