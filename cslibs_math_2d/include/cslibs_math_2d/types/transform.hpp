@@ -80,8 +80,8 @@ public:
     inline Vector2d operator * (const Vector2d &v) const
     {
         return yaw_ == 0.0 ? v + translation_
-                           : Vector2d(cos_ * v.x() - sin_ * v.y() + translation_.x(),
-                                      sin_ * v.x() + cos_ * v.y() + translation_.y());
+                           : Vector2d(cos_ * v(0) - sin_ * v(1) + translation_(0),
+                                      sin_ * v(0) + cos_ * v(1) + translation_(1));
     }
 
     inline Transform2d operator * (const Transform2d &other) const
@@ -133,8 +133,7 @@ public:
 
     inline Transform2d& operator = (const Eigen::Vector3d &eigen)
     {
-        translation_.x() = eigen(0);
-        translation_.y() = eigen(1);
+        translation_ = eigen.block<2,1>(0,0);
         setYaw(eigen(2));
         return *this;
     }
@@ -150,8 +149,8 @@ public:
 
     inline Transform2d inverse() const
     {
-        return Transform2d(Vector2d(-cos_ * translation_.x() - sin_ * translation_.y(),
-                                    sin_ * translation_.x() - cos_ * translation_.y()),
+        return Transform2d(Vector2d(-cos_ * translation_(0) - sin_ * translation_(1),
+                                     sin_ * translation_(0) - cos_ * translation_(1)),
                            -yaw_,
                            -sin_,
                            cos_);
@@ -164,22 +163,22 @@ public:
 
     inline double & tx()
     {
-        return translation_.x();
+        return translation_(0);
     }
 
     inline double tx() const
     {
-        return translation_.x();
+        return translation_(0);
     }
 
     inline double & ty()
     {
-        return translation_.y();
+        return translation_(1);
     }
 
     inline double ty() const
     {
-        return translation_.y();
+        return translation_(1);
     }
 
     inline Vector2d & translation()
@@ -216,13 +215,13 @@ public:
 
     inline Eigen::Vector3d toEigen() const
     {
-        return Eigen::Vector3d(translation_.x(), translation_.y(), yaw_);
+        return Eigen::Vector3d(translation_(0), translation_(1), yaw_);
     }
 
     inline void setFrom(const Eigen::Vector3d &eigen)
     {
-        translation_.x() = eigen(0);
-        translation_.y() = eigen(1);
+        translation_(0) = eigen(0);
+        translation_(1) = eigen(1);
         setYaw(eigen(2));
     }
 
@@ -230,8 +229,8 @@ public:
                         const double y,
                         const double yaw)
     {
-        translation_.x() = x;
-        translation_.y() = y;
+        translation_(0) = x;
+        translation_(1) = y;
         setYaw(yaw);
     }
 

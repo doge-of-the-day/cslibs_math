@@ -59,7 +59,7 @@ public:
 
     inline Point2d lu() const
     {
-        return Point2d(min_.x(), max_.y());
+        return Point2d(min_(0), max_(1));
     }
 
     inline Point2d ll() const
@@ -74,7 +74,7 @@ public:
 
     inline Point2d rl() const
     {
-        return Point2d(max_.x(), min_.y());
+        return Point2d(max_(0), min_(1));
     }
 
     inline bool intersects(const Line2d &line) const
@@ -107,16 +107,16 @@ public:
             return true;
         };
 
-        if(!clip(-d.x(), -(min_.x()-p0.x()), t0, t1))
+        if(!clip(-d(0), -(min_(0)-p0(0)), t0, t1))
                 return false;
 
-        if(!clip(d.x(), (max_.x()-p0.x()), t0, t1))
+        if(!clip(d(0), (max_(0)-p0(0)), t0, t1))
                 return false;
 
-        if(!clip(-d.y(), -(min_.y()-p0.y()), t0, t1))
+        if(!clip(-d(1), -(min_(1)-p0(1)), t0, t1))
                 return false;
 
-        if(!clip(d.y(), (max_.y()-p0.y()), t0, t1))
+        if(!clip(d(1), (max_(1)-p0(1)), t0, t1))
                 return false;
         return true;
     }
@@ -151,22 +151,22 @@ public:
             return true;
         };
 
-        if(!clip(-d.x(), -(min_.x()-p0.x()), t0, t1))
+        if(!clip(-d(0), -(min_(0)-p0(0)), t0, t1))
                 return false;
 
-        if(!clip(d.x(), (max_.x()-p0.x()), t0, t1))
+        if(!clip(d(0), (max_(0)-p0(0)), t0, t1))
                 return false;
 
-        if(!clip(-d.y(), -(min_.y()-p0.y()), t0, t1))
+        if(!clip(-d(1), -(min_(1)-p0(1)), t0, t1))
                 return false;
 
-        if(!clip(d.y(), (max_.y()-p0.y()), t0, t1))
+        if(!clip(d(1), (max_(1)-p0(1)), t0, t1))
                 return false;
 
-        clipped[0].x() = p0.x() + t0*d.x();
-        clipped[0].y() = p0.y() + t0*d.y();
-        clipped[1].x() = p0.x() + t1*d.x();
-        clipped[1].y() = p0.y() + t1*d.y();
+        clipped[0](0) = p0(0) + t0*d(0);
+        clipped[0](1) = p0(1) + t0*d(1);
+        clipped[1](0) = p0(0) + t1*d(0);
+        clipped[1](1) = p0(1) + t1*d(1);
 
         return true;
     }

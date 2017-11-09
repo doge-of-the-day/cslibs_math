@@ -21,7 +21,7 @@ inline Transform2d from(const tf::Transform &t)
 
 inline tf::Vector3 from(const Vector2d &v)
 {
-    return tf::Vector3(v.x(), v.y(), 0.0);
+    return tf::Vector3(v(0), v(1), 0.0);
 }
 
 inline tf::Transform from(const Transform2d &t)
@@ -45,7 +45,7 @@ inline void from(const std::vector<tf::Vector3> &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const tf::Vector3 &v){return from(v);});
+                   [](const tf::Vector3 &v){return from(v);});
 }
 
 inline void from(const std::vector<Transform2d> &src,
