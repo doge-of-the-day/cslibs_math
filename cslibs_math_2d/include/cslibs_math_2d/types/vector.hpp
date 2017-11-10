@@ -9,7 +9,7 @@ using Vector2d = cslibs_math::linear::Vector<double,2>;
 
 inline double angle(const Vector2d &v)
 {
-    return std::atan2(v(1), v(1));
+    return std::atan2(v(1), v(0));
 }
 }
 

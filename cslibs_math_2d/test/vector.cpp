@@ -5,6 +5,7 @@
 
 #include <cslibs_math/random/random.hpp>
 #include <cslibs_math/common/angle.hpp>
+#include <cslibs_math_2d/types/vector.hpp>
 
 #include <tf/tf.h>
 
@@ -164,7 +165,7 @@ TEST(Test_cslibs_math_2d, testLenAngNorm)
         cslibs_math_2d::Vector2d v0(std::cos(a) * l, std::sin(a) * l);
         EXPECT_NEAR(v0.length(),  std::abs(l), 1e-5);
         EXPECT_NEAR(v0.length2(), l*l, 1e-5);
-        EXPECT_NEAR(v0.angle(), a, 1e-5);
+        EXPECT_NEAR(cslibs_math_2d::angle(v0), a, 1e-5);
 
 
 
@@ -238,17 +239,17 @@ TEST(Test_cslibs_math_2d, testDistance)
         cslibs_math_2d::Vector2d v1(x1,y1);
         cslibs_math_2d::Vector2d d = v0 - v1;
 
-        EXPECT_EQ(v0.distance(v1), d.length());
-        EXPECT_EQ(v1.distance(v0), d.length());
-        EXPECT_EQ(v0.distance2(v1), d.length2());
-        EXPECT_EQ(v1.distance2(v0), d.length2());
+        EXPECT_NEAR(v0.distance(v1), d.length(), 1e-6);
+        EXPECT_NEAR(v1.distance(v0), d.length(), 1e-6);
+        EXPECT_NEAR(v0.distance2(v1), d.length2(), 1e-6);
+        EXPECT_NEAR(v1.distance2(v0), d.length2(), 1e-6);
 
 
         d = v1 - v0;
-        EXPECT_EQ(v0.distance(v1), d.length());
-        EXPECT_EQ(v1.distance(v0), d.length());
-        EXPECT_EQ(v0.distance2(v1), d.length2());
-        EXPECT_EQ(v1.distance2(v0), d.length2());
+        EXPECT_NEAR(v0.distance(v1), d.length(), 1e-6);
+        EXPECT_NEAR(v1.distance(v0), d.length(), 1e-6);
+        EXPECT_NEAR(v0.distance2(v1), d.length2(), 1e-6);
+        EXPECT_NEAR(v1.distance2(v0), d.length2(), 1e-6);
     }
 }
 

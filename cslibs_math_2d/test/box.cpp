@@ -30,7 +30,7 @@ TEST( Test_cslibs_math_2d, testBoxConstructors)
     EXPECT_EQ(b1.getMax()(0), x1);
     EXPECT_EQ(b1.getMax()(1), y1);
 
-    cslibs_math_2d::Box2d b2({x0,y0},{x1,y1});
+    cslibs_math_2d::Box2d b2(x0,y0,x1,y1);
     EXPECT_EQ(b1.getMin()(0), x0);
     EXPECT_EQ(b1.getMin()(1), y0);
     EXPECT_EQ(b1.getMax()(0), x1);
