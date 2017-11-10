@@ -45,5 +45,9 @@ cslibs_math_add_unit_test_gtest(test_array
     SRCS test/array.cpp
 )
 
+cslibs_math_add_unit_test_gtest(test_hausdorff
+    SRCS test/hausdorff.cpp
+)
+
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

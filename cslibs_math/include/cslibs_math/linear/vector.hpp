@@ -17,22 +17,25 @@ public:
 
     using vector_t = Eigen::Matrix<T, Dim, 1>;
 
+    using type_t = T;
+    const static std::size_t size = Dim;
+
     inline Vector() :
         data_(vector_t::Zero())
     {
     }
 
-    inline Vector(const T &c) :
+    inline explicit Vector(const T &c) :
         data_(vector_t::Constant(c))
     {
     }
 
-    inline Vector(vector_t && data) :
+    inline explicit Vector(vector_t && data) :
         data_(std::move(data))
     {
     }
 
-    inline Vector(const vector_t & data) :
+    inline explicit Vector(const vector_t & data) :
         data_(data)
     {
     }
@@ -211,9 +214,16 @@ public:
         return data_;
     }
 
-    inline bool isNormal()
+    inline bool isNormal() const
     {
         return eigen::isnormal(data_);
+    }
+
+    inline static Vector random()
+    {
+        Vector v;
+        v.data_ = vector_t::Random();
+        return v;
     }
 
 private:

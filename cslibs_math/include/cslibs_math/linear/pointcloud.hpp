@@ -67,10 +67,19 @@ public:
         return data_.end();
     }
 
+    inline point_t const & at(const std::size_t i) const
+    {
+        return data_.at(i);
+    }
 
     inline std::vector<point_t> const & getPoints() const
     {
         return data_;
+    }
+
+    inline std::size_t size() const
+    {
+        return data_.size();
     }
 
     inline point_t min() const
