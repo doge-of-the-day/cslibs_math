@@ -1,8 +1,8 @@
 #ifndef CSLIBS_MATH_2D_POINTCLOUD2D_HPP
 #define CSLIBS_MATH_2D_POINTCLOUD2D_HPP
 
-#include <cslibs_math_2d/types/box.hpp>
-#include <cslibs_math_2d/types/transform.hpp>
+#include <cslibs_math_2d/linear/box.hpp>
+#include <cslibs_math_2d/linear/transform.hpp>
 
 #include <cslibs_math/linear/pointcloud.hpp>
 

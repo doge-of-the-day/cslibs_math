@@ -1,7 +1,7 @@
 #ifndef CSLIBS_MATH_2D_BOX_2D_HPP
 #define CSLIBS_MATH_2D_BOX_2D_HPP
 
-#include <cslibs_math_2d/types/line.hpp>
+#include <cslibs_math_2d/linear/line.hpp>
 
 #include <cslibs_math/common/equal.hpp>
 
