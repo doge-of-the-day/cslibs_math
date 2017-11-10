@@ -1,8 +1,8 @@
 #ifndef CSLIBS_MATH_2D_BOOST_HPP
 #define CSLIBS_MATH_2D_BOOST_HPP
 
-#include <cslibs_math_2d/types/line.hpp>
-#include <cslibs_math_2d/types/point.hpp>
+#include <cslibs_math_2d/linear/line.hpp>
+#include <cslibs_math_2d/linear/point.hpp>
 
 #include <cslibs_boost_geometry/types.hpp>
 

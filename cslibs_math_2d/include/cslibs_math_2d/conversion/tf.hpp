@@ -3,8 +3,8 @@
 
 #include <tf/tf.h>
 
-#include <cslibs_math_2d/types/covariance.hpp>
-#include <cslibs_math_2d/types/transform.hpp>
+#include <cslibs_math_2d/linear/covariance.hpp>
+#include <cslibs_math_2d/linear/transform.hpp>
 
 namespace cslibs_math_2d {
 namespace conversion {

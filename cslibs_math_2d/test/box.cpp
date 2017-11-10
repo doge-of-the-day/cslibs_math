@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <cslibs_math_2d/types/box.hpp>
-#include <cslibs_math_2d/types/transform.hpp>
+#include <cslibs_math_2d/linear/box.hpp>
+#include <cslibs_math_2d/linear/transform.hpp>
 #include <cslibs_math/random/random.hpp>
 
 using rng_t = cslibs_math::random::Uniform<1>;
