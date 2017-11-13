@@ -9,6 +9,8 @@ class Quaternion {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+    using quaternion_t = Eigen::Quaternion<double>;
+
     Quaternion() :
         data_(1.0, 0.0, 0.0, 0.0),
         data_inverse_(1.0, 0.0, 0.0, 0.0)
@@ -101,6 +103,18 @@ public:
         return data_.coeffs()(2);
     }
 
+    inline Quaternion operator * (const Quaternion &other) const
+    {
+
+    }
+
+    inline Quaternion& operator *= (const Quaternion &other)
+    {
+
+        return *this;
+    }
+
+
     inline double angle(const Quaternion &other) const
     {
 
@@ -108,27 +122,49 @@ public:
 
     inline Vector3d operator * (const Vector3d &v) const
     {
-
+        const quaternion_t rot = data_ * v * data_inverse_;
+        return Vector3d(rot.vec());
     }
 
     inline double roll() const
     {
-
+        const auto &coeffs = data_.coeffs();
+        const double sin_roll = 2.0 * coeffs(0) * coeffs(3) + coeffs(1) * coeffs(2);
+        const double cos_roll = 1.0 - 2.0 * (coeffs(0) * coeffs(0) + coeffs(1) * coeffs(1));
+        return std::atan2(sin_roll, cos_roll);
     }
 
     inline double pitch() const
     {
-
+        const auto &coeffs = data_.coeffs();
+        const double sin_pitch = 2.0 * coeffs(1) * coeffs(3) - coeffs(0) * cosffs(2);
+        return std::abs(sin_pitch) >= 1.0 ? std::copysign(M_PI / 2, sin_pitch) : std::asin(sin_pitch);
     }
 
     inline double yaw() const
     {
+        const auto &coeffs = data_.coeffs();
+        const double sin_yaw = 2.0 * coeffs(2) * coeffs(3) + coeffs(0) * coeffs(1);
+        const double cos_yaw = 1.0 - 2.0 * (coeffs(1) * coeffs(1) + coeffs(2) * coeffs(2));
+        return std::atan2(sin_yaw, cos_yaw);
+    }
 
+    inline void getRollPitchYaw(double &roll, double &pitch, double &yaw) const
+    {
+        const auto &coeffs = data_.coeffs();
+        const double sin_roll = 2.0 * coeffs(0) * coeffs(3) + coeffs(1) * coeffs(2);
+        const double cos_roll = 1.0 - 2.0 * (coeffs(0) * coeffs(0) + coeffs(1) * coeffs(1));
+        roll = std::atan2(sin_roll, cos_roll);
+        const double sin_pitch = 2.0 * coeffs(1) * coeffs(3) - coeffs(0) * cosffs(2);
+        pitch = std::abs(sin_pitch) >= 1.0 ? std::copysign(M_PI / 2, sin_pitch) : std::asin(sin_pitch);
+        const double sin_yaw = 2.0 * coeffs(2) * coeffs(3) + coeffs(0) * coeffs(1);
+        const double cos_yaw = 1.0 - 2.0 * (coeffs(1) * coeffs(1) + coeffs(2) * coeffs(2));
+        yaw = std::atan2(sin_yaw, cos_yaw);
     }
 
 private:
-    Eigen::Quaternion<double> data_;
-    Eigen::Quaternion<double> data_inverse_;
+    quaternion_t data_;
+    quaternion_t data_inverse_;
 
 };
 
