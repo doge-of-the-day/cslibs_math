@@ -4,13 +4,13 @@ project(cslibs_math_2d)
 find_package(catkin REQUIRED COMPONENTS
     cslibs_math
 )
+find_package(Eigen3 REQUIRED)
+
 catkin_package(
     INCLUDE_DIRS    include
     CATKIN_DEPENDS  cslibs_math
     DEPENDS         Eigen3
 )
-install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 
 include_directories(
     ${Eigen3_INCLUDE_DIR}
@@ -38,3 +38,7 @@ endif()
 cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_box
     SRCS test/box.cpp
 )
+
+install(DIRECTORY include/${PROJECT_NAME}/
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
