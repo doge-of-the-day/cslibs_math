@@ -1,10 +1,10 @@
-#ifndef CSLIBS_MATH_2D_COVARIANCE_2D_HPP
-#define CSLIBS_MATH_2D_COVARIANCE_2D_HPP
+#ifndef CSLIBS_MATH_3D_COVARIANCE_3D_HPP
+#define CSLIBS_MATH_3D_COVARIANCE_3D_HPP
 
 #include <cslibs_math/linear/matrix.hpp>
 
 namespace cslibs_math_3d {
-using Covariance2d = cslibs_math::linear::Matrix<double, 3, 3>;
+using Covariance3d = cslibs_math::linear::Matrix<double, 6, 6>;
 }
 
-#endif // CSLIBS_MATH_2D_COVARIANCE_2D_HPP
+#endif // CSLIBS_MATH_3D_COVARIANCE_3D_HPP

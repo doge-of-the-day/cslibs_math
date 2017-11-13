@@ -1,13 +1,13 @@
-#ifndef CSLIBS_MATH_2D_TRANSFORM_2D_HPP
-#define CSLIBS_MATH_2D_TRANSFORM_2D_HPP
+#ifndef CSLIBS_MATH_3D_TRANSFORM_3D_HPP
+#define CSLIBS_MATH_3D_TRANSFORM_3D_HPP
 
 #include <cslibs_math_3d/linear/vector.hpp>
 #include <cslibs_math/common/angle.hpp>
 
 namespace cslibs_math_3d {
-class Transform2d {
+class Transform3d {
 public:
-    inline Transform2d() :
+    inline Transform3d() :
         translation_(0.0, 0.0),
         yaw_(0.0),
         sin_(0.0),
@@ -15,12 +15,12 @@ public:
     {
     }
 
-    static inline Transform2d identity()
+    static inline Transform3d identity()
     {
-        return Transform2d(0.0, 0.0);
+        return Transform3d(0.0, 0.0);
     }
 
-    inline Transform2d(const double x,
+    inline Transform3d(const double x,
                        const double y) :
         translation_(x, y),
         yaw_(0.0),
@@ -29,7 +29,7 @@ public:
     {
     }
 
-    inline Transform2d(const Vector2d &translation) :
+    inline Transform3d(const Vector2d &translation) :
         translation_(translation),
         yaw_(0.0),
         sin_(0.0),
@@ -37,12 +37,12 @@ public:
     {
     }
 
-    inline Transform2d(const double yaw) :
-        Transform2d(0.0, 0.0, yaw)
+    inline Transform3d(const double yaw) :
+        Transform3d(0.0, 0.0, yaw)
     {
     }
 
-    inline Transform2d(const double x,
+    inline Transform3d(const double x,
                        const double y,
                        const double yaw) :
         translation_(x, y),
@@ -52,7 +52,7 @@ public:
     {
     }
 
-    inline Transform2d(const Vector2d &translation,
+    inline Transform3d(const Vector2d &translation,
                        const double yaw) :
         translation_(translation),
         yaw_(yaw),
@@ -61,7 +61,7 @@ public:
     {
     }
 
-    inline Transform2d(const Transform2d &other) :
+    inline Transform3d(const Transform3d &other) :
         translation_(other.translation_),
         yaw_(other.yaw_),
         sin_(other.sin_),
@@ -69,7 +69,7 @@ public:
     {
     }
 
-    inline Transform2d(Transform2d &&other) :
+    inline Transform3d(Transform3d &&other) :
         translation_(other.translation_),
         yaw_(other.yaw_),
         sin_(other.sin_),
@@ -84,24 +84,24 @@ public:
                                       sin_ * v(0) + cos_ * v(1) + translation_(1));
     }
 
-    inline Transform2d operator * (const Transform2d &other) const
+    inline Transform3d operator * (const Transform3d &other) const
     {
-        return yaw_ == 0.0 ? Transform2d(other.translation_ + translation_,
+        return yaw_ == 0.0 ? Transform3d(other.translation_ + translation_,
                                          other.yaw_,
                                          other.sin_,
                                          other.cos_)
-                           : other.yaw_ == 0.0 ? Transform2d((*this) * other.translation_,
+                           : other.yaw_ == 0.0 ? Transform3d((*this) * other.translation_,
                                                              yaw_,
                                                              sin_,
                                                              cos_)
-                                               : Transform2d ((*this) * other.translation_,
+                                               : Transform3d ((*this) * other.translation_,
                                                               cslibs_math::common::angle::normalize(yaw_ + other.yaw_),
                                                               sin_ * other.cos_ + cos_ * other.sin_,
                                                               cos_ * other.cos_ - sin_ * other.sin_);
     }
 
 
-    inline Transform2d & operator *= (const Transform2d &other)
+    inline Transform3d & operator *= (const Transform3d &other)
     {
         if(yaw_ == 0.0) {
             translation_ += other.translation_;
@@ -121,7 +121,7 @@ public:
         return *this;
     }
 
-    inline Transform2d& operator = (const Transform2d &other)
+    inline Transform3d& operator = (const Transform3d &other)
     {
         yaw_ = other.yaw_;
         sin_ = other.sin_;
@@ -131,14 +131,14 @@ public:
     }
 
 
-    inline Transform2d& operator = (const Eigen::Vector3d &eigen)
+    inline Transform3d& operator = (const Eigen::Vector3d &eigen)
     {
         translation_ = eigen.block<2,1>(0,0);
         setYaw(eigen(2));
         return *this;
     }
 
-    inline Transform2d& operator = (Transform2d &&other)
+    inline Transform3d& operator = (Transform3d &&other)
     {
         yaw_ = other.yaw_;
         sin_ = other.sin_;
@@ -147,16 +147,16 @@ public:
         return *this;
     }
 
-    inline Transform2d inverse() const
+    inline Transform3d inverse() const
     {
-        return Transform2d(Vector2d(-cos_ * translation_(0) - sin_ * translation_(1),
+        return Transform3d(Vector2d(-cos_ * translation_(0) - sin_ * translation_(1),
                                      sin_ * translation_(0) - cos_ * translation_(1)),
                            -yaw_,
                            -sin_,
                            cos_);
     }
 
-    inline Transform2d operator -() const
+    inline Transform3d operator -() const
     {
         return inverse();
     }
@@ -234,7 +234,7 @@ public:
         setYaw(yaw);
     }
 
-    inline Transform2d interpolate(const Transform2d &other,
+    inline Transform3d interpolate(const Transform3d &other,
                                    const double ratio) const
     {
         assert(ratio  >= 0.0);
@@ -249,11 +249,11 @@ public:
         const  double ratio_inverse = 1.0 - ratio;
         const  Vector2d translation = translation_ * ratio_inverse + other.translation_ * ratio;
         const  double   yaw = cslibs_math::common::angle::normalize(yaw_ * ratio_inverse + other.yaw_ * ratio);
-        return Transform2d(translation, yaw);
+        return Transform3d(translation, yaw);
     }
 
 private:
-    inline Transform2d(const Vector2d &translation,
+    inline Transform3d(const Vector2d &translation,
                        const double yaw,
                        const double sin,
                        const double cos) :
@@ -277,4 +277,4 @@ inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Tran
     return out;
 }
 
-#endif // CSLIBS_MATH_2D_TRANSFORM_2D_HPP
+#endif // CSLIBS_MATH_3D_TRANSFORM_3D_HPP

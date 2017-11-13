@@ -1,5 +1,5 @@
-#ifndef CSLIBS_MATH_2D_POINTCLOUD2D_HPP
-#define CSLIBS_MATH_2D_POINTCLOUD2D_HPP
+#ifndef CSLIBS_MATH_3D_POINTCLOUD_3D_HPP
+#define CSLIBS_MATH_3D_POINTCLOUD_3D_HPP
 
 #include <cslibs_math_3d/linear/box.hpp>
 #include <cslibs_math_3d/linear/transform.hpp>
@@ -10,13 +10,13 @@
 #include <vector>
 
 namespace cslibs_math_3d {
-using Pointcloud2d = cslibs_math::linear::Pointcloud<Point2d>;
-inline Box2d boundingBox(const Pointcloud2d &points)
+using Pointcloud3d = cslibs_math::linear::Pointcloud<Point3d>;
+inline Box3d boundingBox(const Pointcloud3d &points)
 {
-    return Box2d(points.min(), points.max());
+    return Box3d(points.min(), points.max());
 }
 
-inline void transform(const Transform2d &t, Pointcloud2d &points)
+inline void transform(const Transform3d &t, Pointcloud3d &points)
 {
     std::for_each(points.begin(), points.end(),
                   [&t](Point2d &p){p = t * p;});
@@ -25,4 +25,4 @@ inline void transform(const Transform2d &t, Pointcloud2d &points)
 
 
 
-#endif // CSLIBS_MATH_2D_POINTCLOUD2D_HPP
+#endif // CSLIBS_MATH_2D_POINTCLOUD_3D_HPP

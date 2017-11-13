@@ -1,5 +1,5 @@
-#ifndef CSLIBS_MATH_2D_BOX_2D_HPP
-#define CSLIBS_MATH_2D_BOX_2D_HPP
+#ifndef CSLIBS_MATH_3D_BOX_3D_HPP
+#define CSLIBS_MATH_3D_BOX_3D_HPP
 
 #include <cslibs_math_3d/linear/line.hpp>
 
@@ -9,13 +9,13 @@
 #include <set>
 
 namespace cslibs_math_3d {
-class Box2d
+class Box3d
 {
 public:
-    using point_set_t    = std::set<Point2d>;
-    using coefficients_t = std::array<double, 2>;
+    using point_set_t    = std::set<Point3d>;
+    using coefficients_t = std::array<double, 3>;
 
-    inline Box2d() :
+    inline Box3d() :
         min_(std::numeric_limits<double>::lowest(),
              std::numeric_limits<double>::lowest()),
         max_(std::numeric_limits<double>::max(),
@@ -23,61 +23,61 @@ public:
     {
     }
 
-    inline Box2d(const double min_x, const double min_y,
-                 const double max_x, const double max_y) :
-        min_(min_x, min_y),
-        max_(max_x, max_y)
+    inline Box3d(const double min_x, const double min_y, const double min_z,
+                 const double max_x, const double max_y, const double max_z) :
+        min_(min_x, min_y, min_z),
+        max_(max_x, max_y, max_z)
     {
     }
 
-    inline Box2d(const Point2d &min,
-                 const Point2d &max) :
+    inline Box3d(const Point3d &min,
+                 const Point3d &max) :
         min_(min),
         max_(max)
     {
     }
 
-    inline void setMin(const Point2d &min)
+    inline void setMin(const Point3d &min)
     {
         min_ = min;
     }
 
-    inline void setMax(const Point2d &max)
+    inline void setMax(const Point3d &max)
     {
         max_ = max;
     }
 
-    inline Point2d const & getMin() const
+    inline Point3d const & getMin() const
     {
         return min_;
     }
 
-    inline Point2d const & getMax() const
+    inline Point3d const & getMax() const
     {
         return max_;
     }
 
-    inline Point2d lu() const
+    inline Point3d lu() const
     {
-        return Point2d(min_(0), max_(1));
+        return Point3d(min_(0), max_(1));
     }
 
-    inline Point2d ll() const
+    inline Point3d ll() const
     {
         return min_;
     }
 
-    inline Point2d ru() const
+    inline Point3d ru() const
     {
         return max_;
     }
 
-    inline Point2d rl() const
+    inline Point3d rl() const
     {
-        return Point2d(max_(0), min_(1));
+        return Point3d(max_(0), min_(1));
     }
 
-    inline bool intersects(const Line2d &line) const
+    inline bool intersects(const Line3d &line) const
     {
         //// LIANG BARSKY
         const auto p0 = line[0];
@@ -172,16 +172,16 @@ public:
     }
 
 private:
-    Point2d min_;
-    Point2d max_;
+    Point3d min_;
+    Point3d max_;
 
 }__attribute__ ((aligned (32)));
 }
 
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Box2d &b)
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Box3d &b)
 {
     out << "[" << b.getMin() << "," << b.getMax() << "]";
     return out;
 }
 
-#endif // CSLIBS_MATH_2D_BOX_2D_HPP
+#endif // CSLIBS_MATH_3D_BOX_2D_HPP

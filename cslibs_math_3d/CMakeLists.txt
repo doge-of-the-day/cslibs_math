@@ -39,5 +39,10 @@ cslibs_math_3d_show_headers()
 #    )
 #endif()
 
+
+cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_rotation
+    SRCS test/test_rotation.cpp
+)
+
 install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

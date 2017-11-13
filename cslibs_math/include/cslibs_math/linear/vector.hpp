@@ -219,6 +219,11 @@ public:
         return eigen::isnormal(data_);
     }
 
+    inline T angle(const Vector &other)
+    {
+        return std::acos(dot(other) / (length() * other.length()));
+    }
+
     inline static Vector random()
     {
         Vector v;
