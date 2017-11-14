@@ -19,7 +19,7 @@ inline Box3d boundingBox(const Pointcloud3d &points)
 inline void transform(const Transform3d &t, Pointcloud3d &points)
 {
     std::for_each(points.begin(), points.end(),
-                  [&t](Point2d &p){p = t * p;});
+                  [&t](Point3d &p){p = t * p;});
 }
 }
 

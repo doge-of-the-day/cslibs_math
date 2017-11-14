@@ -7,27 +7,27 @@
 namespace cslibs_math {
 namespace common {
 template<typename T>
-inline bool eq(const T a, const T b)
+inline bool eq(const T a, const T b, const T eps = std::numeric_limits<T>::epsilon())
 {
-    return std::abs(a - b) < std::numeric_limits<T>::epsilon();
+    return std::abs(a - b) < eps;
 }
 
 template<typename T>
-inline bool ge(const T a, const T b)
+inline bool ge(const T a, const T b, const T eps = std::numeric_limits<T>::epsilon())
 {
-    return eq(a,b) || a > b;
+    return eq(a,b, eps) || a > b;
 }
 
 template<typename T>
-inline bool le(const T a, const T b)
+inline bool le(const T a, const T b, const T eps = std::numeric_limits<T>::epsilon())
 {
-    return eq(a,b) || a < b;
+    return eq(a,b, eps) || a < b;
 }
 
 template<typename T>
-inline bool neq(const T a, const T b)
+inline bool neq(const T a, const T b, const T eps = std::numeric_limits<T>::epsilon())
 {
-    return !eq(a,b);
+    return !eq(a,b, eps);
 }
 }
 }
