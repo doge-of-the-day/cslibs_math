@@ -25,24 +25,21 @@ include_directories(
 cslibs_math_3d_show_headers()
 
 #### test
-#find_package(tf QUIET)
-#if(${tf_FOUND})
-#    include_directories(
-#        ${tf_INCLUDE_DIRS}
-#    )
-
+find_package(tf QUIET)
+if(${tf_FOUND})
+    include_directories(
+        ${tf_INCLUDE_DIRS}
+    )
+    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_quaternion
+        SRCS test/quaternion.cpp
+    )
 #    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_transform
 #        SRCS test/transform.cpp
 #    )
 #    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_vector
 #        SRCS test/vector.cpp
 #    )
-#endif()
-
-
-cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_rotation
-    SRCS test/test_rotation.cpp
-)
+endif()
 
 install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
