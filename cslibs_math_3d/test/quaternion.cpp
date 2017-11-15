@@ -43,21 +43,23 @@ TEST(Test_cslibs_math_3d, testYawConstructor)
         EXPECT_NEAR(q.pitch(), 0.0, 1e-6);
     }
 
+    cslibs_math_3d::Quaternion q(M_PI);
     cslibs_math::utility::tiny_time::duration_t dur;
     cslibs_math::utility::tiny_time::duration_t dur_tf;
     cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const cslibs_math_3d::Quaternion q(M_PI);
+        q = cslibs_math_3d::Quaternion(M_PI);
     }
+    tf::Quaternion tf_q;
     dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const tf::Quaternion tf_q = tf::createQuaternionFromYaw(M_PI);
+        tf_q = tf::createQuaternionFromYaw(M_PI);
     }
     dur_tf = cslibs_math::utility::tiny_time::clock_t::now() - start;
     std::cout << "[runtimes  ]" << "\n";
     std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
-    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur_tf) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
@@ -83,21 +85,23 @@ TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
                     cslibs_math::common::eq(std::abs(yaw) + std::abs(q.yaw()), M_PI, 1e-6));
     }
 
+    cslibs_math_3d::Quaternion q(M_PI, 0.0, 0.0);
     cslibs_math::utility::tiny_time::duration_t dur;
     cslibs_math::utility::tiny_time::duration_t dur_tf;
     cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const cslibs_math_3d::Quaternion q(M_PI, 0.0, 0.0);
+        q = cslibs_math_3d::Quaternion(M_PI, 0.0, 0.0);
     }
     dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    tf::Quaternion tf_q(tf::createQuaternionFromRPY(M_PI, 0.0, 0.0));
     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const tf::Quaternion tf_q = tf::createQuaternionFromRPY(M_PI, 0.0, 0.0);
+        tf_q = tf::createQuaternionFromRPY(M_PI, 0.0, 0.0);
     }
     dur_tf = cslibs_math::utility::tiny_time::clock_t::now() - start;
     std::cout << "[runtimes  ]" << "\n";
     std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
-    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur_tf) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testCoefficientConstructor)
@@ -119,19 +123,21 @@ TEST(Test_cslibs_math_3d, testCoefficientConstructor)
     cslibs_math::utility::tiny_time::duration_t dur;
     cslibs_math::utility::tiny_time::duration_t dur_tf;
     cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
+    cslibs_math_3d::Quaternion q(0.0,0.0,0.0,1.0);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const cslibs_math_3d::Quaternion q(0.0,0.0,0.0,1.0);
+        q = cslibs_math_3d::Quaternion(0.0,0.0,0.0,1.0);
     }
     dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    tf::Quaternion tf_q(0.0,0.0,0.0,1.0);
     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const tf::Quaternion q(0.0,0.0,0.0,1.0);
+        tf_q = tf::Quaternion (0.0,0.0,0.0,1.0);
     }
     dur_tf = cslibs_math::utility::tiny_time::clock_t::now() - start;
 
     std::cout << "[runtimes  ]" << "\n";
     std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
-    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur_tf) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testCopyMoveConstructor)
@@ -156,6 +162,24 @@ TEST(Test_cslibs_math_3d, testCopyMoveConstructor)
         EXPECT_NEAR(q0.y(), q2.y(), 1e-6);
         EXPECT_NEAR(q0.z(), q2.z(), 1e-6);
     }
+
+    cslibs_math::utility::tiny_time::duration_t dur_copy;
+    cslibs_math::utility::tiny_time::duration_t dur_move;
+    cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
+    const cslibs_math_3d::Quaternion q0(0.0,0.0,0.0,1.0);
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const cslibs_math_3d::Quaternion q1(q0);
+    }
+    dur_copy = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const cslibs_math_3d::Quaternion q1(std::move(q0));
+    }
+    dur_move = cslibs_math::utility::tiny_time::clock_t::now() - start;
+
+    std::cout << "[runtimes  ]" << "\n";
+    std::cout << "[copy      ]: " << cslibs_math::utility::tiny_time::microseconds(dur_copy) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[move      ]: " << cslibs_math::utility::tiny_time::microseconds(dur_move) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testCopyMoveAssignment)
@@ -174,7 +198,8 @@ TEST(Test_cslibs_math_3d, testCopyMoveAssignment)
         EXPECT_NEAR(q0.x(), q1.x(), 1e-6);
         EXPECT_NEAR(q0.y(), q1.y(), 1e-6);
         EXPECT_NEAR(q0.z(), q1.z(), 1e-6);
-        const cslibs_math_3d::Quaternion q2(std::move(q1));
+        cslibs_math_3d::Quaternion q2;
+        q2 = std::move(q1);
         EXPECT_NEAR(q0.w(), q2.w(), 1e-6);
         EXPECT_NEAR(q0.x(), q2.x(), 1e-6);
         EXPECT_NEAR(q0.y(), q2.y(), 1e-6);
@@ -209,8 +234,42 @@ TEST(Test_cslibs_math_3d, testOperatorPlus)
         EXPECT_NEAR(tf_q2.x(), q3.x(), 1e-6);
         EXPECT_NEAR(tf_q2.y(), q3.y(), 1e-6);
         EXPECT_NEAR(tf_q2.z(), q3.z(), 1e-6);
-
     }
+
+    cslibs_math_3d::Quaternion q(0.0,0.0,0.0,1.0);
+    cslibs_math::utility::tiny_time::duration_t dur;
+    cslibs_math::utility::tiny_time::duration_t dur_tf;
+    cslibs_math::utility::tiny_time::duration_t dur_assign;
+    cslibs_math::utility::tiny_time::duration_t dur_tf_assign;
+    cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        q + q;
+    }
+    dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    tf::Quaternion tf_q(0.0,0.0,0.0,1.0);
+    start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        tf_q + tf_q;
+    }
+    dur_tf = cslibs_math::utility::tiny_time::clock_t::now() - start;
+
+    start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        q += q;
+    }
+    dur_assign = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        tf_q += tf_q;
+    }
+    dur_tf_assign = cslibs_math::utility::tiny_time::clock_t::now() - start;
+
+
+    std::cout << "[runtimes  ]" << "\n";
+    std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur_tf) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur_assign) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur_tf_assign) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testOperatorMinus)
