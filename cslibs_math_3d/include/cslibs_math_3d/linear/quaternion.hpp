@@ -259,8 +259,7 @@ public:
 
     inline Quaternion conjugate() const
     {
-        const quaternion_t con = data_.conjugate();
-        return Quaternion(con, con);
+        return Quaternion(data_.conjugate());
     }
 
     static inline Quaternion random()

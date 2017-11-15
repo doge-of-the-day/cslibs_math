@@ -2,16 +2,18 @@
 
 #include <cslibs_math/common/equal.hpp>
 #include <cslibs_math/common/angle.hpp>
+#include <cslibs_math/utility/tiny_time.hpp>
+
 #include <cslibs_math_3d/linear/vector.hpp>
 #include <cslibs_math_3d/linear/quaternion.hpp>
 
-
 #include <gtest/gtest.h>
-
 #include <tf/tf.h>
 
-const static std::size_t ITERATIONS = 1000000;
+#include <chrono>
 
+
+const static std::size_t ITERATIONS = 1000000;
 
 TEST(Test_cslibs_math_3d, testDefaultConstructor)
 {
@@ -30,6 +32,7 @@ TEST(Test_cslibs_math_3d, testYawConstructor)
         const double yaw = rng.get();
         const cslibs_math_3d::Quaternion q(yaw);
         const tf::Quaternion tf_q = tf::createQuaternionFromYaw(yaw);
+
         EXPECT_NEAR(tf_q.w(), q.w(), 1e-6);
         EXPECT_NEAR(tf_q.x(), q.x(), 1e-6);
         EXPECT_NEAR(tf_q.y(), q.y(), 1e-6);
@@ -39,6 +42,22 @@ TEST(Test_cslibs_math_3d, testYawConstructor)
         EXPECT_NEAR(q.roll(), 0.0, 1e-6);
         EXPECT_NEAR(q.pitch(), 0.0, 1e-6);
     }
+
+    cslibs_math::utility::tiny_time::duration_t dur;
+    cslibs_math::utility::tiny_time::duration_t dur_tf;
+    cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const cslibs_math_3d::Quaternion q(M_PI);
+    }
+    dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const tf::Quaternion tf_q = tf::createQuaternionFromYaw(M_PI);
+    }
+    dur_tf = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    std::cout << "[runtimes  ]" << "\n";
+    std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
@@ -50,6 +69,7 @@ TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
         const double yaw   = rng.get();
         const cslibs_math_3d::Quaternion q(roll, pitch, yaw);
         const tf::Quaternion tf_q = tf::createQuaternionFromRPY(roll, pitch, yaw);
+
         EXPECT_NEAR(tf_q.w(), q.w(), 1e-6);
         EXPECT_NEAR(tf_q.x(), q.x(), 1e-6);
         EXPECT_NEAR(tf_q.y(), q.y(), 1e-6);
@@ -62,6 +82,22 @@ TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
         EXPECT_TRUE(cslibs_math::common::eq(yaw, q.yaw(), 1e-6) ||
                     cslibs_math::common::eq(std::abs(yaw) + std::abs(q.yaw()), M_PI, 1e-6));
     }
+
+    cslibs_math::utility::tiny_time::duration_t dur;
+    cslibs_math::utility::tiny_time::duration_t dur_tf;
+    cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const cslibs_math_3d::Quaternion q(M_PI, 0.0, 0.0);
+    }
+    dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const tf::Quaternion tf_q = tf::createQuaternionFromRPY(M_PI, 0.0, 0.0);
+    }
+    dur_tf = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    std::cout << "[runtimes  ]" << "\n";
+    std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testCoefficientConstructor)
@@ -79,6 +115,23 @@ TEST(Test_cslibs_math_3d, testCoefficientConstructor)
         EXPECT_NEAR(tf_q.y(), q.y(), 1e-6);
         EXPECT_NEAR(tf_q.z(), q.z(), 1e-6);
     }
+
+    cslibs_math::utility::tiny_time::duration_t dur;
+    cslibs_math::utility::tiny_time::duration_t dur_tf;
+    cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const cslibs_math_3d::Quaternion q(0.0,0.0,0.0,1.0);
+    }
+    dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
+    start = cslibs_math::utility::tiny_time::clock_t::now();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const tf::Quaternion q(0.0,0.0,0.0,1.0);
+    }
+    dur_tf = cslibs_math::utility::tiny_time::clock_t::now() - start;
+
+    std::cout << "[runtimes  ]" << "\n";
+    std::cout << "[cslibs    ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
+    std::cout << "[tf        ]: " << cslibs_math::utility::tiny_time::microseconds(dur) / static_cast<double>(ITERATIONS) << "µs \n";
 }
 
 TEST(Test_cslibs_math_3d, testCopyMoveConstructor)
