@@ -16,10 +16,8 @@ public:
     using coefficients_t = std::array<double, 3>;
 
     inline Box3d() :
-        min_(std::numeric_limits<double>::lowest(),
-             std::numeric_limits<double>::lowest()),
-        max_(std::numeric_limits<double>::max(),
-             std::numeric_limits<double>::max())
+        min_(std::numeric_limits<double>::lowest()),
+        max_(std::numeric_limits<double>::max())
     {
     }
 
@@ -121,8 +119,8 @@ public:
         return true;
     }
 
-    inline bool intersection(const Line2d &line,
-                             Line2d &clipped)
+    inline bool intersection(const Line3d &line,
+                             Line3d &clipped)
     {
         const auto p0 = line[0];
         const auto p1 = line[1];

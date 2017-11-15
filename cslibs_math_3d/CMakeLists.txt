@@ -33,9 +33,9 @@ if(${tf_FOUND})
     cslibs_math_3d_add_unit_test_gtest(${PROJECT_NAME}_test_quaternion
         SRCS test/quaternion.cpp
     )
-#    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_transform
-#        SRCS test/transform.cpp
-#    )
+    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_transform
+        SRCS test/transform.cpp
+    )
 #    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_vector
 #        SRCS test/vector.cpp
 #    )
