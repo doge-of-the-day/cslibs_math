@@ -8,7 +8,7 @@
 namespace cslibs_math_3d {
 class Transform3d {
 public:
-    using eigne_vector_6d_t = Eigen::Matrix<double, 6, 1>;
+    using eigen_vector_6d_t = Eigen::Matrix<double, 6, 1>;
 
     inline Transform3d()
     {
@@ -52,6 +52,13 @@ public:
     {
     }
 
+    inline Transform3d(const Vector3d &translation,
+                       const Quaternion &rotation) :
+        translation_(translation),
+        rotation_(rotation)
+    {
+    }
+
     inline Transform3d(const Transform3d &other) :
         translation_(other.translation_),
         rotation_(other.rotation_)
@@ -71,13 +78,13 @@ public:
 
     inline Transform3d operator * (const Transform3d &other) const
     {
-        return Transform3d(rotation_ * other.translation_, rotation_ * other.rotation_);
+        return Transform3d(translation_ + rotation_ * other.translation_, rotation_ * other.rotation_);
     }
 
     inline Transform3d & operator *= (const Transform3d &other)
     {
-        translation_ = (*this) * other.translation_;
-        rotation_ *= other.rotation_;
+        translation_ += rotation_ * other.translation_;
+        rotation_    *= other.rotation_;
         return *this;
     }
 
@@ -106,7 +113,7 @@ public:
     inline Transform3d inverse() const
     {
         Quaternion rotation_inverse = rotation_.invert();
-        return Transform3d(rotation_inverse * translation_,
+        return Transform3d(rotation_inverse * -translation_,
                            rotation_inverse);
     }
 
@@ -137,7 +144,7 @@ public:
 
     inline double tz() const
     {
-        return translation_(1);
+        return translation_(2);
     }
 
     inline double roll() const
@@ -155,6 +162,26 @@ public:
         return rotation_.yaw();
     }
 
+    inline void setRoll(const double roll)
+    {
+        rotation_.setRoll(roll);
+    }
+
+    inline void setPitch(const double pitch)
+    {
+        rotation_.setPitch(pitch);
+    }
+
+    inline void setYaw(const double yaw)
+    {
+        rotation_.setYaw(yaw);
+    }
+
+    inline void setRPY(const double roll, const double pitch, const double yaw)
+    {
+        rotation_.setRPY(roll, pitch, yaw);
+    }
+
     inline Vector3d & translation()
     {
         return translation_;
@@ -165,18 +192,23 @@ public:
         return translation_;
     }
 
-    inline void setYaw(const double yaw)
+    inline Quaternion & rotation()
     {
-        rotation_.setYaw(yaw);
+        return rotation_;
     }
 
-    inline eigne_vector_6d_t toEigen() const
+    inline Quaternion const & rotation() const
     {
-        return cslibs_math::linear::eigen::create<eigne_vector_6d_t>(translation_(0), translation_(1), translation_(2),
+        return rotation_;
+    }
+
+    inline eigen_vector_6d_t toEigen() const
+    {
+        return cslibs_math::linear::eigen::create<eigen_vector_6d_t>(translation_(0), translation_(1), translation_(2),
                                                                      rotation_.roll(), rotation_.pitch(), rotation_.yaw());
     }
 
-    inline void setFrom(const Eigen::Matrix<double, 6, 1> &eigen)
+    inline void setFrom(const eigen_vector_6d_t &eigen)
     {
         translation_(0) = eigen(0);
         translation_(1) = eigen(1);
@@ -216,14 +248,7 @@ public:
     }
 
 private:
-    inline Transform3d(const Vector3d &translation,
-                       const Quaternion &rotation) :
-        translation_(translation),
-        rotation_(rotation)
-    {
-    }
-
-    Vector3d    translation_;
+   Vector3d    translation_;
     Quaternion  rotation_;
 } __attribute__ ((aligned (64)));
 }

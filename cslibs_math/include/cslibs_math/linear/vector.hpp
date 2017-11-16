@@ -161,7 +161,7 @@ public:
 
     inline Vector operator - () const
     {
-        return Vector(-data_);
+        return Vector(vector_t(-data_));
     }
 
     operator const vector_t& () const

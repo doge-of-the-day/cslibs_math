@@ -9,16 +9,19 @@
 namespace cslibs_math_3d {
 class Quaternion {
 public:
-    using data_t = std::array<double, 4>;
+    using data_t = double[4];
 
     inline Quaternion() :
-        data_{{0.0, 0.0, 0.0, 1.0}}
+        data_{0.0, 0.0, 0.0, 1.0}
     {
     }
 
-    inline Quaternion(const double yaw)
+    inline Quaternion(const double yaw) :
+        data_{0.0, 0.0, 0.0, 1.0}
     {
-        setYaw(yaw);
+        const double yaw_2 = yaw   * 0.5;
+        data_[2] = sin(yaw_2);
+        data_[3] = cos(yaw_2);
     }
 
     inline Quaternion(const double roll, const double pitch, const double yaw)
@@ -26,30 +29,33 @@ public:
         setRPY(roll, pitch, yaw);
     }
 
-    inline Quaternion(const double x, const double y, const double z, const double w) :
-        data_{{x,y,z,w}}
+    inline Quaternion(const double x, const double y, const double z, const double w)
     {
+        data_[0] = x;
+        data_[1] = y;
+        data_[2] = z;
+        data_[3] = w;
     }
 
-    inline Quaternion(const Quaternion &other) :
-        data_(other.data_)
+    inline Quaternion(const Quaternion &other)
     {
+       assign(other.data_, data_);
     }
 
-    inline Quaternion(Quaternion &&other) :
-        data_(std::move(other.data_))
+    inline Quaternion(Quaternion &&other)
     {
+        assign(other.data_, data_);
     }
 
     inline Quaternion& operator = (const Quaternion &other)
     {
-        data_         = other.data_;
+        assign(other.data_, data_);
         return *this;
     }
 
     inline Quaternion& operator = (Quaternion &&other)
     {
-        data_         = std::move(other.data_);
+        assign(other.data_, data_);
         return *this;
     }
 
@@ -65,21 +71,37 @@ public:
         const double cos_yaw   = std::cos(yaw_2);
         const double sin_yaw   = std::sin(yaw_2);
 
-        data_[0] = sin_roll * cos_pitch * cos_yaw - cos_roll * sin_pitch * sin_yaw; // x
-        data_[1] = cos_roll * sin_pitch * cos_yaw + sin_roll * cos_pitch * sin_yaw; // y
-        data_[2] = cos_roll * cos_pitch * sin_yaw - sin_roll * sin_pitch * cos_yaw; // z
-        data_[3] = cos_roll * cos_pitch * cos_yaw + sin_roll * sin_pitch * sin_yaw; // w
+        data_[0] = sin_roll * cos_pitch * cos_yaw - cos_roll * sin_pitch * sin_yaw;
+        data_[1] = cos_roll * sin_pitch * cos_yaw + sin_roll * cos_pitch * sin_yaw;
+        data_[2] = cos_roll * cos_pitch * sin_yaw - sin_roll * sin_pitch * cos_yaw;
+        data_[3] = cos_roll * cos_pitch * cos_yaw + sin_roll * sin_pitch * sin_yaw;
+    }
+
+    inline void setRoll(const double roll)
+    {
+        const double roll_2    = roll  * 0.5;
+        data_[0] = std::sin(roll_2);
+        data_[1] = 0.0;
+        data_[2] = 0.0;
+        data_[3] = std::cos(roll_2);
+    }
+
+    inline void setPitch(const double pitch)
+    {
+        const double pitch_2   = pitch * 0.5;
+        data_[0] = 0.0;
+        data_[1] = std::sin(pitch_2);
+        data_[2] = 0.0;
+        data_[3] = std::cos(pitch_2);
     }
 
     inline void setYaw(const double yaw)
     {
         const double yaw_2 = yaw   * 0.5;
-        double cos_yaw = std::cos(yaw_2);
-        double sin_yaw = std::sin(yaw_2);
         data_[0] = 0.0;
         data_[1] = 0.0;
-        data_[2] = sin_yaw;
-        data_[3] = cos_yaw;
+        data_[2] = std::sin(yaw_2);
+        data_[3] = std::cos(yaw_2);
     }
 
     inline double & w()
@@ -125,62 +147,57 @@ public:
 
     inline Quaternion operator + (const Quaternion &other) const
     {
-        return Quaternion(data_[0] + other.data_[0],
-                          data_[1] + other.data_[1],
-                          data_[2] + other.data_[2],
-                          data_[3] + other.data_[3]);
+        Quaternion q;
+        add(data_ , other.data_, q.data_);
+        return q;
     }
-
 
     inline Quaternion& operator += (const Quaternion &other)
     {
-        data_[0] += other.data_[0];
-        data_[1] += other.data_[1];
-        data_[2] += other.data_[2];
-        data_[3] += other.data_[3];
+        add(data_, other.data_, data_);
         return *this;
     }
 
     inline Quaternion operator - (const Quaternion &other) const
     {
-        return Quaternion(data_[0] - other.data_[0],
-                data_[1] - other.data_[1],
-                data_[2] - other.data_[2],
-                data_[3] - other.data_[3]);
+        Quaternion q;
+        sub(data_, other.data_, q.data_);
+        return q;
     }
 
     inline Quaternion& operator -= (const Quaternion &other)
     {
-        data_[0] -= other.data_[0];
-        data_[1] -= other.data_[1];
-        data_[2] -= other.data_[2];
-        data_[3] -= other.data_[3];
+        sub(data_, other.data_, data_);
         return *this;
     }
 
     inline Quaternion operator - () const
     {
-        return Quaternion(-data_[0],
-                          -data_[1],
-                          -data_[2],
-                          -data_[3]);
+        Quaternion q;
+        q.data_[0] = -data_[0];
+        q.data_[1] = -data_[1];
+        q.data_[2] = -data_[2];
+        q.data_[3] = -data_[3];
+        return q;
     }
 
     inline Quaternion operator * (const Quaternion &other) const
     {
-        return Quaternion(multiply(data_, other.data_));
+        Quaternion q;
+        multiply(data_, other.data_, q.data_);
+        return q;
     }
 
     inline Quaternion& operator *= (const Quaternion &other)
     {
-        data_ = multiply(data_, other.data_);
+        data_t q = {data_[0], data_[1], data_[2], data_[3]};
+        multiply(q, other.data_, data_);
         return *this;
     }
 
     inline double angle(const Quaternion &other) const
     {
-        const double s = std::sqrt(other.norm2() + norm2());
-        return std::acos(dot(data_, other.data_) / s);
+        return std::acos(dot(data_, other.data_) / std::sqrt(other.norm2() + norm2()));
     }
 
     inline double angle() const
@@ -190,8 +207,13 @@ public:
 
     inline Vector3d operator * (const Vector3d &v) const
     {
-        const data_t rot = multiply(data_, multiply({{v(0), v(1), v(2), 0.0}}, invert(data_)));
-        return Vector3d(rot[0],rot[1],rot[2]);
+        data_t inverse;
+        data_t r0;
+        data_t r1;
+        invert(data_, inverse);
+        multiply({v(0), v(1), v(2), 0.0}, inverse, r0);
+        multiply(data_, r0, r1);
+        return Vector3d(r1[0],r1[1],r1[2]);
     }
 
     inline double roll() const
@@ -223,12 +245,14 @@ public:
 
     inline void normalize()
     {
-        data_ = normalize(data_);
+        normalize(data_, data_);
     }
 
     inline Quaternion normalized() const
     {
-        return Quaternion(normalize(data_));
+        Quaternion q;
+        normalize(data_, q.data_);
+        return q;
     }
 
     inline double norm() const
@@ -254,74 +278,105 @@ public:
             const double s0 = std::sin((1.0 - ratio) * theta);
             const double s1 = std::sin(ratio * theta);
             return d < 0.0 ? Quaternion((data_[0] * s0 - other.data_[0] * s1) * scale,
-                                        (data_[1] * s0 - other.data_[1] * s1) * scale,
-                                        (data_[2] * s0 - other.data_[2] * s1) * scale,
-                                        (data_[3] * s0 - other.data_[3] * s1) * scale)
-                           : Quaternion((data_[0] * s0 + other.data_[0] * s1) * scale,
-                                        (data_[1] * s0 + other.data_[1] * s1) * scale,
-                                        (data_[2] * s0 + other.data_[2] * s1) * scale,
-                                        (data_[3] * s0 + other.data_[3] * s1) * scale);
+                    (data_[1] * s0 - other.data_[1] * s1) * scale,
+                    (data_[2] * s0 - other.data_[2] * s1) * scale,
+                    (data_[3] * s0 - other.data_[3] * s1) * scale)
+                    : Quaternion((data_[0] * s0 + other.data_[0] * s1) * scale,
+                    (data_[1] * s0 + other.data_[1] * s1) * scale,
+                    (data_[2] * s0 + other.data_[2] * s1) * scale,
+                    (data_[3] * s0 + other.data_[3] * s1) * scale);
         }
         return *this;
     }
 
     inline Quaternion invert() const
     {
-        return Quaternion(invert(data_));
+        Quaternion q;
+        invert(data_, q.data_);
+        return q;
     }
 
     inline Quaternion conjugate() const
     {
-        return Quaternion(conjugate(data_));
+        Quaternion q;
+        conjugate(data_, q.data_);
+        return q;
     }
 
 private:
-    data_t data_;
+    data_t data_; // [x,y,z,w]
 
-    inline Quaternion(const std::array<double, 4> &data) :
-        data_(data)
+    inline Quaternion(const data_t &data) :
+        data_{data[0],data[1],data[2],data[3]}
     {
     }
 
-    inline Quaternion(std::array<double, 4> &&data) :
-        data_(data)
+    inline Quaternion(data_t &&data) :
+        data_{data[0],data[1],data[2],data[3]}
     {
     }
 
-    static inline std::array<double, 4> normalize(const std::array<double, 4> &a)
+    static inline void normalize(const data_t &a, data_t &a_normalized)
     {
         const double n = 1.0 / std::sqrt(dot(a, a));
-        return {{a[0] * n, a[1] * n, a[2] * n, a[3] * n}};
+        a_normalized[0] = a[0] * n;
+        a_normalized[1] = a[1] * n;
+        a_normalized[2] = a[2] * n;
+        a_normalized[3] = a[3] * n;
     }
 
-    static inline std::array<double, 4> invert(const double x, const double y, const double z, const double w)
-    {
-        const double n = 1.0 / (x*x + y*y + z*z + w*w);
-        return {{-x * n, -y * n, -z * n, w * n}};
-    }
-
-    static inline std::array<double, 4> invert(const std::array<double, 4> &a)
+    static inline void invert(const data_t &a, data_t &a_inverted)
     {
         const double n = 1.0 / dot(a,a);
-        return {{-a[0] * n, -a[1] * n, -a[2] * n, a[3] * n}};
+        a_inverted[0] = -a[0] * n;
+        a_inverted[1] = -a[1] * n;
+        a_inverted[2] = -a[2] * n;
+        a_inverted[3] =  a[3] * n;
     }
 
-    static inline std::array<double,4> conjugate(const std::array<double, 4> &q)
+    static inline void conjugate(const data_t &q, data_t &q_conjugated)
     {
-        return {{-q[0], -q[1], -q[2], q[3]}};
+        q_conjugated[0] = -q[0];
+        q_conjugated[1] = -q[1];
+        q_conjugated[2] = -q[2];
+        q_conjugated[3] =  q[3];
     }
 
-    static inline double dot(const std::array<double,4> &a, const std::array<double,4> &b)
+    static inline double dot(const data_t &a, const data_t &b)
     {
         return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
     }
 
-    static inline std::array<double, 4> multiply (const std::array<double, 4> &a, const std::array<double,4> &b)
+    static inline void multiply (const data_t &a, const data_t &b, data_t &r)
     {
-        return {{a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1],
-                        a[3] * b[1] + a[1] * b[3] + a[2] * b[0] - a[0] * b[2],
-                        a[3] * b[2] + a[2] * b[3] + a[0] * b[1] - a[1] * b[0],
-                        a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]}};
+        r[0] = a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1];
+        r[1] = a[3] * b[1] + a[1] * b[3] + a[2] * b[0] - a[0] * b[2];
+        r[2] = a[3] * b[2] + a[2] * b[3] + a[0] * b[1] - a[1] * b[0];
+        r[3] = a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2];
+    }
+
+    static inline void add(const data_t &a, const data_t &b, data_t &r)
+    {
+        r[0] = a[0] + b[0];
+        r[1] = a[1] + b[1];
+        r[2] = a[2] + b[2];
+        r[3] = a[3] + b[3];
+    }
+
+    static inline void sub(const data_t &a, const data_t &b, data_t &r)
+    {
+        r[0] = a[0] - b[0];
+        r[1] = a[1] - b[1];
+        r[2] = a[2] - b[2];
+        r[3] = a[3] - b[3];
+    }
+
+    static inline void assign(const data_t &a, data_t &b)
+    {
+        b[0] = a[0];
+        b[1] = a[1];
+        b[2] = a[2];
+        b[3] = a[3];
     }
 
     inline double angleShortestPath(const Quaternion& q) const
