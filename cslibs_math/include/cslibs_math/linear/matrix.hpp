@@ -18,6 +18,10 @@ public:
     using vector_t = Eigen::Matrix<T, N, 1>;
     using matrix_t = Eigen::Matrix<T, N, M>;
 
+    using type_t                  = T;
+    const static std::size_t ROWS = N;
+    const static std::size_t COLS = M;
+
     inline Matrix() :
         data_(matrix_t::Zero())
     {

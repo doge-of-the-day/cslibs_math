@@ -16,9 +16,9 @@ public:
     using Ptr              = std::shared_ptr<Pointcloud>;
     using points_t         = std::vector<point_t>;
     using const_iterator_t = typename points_t::const_iterator;
-    using iterator_t       = typename points_t::iterator;
 
-    Pointcloud()
+    Pointcloud() :
+        min_()
     {
     }
 
@@ -56,17 +56,6 @@ public:
         return data_.end();
     }
 
-
-    inline iterator_t begin()
-    {
-        return data_.begin();
-    }
-
-    inline iterator_t end()
-    {
-        return data_.end();
-    }
-
     inline point_t const & at(const std::size_t i) const
     {
         return data_.at(i);
@@ -98,9 +87,18 @@ public:
         return max;
     }
 
+    template<typename transform_t>
+    inline void transform(const transform_t &t)
+    {
+        std::for_each(data_.begin(), data_.end(),
+                      [&t](point_t &p){p = t * p;});
+    }
+
+
 protected:
     std::vector<point_t> data_;
-
+    point_t              min_;
+    point_t              max_;
 };
 }
 }

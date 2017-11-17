@@ -145,32 +145,6 @@ public:
 
     }
 
-    inline Quaternion operator + (const Quaternion &other) const
-    {
-        Quaternion q;
-        add(data_ , other.data_, q.data_);
-        return q;
-    }
-
-    inline Quaternion& operator += (const Quaternion &other)
-    {
-        add(data_, other.data_, data_);
-        return *this;
-    }
-
-    inline Quaternion operator - (const Quaternion &other) const
-    {
-        Quaternion q;
-        sub(data_, other.data_, q.data_);
-        return q;
-    }
-
-    inline Quaternion& operator -= (const Quaternion &other)
-    {
-        sub(data_, other.data_, data_);
-        return *this;
-    }
-
     inline Quaternion operator - () const
     {
         Quaternion q;
@@ -181,11 +155,17 @@ public:
         return q;
     }
 
-    inline Quaternion operator * (const Quaternion &other) const
+    inline Quaternion& operator += (const Quaternion &other)
     {
-        Quaternion q;
-        multiply(data_, other.data_, q.data_);
-        return q;
+        add(data_, other.data_, data_);
+        return *this;
+    }
+
+
+    inline Quaternion& operator -= (const Quaternion &other)
+    {
+        sub(data_, other.data_, data_);
+        return *this;
     }
 
     inline Quaternion& operator *= (const Quaternion &other)
@@ -203,17 +183,6 @@ public:
     inline double angle() const
     {
         return 2.0 * std::acos(data_[3]);
-    }
-
-    inline Vector3d operator * (const Vector3d &v) const
-    {
-        data_t inverse;
-        data_t r0;
-        data_t r1;
-        invert(data_, inverse);
-        multiply({v(0), v(1), v(2), 0.0}, inverse, r0);
-        multiply(data_, r0, r1);
-        return Vector3d(r1[0],r1[1],r1[2]);
     }
 
     inline double roll() const
@@ -388,6 +357,49 @@ private:
     }
 
 }__attribute__ ((aligned (32)));
+}
+
+
+inline cslibs_math_3d::Quaternion operator + (const cslibs_math_3d::Quaternion &a,
+                                              const cslibs_math_3d::Quaternion &b)
+{
+    cslibs_math_3d::Quaternion q;
+    q.x() = a.x() + b.x();
+    q.y() = a.y() + b.y();
+    q.z() = a.z() + b.z();
+    q.w() = a.w() + b.w();
+    return q;
+}
+
+inline cslibs_math_3d::Quaternion operator - (const cslibs_math_3d::Quaternion &a,
+                                              const cslibs_math_3d::Quaternion &b)
+{
+    cslibs_math_3d::Quaternion q;
+    q.x() = a.x() - b.x();
+    q.y() = a.y() - b.y();
+    q.z() = a.z() - b.z();
+    q.w() = a.w() - b.w();
+    return q;
+}
+
+inline cslibs_math_3d::Quaternion operator * (const cslibs_math_3d::Quaternion &a,
+                                              const cslibs_math_3d::Quaternion &b)
+{
+    cslibs_math_3d::Quaternion q;
+    q.x() = a.w() * b.x() + a.x() * b.w() + a.y() * b.z() - a.z() * b.y();
+    q.y() = a.w() * b.y() + a.y() * b.w() + a.z() * b.x() - a.x() * b.z();
+    q.z() = a.w() * b.z() + a.z() * b.w() + a.x() * b.y() - a.y() * b.x();
+    q.w() = a.w() * b.w() - a.x() * b.x() - a.y() * b.y() - a.z() * b.z();
+    return q;
+}
+
+inline cslibs_math_3d::Vector3d operator * (const cslibs_math_3d::Quaternion &q,
+                                            const cslibs_math_3d::Vector3d &v)
+{
+    cslibs_math_3d::Quaternion inverse = q.invert();
+    cslibs_math_3d::Quaternion qv(v(0), v(1), v(2), 0.0);
+    qv = q * qv * inverse;
+    return cslibs_math_3d::Vector3d(qv.x(),qv.y(),qv.z());
 }
 
 

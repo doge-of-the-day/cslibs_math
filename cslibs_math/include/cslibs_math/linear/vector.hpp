@@ -15,10 +15,9 @@ class Vector {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    using vector_t = Eigen::Matrix<T, Dim, 1>;
-
-    using type_t = T;
-    const static std::size_t size = Dim;
+    using vector_t                = Eigen::Matrix<T, Dim, 1>;
+    using type_t                  = T;
+    const static std::size_t SIZE = Dim;
 
     inline Vector() :
         data_(vector_t::Zero())
@@ -78,26 +77,6 @@ public:
     {
         data_ = std::move(other.data_);
         return *this;
-    }
-
-    inline Vector operator * (const T s) const
-    {
-        return Vector(vector_t(data_ * s));
-    }
-
-    inline Vector operator / (const T s) const
-    {
-        return Vector(vector_t(data_ / s));
-    }
-
-    inline Vector operator + (const Vector &other) const
-    {
-        return Vector(vector_t(data_ + other.data_));
-    }
-
-    inline Vector operator - (const Vector &other) const
-    {
-        return Vector(vector_t(data_ - other.data_));
     }
 
     inline T dot(const Vector &other)
@@ -184,26 +163,6 @@ public:
         return &data_;
     }
 
-    inline Vector min(const Vector &other) const
-    {
-        return Vector(vector_t(data_.cwiseMin(other.data_)));
-    }
-
-    inline Vector max(const Vector &other) const
-    {
-        return Vector(vector_t(data_.cwiseMax(other.data_)));
-    }
-
-    inline T distance(const Vector &other) const
-    {
-        return (data_ - other.data_).norm();
-    }
-
-    inline T distance2(const Vector &other) const
-    {
-        return (data_ - other.data_).squaredNorm();
-    }
-
     inline const vector_t& data() const
     {
         return data_;
@@ -219,11 +178,6 @@ public:
         return eigen::isnormal(data_);
     }
 
-    inline T angle(const Vector &other)
-    {
-        return std::acos(dot(other) / (length() * other.length()));
-    }
-
     inline static Vector random()
     {
         Vector v;
@@ -231,10 +185,96 @@ public:
         return v;
     }
 
+    inline static Vector minimum()
+    {
+        return Vector(std::numeric_limits<T>::lowest());
+    }
+
+    inline static Vector maximum()
+    {
+        return Vector(std::numeric_limits<T>::maximum());
+    }
+
 private:
     vector_t data_;
 };
+
+template<typename T, std::size_t Dim>
+inline T distance(const cslibs_math::linear::Vector<T, Dim> &a,
+                  const cslibs_math::linear::Vector<T, Dim> &b)
+{
+    return (a.data() - b.data()).norm();
+}
+template<typename T, std::size_t Dim>
+inline T distance2(const cslibs_math::linear::Vector<T, Dim> &a,
+                   const cslibs_math::linear::Vector<T, Dim> &b)
+{
+    return (a.data() - b.data()).squaredNorm();
+}
+
+template<typename T, std::size_t Dim>
+inline T operator * (const cslibs_math::linear::Vector<T, Dim> &a,
+                     const cslibs_math::linear::Vector<T, Dim> &b)
+{
+    return a.data().dot(b.data());
+}
+
+template<typename T, std::size_t Dim>
+inline T angle(const cslibs_math::linear::Vector<T, Dim> &a,
+               const cslibs_math::linear::Vector<T, Dim> &b)
+{
+    return std::acos((a * b) / (a.length() * b.length()));
+}
+
+template<typename T, std::size_t Dim>
+inline cslibs_math::linear::Vector<T, Dim> min(const cslibs_math::linear::Vector<T, Dim> &a,
+                                               const cslibs_math::linear::Vector<T, Dim> &b)
+{
+    using vector_t = typename cslibs_math::linear::Vector<T, Dim>::vector_t;
+    return cslibs_math::linear::Vector<T, Dim> (vector_t(a.data().cwiseMin(b.data())));
+}
+
+template<typename T, std::size_t Dim>
+inline cslibs_math::linear::Vector<T, Dim> max(const cslibs_math::linear::Vector<T, Dim> &a,
+                                               const cslibs_math::linear::Vector<T, Dim> &b)
+{
+    using vector_t = typename cslibs_math::linear::Vector<T, Dim>::vector_t;
+    return cslibs_math::linear::Vector<T, Dim> (vector_t(a.data().cwiseMax(b.data())));
 }
 }
+}
+
+template<typename T, std::size_t Dim>
+inline cslibs_math::linear::Vector<T, Dim> operator * (const cslibs_math::linear::Vector<T, Dim> &v,
+                                                       const T s)
+{
+    using vector_t = typename cslibs_math::linear::Vector<T, Dim>::vector_t;
+    return cslibs_math::linear::Vector<T, Dim>(vector_t((v.data() * s)));
+}
+
+template<typename T, std::size_t Dim>
+inline cslibs_math::linear::Vector<T, Dim> operator / (const cslibs_math::linear::Vector<T, Dim> &v,
+                                                       const T s)
+{
+    using vector_t = typename cslibs_math::linear::Vector<T, Dim>::vector_t;
+    return cslibs_math::linear::Vector<T, Dim>(vector_t(v.data() / s));
+}
+
+template<typename T, std::size_t Dim>
+inline cslibs_math::linear::Vector<T, Dim> operator + (const cslibs_math::linear::Vector<T, Dim> &a,
+                                                       const cslibs_math::linear::Vector<T, Dim> &b)
+{
+    using vector_t = typename cslibs_math::linear::Vector<T, Dim>::vector_t;
+    return cslibs_math::linear::Vector<T, Dim>(vector_t(a.data() + b.data()));
+}
+
+template<typename T, std::size_t Dim>
+inline cslibs_math::linear::Vector<T, Dim> operator - (const cslibs_math::linear::Vector<T, Dim> &a,
+                                                       const cslibs_math::linear::Vector<T, Dim> &b){
+    using vector_t = typename cslibs_math::linear::Vector<T, Dim>::vector_t;
+    return cslibs_math::linear::Vector<T, Dim>(vector_t(a.data() - b.data()));
+}
+
+
 
 #endif // CSLIBS_MATH_VECTOR_HPP
