@@ -71,16 +71,6 @@ public:
     {
     }
 
-    inline Vector3d operator * (const Vector3d &v) const
-    {
-        return rotation_ * v + translation_;
-    }
-
-    inline Transform3d operator * (const Transform3d &other) const
-    {
-        return Transform3d(translation_ + rotation_ * other.translation_, rotation_ * other.rotation_);
-    }
-
     inline Transform3d & operator *= (const Transform3d &other)
     {
         translation_ += rotation_ * other.translation_;
@@ -251,6 +241,19 @@ private:
    Vector3d    translation_;
     Quaternion  rotation_;
 } __attribute__ ((aligned (64)));
+}
+
+inline cslibs_math_3d::Vector3d operator * (const cslibs_math_3d::Transform3d &t,
+                                            const cslibs_math_3d::Vector3d    &v)
+{
+    return t.rotation() * v + t.translation();
+}
+
+inline cslibs_math_3d::Transform3d operator * (const cslibs_math_3d::Transform3d &a,
+                                               const cslibs_math_3d::Transform3d &b)
+{
+    return cslibs_math_3d::Transform3d(a.translation() + a.rotation() * b.translation(),
+                                       a.rotation() * b.rotation());
 }
 
 inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Transform3d &t)

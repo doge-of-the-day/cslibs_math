@@ -4,6 +4,14 @@
 #include <cslibs_math_2d/linear/vector.hpp>
 #include <cslibs_math/common/angle.hpp>
 
+namespace cslibs_math_2d
+{
+    class Transform2d;
+}
+
+inline cslibs_math_2d::Vector2d operator * (const cslibs_math_2d::Transform2d &t,
+                                            const cslibs_math_2d::Vector2d &v);
+
 namespace cslibs_math_2d {
 class Transform2d {
 public:
@@ -12,6 +20,17 @@ public:
         yaw_(0.0),
         sin_(0.0),
         cos_(1.0)
+    {
+    }
+
+    inline Transform2d(const Vector2d &translation,
+                       const double yaw,
+                       const double sin,
+                       const double cos) :
+        translation_(translation),
+        yaw_(yaw),
+        sin_(sin),
+        cos_(cos)
     {
     }
 
@@ -47,8 +66,8 @@ public:
                        const double yaw) :
         translation_(x, y),
         yaw_(yaw),
-        sin_(sin(yaw_)),
-        cos_(cos(yaw_))
+        sin_(std::sin(yaw_)),
+        cos_(std::cos(yaw_))
     {
     }
 
@@ -56,8 +75,8 @@ public:
                        const double yaw) :
         translation_(translation),
         yaw_(yaw),
-        sin_(sin(yaw_)),
-        cos_(cos(yaw_))
+        sin_(std::sin(yaw_)),
+        cos_(std::cos(yaw_))
     {
     }
 
@@ -76,30 +95,6 @@ public:
         cos_(other.cos_)
     {
     }
-
-    inline Vector2d operator * (const Vector2d &v) const
-    {
-        return yaw_ == 0.0 ? v + translation_
-                           : Vector2d(cos_ * v(0) - sin_ * v(1) + translation_(0),
-                                      sin_ * v(0) + cos_ * v(1) + translation_(1));
-    }
-
-    inline Transform2d operator * (const Transform2d &other) const
-    {
-        return yaw_ == 0.0 ? Transform2d(other.translation_ + translation_,
-                                         other.yaw_,
-                                         other.sin_,
-                                         other.cos_)
-                           : other.yaw_ == 0.0 ? Transform2d((*this) * other.translation_,
-                                                             yaw_,
-                                                             sin_,
-                                                             cos_)
-                                               : Transform2d ((*this) * other.translation_,
-                                                              cslibs_math::common::angle::normalize(yaw_ + other.yaw_),
-                                                              sin_ * other.cos_ + cos_ * other.sin_,
-                                                              cos_ * other.cos_ - sin_ * other.sin_);
-    }
-
 
     inline Transform2d & operator *= (const Transform2d &other)
     {
@@ -149,11 +144,12 @@ public:
 
     inline Transform2d inverse() const
     {
-        return Transform2d(Vector2d(-cos_ * translation_(0) - sin_ * translation_(1),
-                                     sin_ * translation_(0) - cos_ * translation_(1)),
-                           -yaw_,
-                           -sin_,
-                           cos_);
+        Transform2d t;
+        t.tx() = -cos_ * translation_(0) - sin_ * translation_(1);
+        t.ty() = sin_ * translation_(0) - cos_ * translation_(1);
+        t.sin_ = -sin_;
+        t.cos_ =  cos_;
+        return t;
     }
 
     inline Transform2d operator -() const
@@ -194,8 +190,8 @@ public:
     inline void setYaw(const double yaw)
     {
         yaw_ = yaw;
-        sin_ = sin(yaw_);
-        cos_ = cos(yaw_);
+        sin_ = std::sin(yaw_);
+        cos_ = std::cos(yaw_);
     }
 
     inline double yaw() const
@@ -203,12 +199,12 @@ public:
         return yaw_;
     }
 
-    inline double sine() const
+    inline double sin() const
     {
         return sin_;
     }
 
-    inline double cosine() const
+    inline double cos() const
     {
         return cos_;
     }
@@ -253,22 +249,32 @@ public:
     }
 
 private:
-    inline Transform2d(const Vector2d &translation,
-                       const double yaw,
-                       const double sin,
-                       const double cos) :
-        translation_(translation),
-        yaw_(yaw),
-        sin_(sin),
-        cos_(cos)
-    {
-    }
-
     Vector2d translation_;
     double   yaw_;
     double   sin_;
     double   cos_;
 } __attribute__ ((aligned (64)));
+}
+
+inline cslibs_math_2d::Vector2d operator * (const cslibs_math_2d::Transform2d &t,
+                                            const cslibs_math_2d::Vector2d &v)
+{
+    return t.yaw() == 0.0 ? v + t.translation()
+                          : cslibs_math_2d::Vector2d(t.cos() * v(0) - t.sin() * v(1) + t.translation()(0),
+                                                     t.sin() * v(0) + t.cos() * v(1) + t.translation()(1));
+}
+
+inline cslibs_math_2d::Transform2d operator * (const cslibs_math_2d::Transform2d &a,
+                                               const cslibs_math_2d::Transform2d &b)
+{
+    return a.yaw() == 0.0 ? cslibs_math_2d::Transform2d(b.translation() + a.translation(),
+                                                        b.yaw(), b.sin(), b.cos())
+                          : b.yaw() == 0.0 ? cslibs_math_2d::Transform2d(a * b.translation(),
+                                                                         a.yaw(), a.sin(), a.cos())
+                                           : cslibs_math_2d::Transform2d (a * b.translation(),
+                                                                          cslibs_math::common::angle::normalize(a.yaw() + b.yaw()),
+                                                                          a.sin() * b.cos() + a.cos() * b.sin(),
+                                                                          a.cos() * b.cos() - a.sin() * b.sin());
 }
 
 inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Transform2d &t)

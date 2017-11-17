@@ -115,9 +115,9 @@ inline double hausdorffMPE(const typename cslibs_math::linear::Pointcloud<point_
     return valid != 0 ? p_src / static_cast<double>(valid) : 0.0;
 }
 template<typename point_t>
-inline Matrix<double, point_t::size, point_t::size>
+inline Matrix<double, point_t::SIZE, point_t::SIZE>
     hausdorffCovariance(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
-                         const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
+                        const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
 {
     if(points_src.size() == 0)
         return Matrix<double, point_t::size, point_t::size>(std::numeric_limits<double>::infinity());

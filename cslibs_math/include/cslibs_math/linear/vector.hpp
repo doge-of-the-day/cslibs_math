@@ -15,6 +15,7 @@ class Vector {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+    using allocator_t             = Eigen::aligned_allocator<Vector>;
     using vector_t                = Eigen::Matrix<T, Dim, 1>;
     using type_t                  = T;
     const static std::size_t SIZE = Dim;

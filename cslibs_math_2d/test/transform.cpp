@@ -16,36 +16,36 @@ TEST(Test_cslibs_math_2d, testTransformInitEye)
     EXPECT_EQ(t_0.yaw(), 0.0);
     EXPECT_EQ(t_0.tx(),  0.0);
     EXPECT_EQ(t_0.ty(),  0.0);
-    EXPECT_EQ(t_0.sine(), 0.0);
-    EXPECT_EQ(t_0.cosine(), 1.0);
+    EXPECT_EQ(t_0.sin(), 0.0);
+    EXPECT_EQ(t_0.cos(), 1.0);
 
     cslibs_math_2d::Transform2d t_1 = cslibs_math_2d::Transform2d(0.0, 0.0);
     EXPECT_EQ(t_1.yaw(), 0.0);
     EXPECT_EQ(t_1.tx(),  0.0);
     EXPECT_EQ(t_1.ty(),  0.0);
-    EXPECT_EQ(t_1.sine(), 0.0);
-    EXPECT_EQ(t_1.cosine(), 1.0);
+    EXPECT_EQ(t_1.sin(), 0.0);
+    EXPECT_EQ(t_1.cos(), 1.0);
 
     cslibs_math_2d::Transform2d t_2 = cslibs_math_2d::Transform2d(cslibs_math_2d::Point2d(0.0, 0.0));
     EXPECT_EQ(t_2.yaw(), 0.0);
     EXPECT_EQ(t_2.tx(),  0.0);
     EXPECT_EQ(t_2.ty(),  0.0);
-    EXPECT_EQ(t_2.sine(), 0.0);
-    EXPECT_EQ(t_2.cosine(), 1.0);
+    EXPECT_EQ(t_2.sin(), 0.0);
+    EXPECT_EQ(t_2.cos(), 1.0);
 
     cslibs_math_2d::Transform2d t_3 = cslibs_math_2d::Transform2d(0.0, 0.0, 0.0);
     EXPECT_EQ(t_3.yaw(), 0.0);
     EXPECT_EQ(t_3.tx(),  0.0);
     EXPECT_EQ(t_3.ty(),  0.0);
-    EXPECT_EQ(t_3.sine(), 0.0);
-    EXPECT_EQ(t_3.cosine(), 1.0);
+    EXPECT_EQ(t_3.sin(), 0.0);
+    EXPECT_EQ(t_3.cos(), 1.0);
 
     cslibs_math_2d::Transform2d t_4 = cslibs_math_2d::Transform2d(cslibs_math_2d::Point2d(0.0, 0.0), 0.0);
     EXPECT_EQ(t_4.yaw(), 0.0);
     EXPECT_EQ(t_4.tx(),  0.0);
     EXPECT_EQ(t_4.ty(),  0.0);
-    EXPECT_EQ(t_4.sine(), 0.0);
-    EXPECT_EQ(t_4.cosine(), 1.0);
+    EXPECT_EQ(t_4.sin(), 0.0);
+    EXPECT_EQ(t_4.cos(), 1.0);
 }
 
 TEST(Test_cslibs_math_2d, testTransformInitTranslation)
@@ -58,29 +58,29 @@ TEST(Test_cslibs_math_2d, testTransformInitTranslation)
     EXPECT_EQ(t_0.yaw(), 0.0);
     EXPECT_EQ(t_0.tx(),  x);
     EXPECT_EQ(t_0.ty(),  y);
-    EXPECT_EQ(t_0.sine(), 0.0);
-    EXPECT_EQ(t_0.cosine(), 1.0);
+    EXPECT_EQ(t_0.sin(), 0.0);
+    EXPECT_EQ(t_0.cos(), 1.0);
 
     cslibs_math_2d::Transform2d t_1 = cslibs_math_2d::Transform2d(    cslibs_math_2d::Point2d(x, y));
     EXPECT_EQ(t_1.yaw(), 0.0);
     EXPECT_EQ(t_1.tx(),  x);
     EXPECT_EQ(t_1.ty(),  y);
-    EXPECT_EQ(t_1.sine(), 0.0);
-    EXPECT_EQ(t_1.cosine(), 1.0);
+    EXPECT_EQ(t_1.sin(), 0.0);
+    EXPECT_EQ(t_1.cos(), 1.0);
 
     cslibs_math_2d::Transform2d t_2 = cslibs_math_2d::Transform2d(x, y, 0.0);
     EXPECT_EQ(t_2.yaw(), 0.0);
     EXPECT_EQ(t_2.tx(),  x);
     EXPECT_EQ(t_2.ty(),  y);
-    EXPECT_EQ(t_2.sine(), 0.0);
-    EXPECT_EQ(t_2.cosine(), 1.0);
+    EXPECT_EQ(t_2.sin(), 0.0);
+    EXPECT_EQ(t_2.cos(), 1.0);
 
     cslibs_math_2d::Transform2d t_3 = cslibs_math_2d::Transform2d(    cslibs_math_2d::Point2d(x, y), 0.0);
     EXPECT_EQ(t_3.yaw(), 0.0);
     EXPECT_EQ(t_3.tx(),  x);
     EXPECT_EQ(t_3.ty(),  y);
-    EXPECT_EQ(t_3.sine(), 0.0);
-    EXPECT_EQ(t_3.cosine(), 1.0);
+    EXPECT_EQ(t_3.sin(), 0.0);
+    EXPECT_EQ(t_3.cos(), 1.0);
 }
 
 TEST(Test_cslibs_math_2d, testTransformInitRotation)
@@ -94,15 +94,15 @@ TEST(Test_cslibs_math_2d, testTransformInitRotation)
     EXPECT_EQ(t_0.yaw(), yaw);
     EXPECT_EQ(t_0.tx(),  0.0);
     EXPECT_EQ(t_0.ty(),  0.0);
-    EXPECT_EQ(t_0.sine(), sin);
-    EXPECT_EQ(t_0.cosine(), cos);
+    EXPECT_EQ(t_0.sin(), sin);
+    EXPECT_EQ(t_0.cos(), cos);
 
     cslibs_math_2d::Transform2d t_1 = cslibs_math_2d::Transform2d(    cslibs_math_2d::Point2d(0.0, 0.0), yaw);
     EXPECT_EQ(t_1.yaw(), yaw);
     EXPECT_EQ(t_1.tx(),  0.0);
     EXPECT_EQ(t_1.ty(),  0.0);
-    EXPECT_EQ(t_1.sine(), sin);
-    EXPECT_EQ(t_1.cosine(), cos);
+    EXPECT_EQ(t_1.sin(), sin);
+    EXPECT_EQ(t_1.cos(), cos);
 }
 
 TEST(Test_cslibs_math_2d, testTransformConstructors)
@@ -118,15 +118,15 @@ TEST(Test_cslibs_math_2d, testTransformConstructors)
     EXPECT_EQ(t_0.yaw(), yaw);
     EXPECT_EQ(t_0.tx(),  x);
     EXPECT_EQ(t_0.ty(),  y);
-    EXPECT_EQ(t_0.sine(), sin);
-    EXPECT_EQ(t_0.cosine(), cos);
+    EXPECT_EQ(t_0.sin(), sin);
+    EXPECT_EQ(t_0.cos(), cos);
 
     cslibs_math_2d::Transform2d t_1 = cslibs_math_2d::Transform2d(    cslibs_math_2d::Point2d(x, y), yaw);
     EXPECT_EQ(t_1.yaw(), yaw);
     EXPECT_EQ(t_1.tx(),  x);
     EXPECT_EQ(t_1.ty(),  y);
-    EXPECT_EQ(t_1.sine(), sin);
-    EXPECT_EQ(t_1.cosine(), cos);
+    EXPECT_EQ(t_1.sin(), sin);
+    EXPECT_EQ(t_1.cos(), cos);
 }
 
 TEST(Test_cslibs_math_2d, testTransformSetFrom)
@@ -144,16 +144,16 @@ TEST(Test_cslibs_math_2d, testTransformSetFrom)
     EXPECT_EQ(t_0.yaw(), yaw);
     EXPECT_EQ(t_0.tx(),  x);
     EXPECT_EQ(t_0.ty(),  y);
-    EXPECT_EQ(t_0.sine(), sin);
-    EXPECT_EQ(t_0.cosine(), cos);
+    EXPECT_EQ(t_0.sin(), sin);
+    EXPECT_EQ(t_0.cos(), cos);
 
     cslibs_math_2d::Transform2d t_1;
     t_1.setFrom(x,y,yaw);
     EXPECT_EQ(t_1.yaw(), yaw);
     EXPECT_EQ(t_1.tx(),  x);
     EXPECT_EQ(t_1.ty(),  y);
-    EXPECT_EQ(t_1.sine(), sin);
-    EXPECT_EQ(t_1.cosine(), cos);
+    EXPECT_EQ(t_1.sin(), sin);
+    EXPECT_EQ(t_1.cos(), cos);
 }
 
 
@@ -170,15 +170,15 @@ TEST(Test_cslibs_math_2d, testTransformSetYaw)
     EXPECT_EQ(t_0.yaw(), 0.0);
     EXPECT_EQ(t_0.tx(),  x);
     EXPECT_EQ(t_0.ty(),  y);
-    EXPECT_EQ(t_0.sine(), 0.0);
-    EXPECT_EQ(t_0.cosine(), 1.0);
+    EXPECT_EQ(t_0.sin(), 0.0);
+    EXPECT_EQ(t_0.cos(), 1.0);
 
     t_0.setYaw(yaw);
     EXPECT_EQ(t_0.yaw(), yaw);
     EXPECT_EQ(t_0.tx(),  x);
     EXPECT_EQ(t_0.ty(),  y);
-    EXPECT_EQ(t_0.sine(), sin);
-    EXPECT_EQ(t_0.cosine(), cos);
+    EXPECT_EQ(t_0.sin(), sin);
+    EXPECT_EQ(t_0.cos(), cos);
 }
 
 TEST(Test_cslibs_math_2d, testTransformTranslation)
@@ -193,8 +193,8 @@ TEST(Test_cslibs_math_2d, testTransformTranslation)
     EXPECT_EQ(t_0.yaw(), 0.0);
     EXPECT_EQ(t_0.tx(),  x_0);
     EXPECT_EQ(t_0.ty(),  y_0);
-    EXPECT_EQ(t_0.sine(), 0.0);
-    EXPECT_EQ(t_0.cosine(), 1.0);
+    EXPECT_EQ(t_0.sin(), 0.0);
+    EXPECT_EQ(t_0.cos(), 1.0);
 
     tf::Transform t_0_tf(tf::createIdentityQuaternion(),
                          tf::Vector3(x_0,y_0,0.0));
@@ -223,8 +223,8 @@ TEST(Test_cslibs_math_2d, testTransformTranslation)
     EXPECT_EQ(t_1.ty(), y_1 + y_0);
     EXPECT_EQ(t_1.tx(), t_1_tf.getOrigin().x());
     EXPECT_EQ(t_1.ty(), t_1_tf.getOrigin().y());
-    EXPECT_EQ(t_1.cosine(), 1.0);
-    EXPECT_EQ(t_1.sine(), 0.0);
+    EXPECT_EQ(t_1.cos(), 1.0);
+    EXPECT_EQ(t_1.sin(), 0.0);
     EXPECT_EQ(t_1.yaw(), 0.0);
 }
 
@@ -241,8 +241,8 @@ TEST(Test_cslibs_math_2d, testTransformRotation)
     EXPECT_EQ(t_0.yaw(), yaw_0);
     EXPECT_EQ(t_0.tx(),  0.0);
     EXPECT_EQ(t_0.ty(),  0.0);
-    EXPECT_EQ(t_0.sine(), sin_0);
-    EXPECT_EQ(t_0.cosine(), cos_0);
+    EXPECT_EQ(t_0.sin(), sin_0);
+    EXPECT_EQ(t_0.cos(), cos_0);
 
     tf::Transform t_0_tf = tf::Transform(tf::createQuaternionFromYaw(yaw_0),
                                          tf::Vector3(0.0,0.0,0.0));
@@ -297,8 +297,8 @@ TEST(Test_cslibs_math_2d, testTransformFull)
     EXPECT_EQ(t_0.yaw(), yaw_0);
     EXPECT_EQ(t_0.tx(),  x_0);
     EXPECT_EQ(t_0.ty(),  y_0);
-    EXPECT_EQ(t_0.sine(), sin_0);
-    EXPECT_EQ(t_0.cosine(), cos_0);
+    EXPECT_EQ(t_0.sin(), sin_0);
+    EXPECT_EQ(t_0.cos(), cos_0);
 
     tf::Transform t_0_tf(tf::createQuaternionFromYaw(yaw_0),
                          tf::Vector3(x_0, y_0, 0.0));
@@ -398,8 +398,8 @@ TEST(Test_cslibs_math_2d, testTransformInverse)
     EXPECT_NEAR(t_0_inverse.tx(), -x_0, 1e-5);
     EXPECT_NEAR(t_0_inverse.ty(), -y_0, 1e-5);
     EXPECT_NEAR(t_0_inverse.yaw(), 0.0, 1e-5);
-    EXPECT_NEAR(t_0_inverse.sine(), 0.0, 1e-5);
-    EXPECT_NEAR(t_0_inverse.cosine(), 1.0, 1e-5);
+    EXPECT_NEAR(t_0_inverse.sin(), 0.0, 1e-5);
+    EXPECT_NEAR(t_0_inverse.cos(), 1.0, 1e-5);
 
     const double x_1 = rng.get();
     const double y_1 = rng.get();
