@@ -144,12 +144,11 @@ public:
 
     inline Transform2d inverse() const
     {
-        Transform2d t;
-        t.tx() = -cos_ * translation_(0) - sin_ * translation_(1);
-        t.ty() = sin_ * translation_(0) - cos_ * translation_(1);
-        t.sin_ = -sin_;
-        t.cos_ =  cos_;
-        return t;
+        return Transform2d(Vector2d(-cos_ * translation_(0) - sin_ * translation_(1),
+                                     sin_ * translation_(0) - cos_ * translation_(1)),
+                           -yaw_,
+                           -sin_,
+                           cos_);
     }
 
     inline Transform2d operator -() const
@@ -244,7 +243,7 @@ public:
 
         const  double ratio_inverse = 1.0 - ratio;
         const  Vector2d translation = translation_ * ratio_inverse + other.translation_ * ratio;
-        const  double   yaw = cslibs_math::common::angle::normalize(yaw_ * ratio_inverse + other.yaw_ * ratio);
+        const  double   yaw = cslibs_math::common::angle::normalize(yaw_ + ratio * cslibs_math::common::angle::normalize(other.yaw_ - yaw_));
         return Transform2d(translation, yaw);
     }
 

@@ -120,10 +120,10 @@ inline Matrix<double, point_t::SIZE, point_t::SIZE>
                         const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
 {
     if(points_src.size() == 0)
-        return Matrix<double, point_t::size, point_t::size>(std::numeric_limits<double>::infinity());
+        return Matrix<double, point_t::SIZE, point_t::SIZE>(std::numeric_limits<double>::infinity());
 
 
-    statistics::Distribution<point_t::size> distribution;
+    statistics::Distribution<point_t::SIZE> distribution;
     for(const point_t &point_src : points_src) {
         if(point_src.isNormal()) {
             std::size_t nn = nearestNeighbour(point_src, points_dst);
@@ -136,7 +136,7 @@ inline Matrix<double, point_t::SIZE, point_t::SIZE>
     }
 
     if(distribution.getN() < 3)
-        return  Matrix<double, point_t::size, point_t::size>(std::numeric_limits<double>::infinity()) ;
+        return  Matrix<double, point_t::SIZE, point_t::SIZE>(std::numeric_limits<double>::infinity()) ;
 
     return distribution.getCovariance();
 

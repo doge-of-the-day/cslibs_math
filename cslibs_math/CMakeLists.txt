@@ -33,19 +33,19 @@ include_directories(
 
 cslibs_math_show_headers()
 
-cslibs_math_add_unit_test_gtest(test_mod
+cslibs_math_add_unit_test_gtest(mod
     SRCS test/mod.cpp
 )
 
-cslibs_math_add_unit_test_gtest(test_div
+cslibs_math_add_unit_test_gtest(div
     SRCS test/div.cpp
 )
 
-cslibs_math_add_unit_test_gtest(test_array
+cslibs_math_add_unit_test_gtest(array
     SRCS test/array.cpp
 )
 
-cslibs_math_add_unit_test_gtest(test_hausdorff
+cslibs_math_add_unit_test_gtest(hausdorff
     SRCS test/hausdorff.cpp
 )
 

@@ -41,7 +41,7 @@ inline double normalize2Pi(const double angle)
  */
 inline double difference(double a, double b)
 {
-    return normalize(a - b);
+    return a - b;
 }
 
 /**

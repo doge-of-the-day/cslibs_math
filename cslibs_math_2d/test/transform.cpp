@@ -8,6 +8,10 @@
 
 #include <tf/tf.h>
 
+#include <iostream>
+
+const static std::size_t ITERATIONS = 100000;
+
 using rng_t = cslibs_math::random::Uniform<1>;
 
 TEST(Test_cslibs_math_2d, testTransformInitEye)
@@ -353,69 +357,71 @@ TEST(Test_cslibs_math_2d, testTransformFull)
 TEST(Test_cslibs_math_2d, testTransformInterpolation)
 {
     rng_t rng(-10.0, 10.0);
-    const double x_0 = rng.get();
-    const double y_0 = rng.get();
-    const double yaw_0 = cslibs_math::common::angle::normalize(rng.get());
-    const double x_1 = rng.get();
-    const double y_1 = rng.get();
-    const double yaw_1 = cslibs_math::common::angle::normalize(rng.get());
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const double x_0 = rng.get();
+        const double y_0 = rng.get();
+        const double yaw_0 = cslibs_math::common::angle::normalize(rng.get());
+        const double x_1 = rng.get();
+        const double y_1 = rng.get();
+        const double yaw_1 = cslibs_math::common::angle::normalize(rng.get());
 
 
-    tf::Transform tf_0(tf::createQuaternionFromYaw(yaw_0),
-                       tf::Vector3(x_0, y_0, 0.0));
-    tf::Transform tf_1(tf::createQuaternionFromYaw(yaw_1),
-                       tf::Vector3(x_1, y_1, 0.0));
+        tf::Transform tf_0(tf::createQuaternionFromYaw(yaw_0),
+                           tf::Vector3(x_0, y_0, 0.0));
+        tf::Transform tf_1(tf::createQuaternionFromYaw(yaw_1),
+                           tf::Vector3(x_1, y_1, 0.0));
 
-    cslibs_math_2d::Transform2d t_0(x_0, y_0, yaw_0);
-    cslibs_math_2d::Transform2d t_1(x_1, y_1, yaw_1);
+        cslibs_math_2d::Transform2d t_0(x_0, y_0, yaw_0);
+        cslibs_math_2d::Transform2d t_1(x_1, y_1, yaw_1);
 
-    cslibs_math_2d::Transform2d t_r = t_0.interpolate(t_1, 0.66);
-    tf::Transform tf_r;
-    tf_r.getOrigin().setInterpolate3(tf_0.getOrigin(), tf_1.getOrigin(), 0.66);
-    tf_r.setRotation(tf::slerp(tf_0.getRotation(), tf_1.getRotation(), 0.66));
-    double t_r_tf_yaw = tf::getYaw(tf_r.getRotation());
-    EXPECT_NEAR(t_r.tx(), tf_r.getOrigin().x(),1e-5);
-    EXPECT_NEAR(t_r.ty(), tf_r.getOrigin().y(),1e-5);
-    EXPECT_TRUE(cslibs_math::common::eq(t_r_tf_yaw, t_r.yaw(), 1e-6) ||
-                cslibs_math::common::eq(std::abs(t_r_tf_yaw) + std::abs(t_r.yaw()), M_PI, 1e-6));
- }
+        cslibs_math_2d::Transform2d t_r = t_0.interpolate(t_1, 0.66);
+        tf::Transform tf_r;
+        tf_r.getOrigin().setInterpolate3(tf_0.getOrigin(), tf_1.getOrigin(), 0.66);
+        tf_r.setRotation(tf::slerp(tf_0.getRotation(), tf_1.getRotation(), 0.66));
+        double t_r_tf_yaw = tf::getYaw(tf_r.getRotation());
+        EXPECT_NEAR(t_r.tx(), tf_r.getOrigin().x(),1e-5);
+        EXPECT_NEAR(t_r.ty(), tf_r.getOrigin().y(),1e-5);
+        EXPECT_TRUE(cslibs_math::common::eq(t_r_tf_yaw, t_r.yaw(), 1e-6) ||
+                    cslibs_math::common::eq(std::abs(t_r_tf_yaw) + std::abs(t_r.yaw()), M_PI, 1e-6));
+    }
+}
 
 TEST(Test_cslibs_math_2d, testTransformInverse)
 {
     rng_t rng(-10.0, 10.0);
-    const double x_0 = rng.get();
-    const double y_0 = rng.get();
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+        const double x_0 = rng.get();
+        const double y_0 = rng.get();
 
-    cslibs_math_2d::Transform2d   t_0(x_0, y_0, 0.0);
-    tf::Transform tf_0(tf::createQuaternionFromYaw(0.0),
-                       tf::Vector3(x_0, y_0, 0.0));
+        cslibs_math_2d::Transform2d   t_0(x_0, y_0, 0.0);
+        tf::Transform tf_0(tf::createQuaternionFromYaw(0.0),
+                           tf::Vector3(x_0, y_0, 0.0));
 
-    cslibs_math_2d::Transform2d t_0_inverse = t_0.inverse();
-    tf::Transform tf_0_inverse = tf_0.inverse();
+        cslibs_math_2d::Transform2d t_0_inverse = t_0.inverse();
+        tf::Transform tf_0_inverse = tf_0.inverse();
 
-    EXPECT_NEAR(t_0_inverse.tx(), tf_0_inverse.getOrigin().x(), 1e-5);
-    EXPECT_NEAR(t_0_inverse.ty(), tf_0_inverse.getOrigin().y(), 1e-5);
-    EXPECT_NEAR(t_0_inverse.tx(), -x_0, 1e-5);
-    EXPECT_NEAR(t_0_inverse.ty(), -y_0, 1e-5);
-    EXPECT_NEAR(t_0_inverse.yaw(), 0.0, 1e-5);
-    EXPECT_NEAR(t_0_inverse.sin(), 0.0, 1e-5);
-    EXPECT_NEAR(t_0_inverse.cos(), 1.0, 1e-5);
+        EXPECT_NEAR(t_0_inverse.tx(), tf_0_inverse.getOrigin().x(), 1e-5);
+        EXPECT_NEAR(t_0_inverse.ty(), tf_0_inverse.getOrigin().y(), 1e-5);
+        EXPECT_NEAR(t_0_inverse.tx(), -x_0, 1e-5);
+        EXPECT_NEAR(t_0_inverse.ty(), -y_0, 1e-5);
+        EXPECT_NEAR(t_0_inverse.yaw(), 0.0, 1e-5);
+        EXPECT_NEAR(t_0_inverse.sin(), 0.0, 1e-5);
+        EXPECT_NEAR(t_0_inverse.cos(), 1.0, 1e-5);
 
-    const double x_1 = rng.get();
-    const double y_1 = rng.get();
-    const double yaw_1 = cslibs_math::common::angle::normalize(rng.get());
-    cslibs_math_2d::Transform2d   t_1(x_1, y_1, yaw_1);
-    tf::Transform tf_1(tf::createQuaternionFromYaw(yaw_1),
-                       tf::Vector3(x_1, y_1, 0.0));
+        const double x_1 = rng.get();
+        const double y_1 = rng.get();
+        const double yaw_1 = cslibs_math::common::angle::normalize(rng.get());
+        cslibs_math_2d::Transform2d   t_1(x_1, y_1, yaw_1);
+        tf::Transform tf_1(tf::createQuaternionFromYaw(yaw_1),
+                           tf::Vector3(x_1, y_1, 0.0));
 
-    cslibs_math_2d::Transform2d t_1_inverse = t_1.inverse();
-    tf::Transform tf_1_inverse = tf_1.inverse();
+        cslibs_math_2d::Transform2d t_1_inverse = t_1.inverse();
+        tf::Transform tf_1_inverse = tf_1.inverse();
 
-    EXPECT_NEAR(t_1_inverse.tx(), tf_1_inverse.getOrigin().x(), 1e-5);
-    EXPECT_NEAR(t_1_inverse.ty(), tf_1_inverse.getOrigin().y(), 1e-5);
-    EXPECT_NEAR(t_1_inverse.yaw(),tf::getYaw(tf_1_inverse.getRotation()), 1e-5);
-
-
+        EXPECT_NEAR(t_1_inverse.tx(), tf_1_inverse.getOrigin().x(), 1e-5);
+        EXPECT_NEAR(t_1_inverse.ty(), tf_1_inverse.getOrigin().y(), 1e-5);
+        EXPECT_NEAR(t_1_inverse.yaw(),tf::getYaw(tf_1_inverse.getRotation()), 1e-5);
+    }
 }
 
 int main(int argc, char *argv[])
