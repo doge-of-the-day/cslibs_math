@@ -14,43 +14,42 @@ namespace statistics {
 template<std::size_t Dim, bool limit_covariance = false>
 class Distribution {
 public:
-    typedef std::shared_ptr<Distribution<Dim, limit_covariance>> Ptr;
+    using Ptr = std::shared_ptr<Distribution<Dim, limit_covariance>>;
 
-    using PointType          = Eigen::Matrix<double, Dim, 1>;
-    using MatrixType         = Eigen::Matrix<double, Dim, Dim>;
-    using EigenValueSetType  = Eigen::Matrix<double, Dim, 1>;
-    using EigenVectorSetType = Eigen::Matrix<double, Dim, Dim>;
-    using ComplexVectorType  = Eigen::Matrix<double, Dim, 1>;
-    using ComplexMatrixType  = Eigen::Matrix<std::complex<double>, Dim, Dim>;
+    using sample_t        = Eigen::Matrix<double, Dim, 1>;
+    using covariance_t    = Eigen::Matrix<double, Dim, Dim>;
+    using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
+    using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
 
     static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
     static constexpr double lambda_ratio = 1e-2;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    Distribution() :
-        mean_(PointType::Zero()),
-        correlated_(MatrixType::Zero()),
+    inline Distribution() :
+        mean_(sample_t::Zero()),
+        correlated_(covariance_t::Zero()),
         n_(1),
         n_1_(0),
-        covariance_(MatrixType::Zero()),
-        inverse_covariance_(MatrixType::Zero()),
-        eigen_values_(EigenValueSetType::Zero()),
-        eigen_vectors_(EigenVectorSetType::Zero()),
+        covariance_(covariance_t::Zero()),
+        inverse_covariance_(covariance_t::Zero()),
+        eigen_values_(eigen_values_t::Zero()),
+        eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(0.0),
         dirty_(false),
         dirty_eigen_(false)
     {
     }
 
-    Distribution(const Distribution &other) = default;
-    Distribution& operator=(const Distribution &other) = default;
+    inline Distribution(const Distribution &other) = default;
+    inline Distribution(Distribution &&other) = default;
+    inline Distribution& operator=(const Distribution &other) = default;
 
     inline void reset()
     {
-        mean_ = PointType::Zero();
-        covariance_ = MatrixType::Zero();
-        correlated_ = MatrixType::Zero();
+        mean_ = sample_t::Zero();
+        covariance_ = covariance_t::Zero();
+        correlated_ = covariance_t::Zero();
         n_ = 1;
         n_1_ = 0;
         dirty_ = true;
@@ -58,7 +57,7 @@ public:
     }
 
     /// Modification
-    inline void add(const PointType &p)
+    inline void add(const sample_t &p)
     {
         mean_ = (mean_ * n_1_ + p) / n_;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
@@ -72,7 +71,7 @@ public:
         dirty_eigen_ = true;
     }
 
-    inline Distribution& operator+=(const PointType &p)
+    inline Distribution& operator+=(const sample_t &p)
     {
         add(p);
         return *this;
@@ -81,8 +80,8 @@ public:
     inline Distribution& operator+=(const Distribution &other)
     {
         std::size_t _n = n_1_ + other.n_1_;
-        PointType   _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
-        MatrixType  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<double>(_n);
+        sample_t   _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
+        covariance_t  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<double>(_n);
         n_   = _n + 1;
         n_1_ = _n;
         mean_ = _mean;
@@ -98,59 +97,59 @@ public:
         return n_1_;
     }
 
-    inline PointType getMean() const
+    inline sample_t getMean() const
     {
         return mean_;
     }
 
-    inline void getMean(PointType &_mean) const
+    inline void getMean(sample_t &_mean) const
     {
         _mean = mean_;
     }
 
-    inline MatrixType getCovariance() const
+    inline covariance_t getCovariance() const
     {
         if(n_1_ >= 2) {
             if(dirty_)
                 update();
             return covariance_;
         }
-        return MatrixType::Zero();
+        return covariance_t::Zero();
     }
 
-    inline void getCovariance(MatrixType &covariance) const
+    inline void getCovariance(covariance_t &covariance) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
                 update();
             covariance = covariance_;
         } else {
-            covariance = MatrixType::Zero();
+            covariance = covariance_t::Zero();
         }
     }
 
-    inline MatrixType getInformationMatrix() const
+    inline covariance_t getInformationMatrix() const
     {
         if(n_1_ >= 2) {
             if(dirty_)
                 update();
             return inverse_covariance_;
         }
-        return MatrixType::Zero();
+        return covariance_t::Zero();
     }
 
-    inline void getInformationMatrix(MatrixType &inverse_covariance) const
+    inline void getInformationMatrix(covariance_t &inverse_covariance) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
                 update();
             inverse_covariance = inverse_covariance_;
         } else {
-            inverse_covariance = MatrixType::Zero();
+            inverse_covariance = covariance_t::Zero();
         }
     }
 
-    inline EigenValueSetType getEigenValues(const bool abs = false) const
+    inline eigen_values_t getEigenValues(const bool abs = false) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
@@ -163,10 +162,10 @@ public:
             else
                 return eigen_values_;
         }
-        return EigenValueSetType::Zero();
+        return eigen_values_t::Zero();
     }
 
-    inline void getEigenValues(EigenValueSetType &eigen_values,
+    inline void getEigenValues(eigen_values_t &eigen_values,
                                const bool abs = false) const
     {
         if(n_1_ >= 2) {
@@ -180,11 +179,11 @@ public:
             else
                 eigen_values = eigen_values_;
         } else {
-            eigen_values = EigenValueSetType::Zero();
+            eigen_values = eigen_values_t::Zero();
         }
     }
 
-    inline EigenVectorSetType getEigenVectors() const
+    inline eigen_vectors_t getEigenVectors() const
     {
         if(n_1_ >= 2) {
             if(dirty_)
@@ -194,10 +193,10 @@ public:
 
             return eigen_vectors_;
         }
-        return EigenVectorSetType::Zero();
+        return eigen_vectors_t::Zero();
     }
 
-    inline void getEigenVectors(EigenVectorSetType &eigen_vectors) const
+    inline void getEigenVectors(eigen_vectors_t &eigen_vectors) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
@@ -207,17 +206,17 @@ public:
 
             eigen_vectors = eigen_vectors_;
         } else {
-            eigen_vectors = EigenVectorSetType::Zero();
+            eigen_vectors = eigen_vectors_t::Zero();
         }
     }
 
     /// Evaluation
-    inline double sample(const PointType &p) const
+    inline double sample(const sample_t &p) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
                 update();
-            PointType  q = p - mean_;
+            sample_t  q = p - mean_;
             double exponent = -0.5 * double(q.transpose() * inverse_covariance_ * q);
             double denominator = 1.0 / (covariance_.determinant() * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
@@ -225,8 +224,8 @@ public:
         return 0.0;
     }
 
-    inline double sample(const PointType &p,
-                         PointType &q) const
+    inline double sample(const sample_t &p,
+                         sample_t &q) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
@@ -239,21 +238,21 @@ public:
         return 0.0;
     }
 
-    inline double sampleNonNormalized(const PointType &p) const
+    inline double sampleNonNormalized(const sample_t &p) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
                 update();
 
-            PointType  q = p - mean_;
+            sample_t  q = p - mean_;
             double exponent = -0.5 * double(q.transpose() * inverse_covariance_ * q);
             return std::exp(exponent);
         }
         return 0.0;
     }
 
-    inline double sampleNonNormalized(const PointType &p,
-                                      PointType &q) const
+    inline double sampleNonNormalized(const sample_t &p,
+                                      sample_t &q) const
     {
         if(n_1_ >= 2) {
             if(dirty_)
@@ -266,15 +265,15 @@ public:
     }
 
 private:
-    PointType                    mean_;
-    MatrixType                   correlated_;
-    std::size_t                  n_;
-    std::size_t                  n_1_;            /// actual amount of points in distribution
+    sample_t                    mean_;
+    covariance_t                correlated_;
+    std::size_t                 n_;
+    std::size_t                 n_1_;            /// actual amount of points in distribution
 
-    mutable MatrixType           covariance_;
-    mutable MatrixType           inverse_covariance_;
-    mutable EigenValueSetType    eigen_values_;
-    mutable EigenVectorSetType   eigen_vectors_;
+    mutable covariance_t         covariance_;
+    mutable covariance_t         inverse_covariance_;
+    mutable eigen_values_t       eigen_values_;
+    mutable eigen_vectors_t      eigen_vectors_;
     mutable double               determinant_;
 
     mutable bool                 dirty_;
@@ -299,7 +298,7 @@ private:
                 if(eigen_values_(i) > max_lambda)
                     max_lambda = eigen_values_(i);
             }
-            MatrixType Lambda = MatrixType::Zero();
+            covariance_t Lambda = covariance_t::Zero();
             double l = max_lambda * lambda_ratio;
             for(std::size_t i = 0 ; i < Dim; ++i) {
                 if(fabs(eigen_values_(i)) < fabs(l)) {
@@ -321,13 +320,256 @@ private:
 
     inline void updateEigen() const
     {
-        Eigen::EigenSolver<MatrixType> solver;
+        Eigen::EigenSolver<covariance_t> solver;
         solver.compute(covariance_);
         eigen_vectors_ = solver.eigenvectors().real();
         eigen_values_  = solver.eigenvalues().real();
         dirty_eigen_ = false;
     }
 };
+
+template<>
+class Distribution<1, false>
+{
+public:
+   static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+
+    inline Distribution() :
+        mean_(0.0),
+        variance_(0.0),
+        standard_deviation_(0.0),
+        squared_(0.0),
+        dirty_(false),
+        n_(1),
+        n_1_(0)
+    {
+    }
+
+    inline Distribution(const Distribution &other) = default;
+    inline Distribution(Distribution &&other) = default;
+    inline Distribution& operator=(const Distribution &other) = default;
+
+    inline void reset()
+    {
+        mean_       = 0.0;
+        squared_    = 0.0;
+        variance_   = 0.0;
+        standard_deviation_ = 0.0;
+        dirty_      = false;
+        n_          = 1;
+        n_1_        = 0;
+    }
+
+    inline void add(const double s)
+    {
+        mean_    = (mean_ * n_1_ + s) / n_;
+        squared_ = (squared_ * n_1_ + s*s) / n_;
+        ++n_;
+        ++n_1_;
+        dirty_ = true;
+    }
+
+    inline Distribution & operator += (const double s)
+    {
+        mean_    = (mean_ * n_1_ + s) / n_;
+        squared_ = (squared_ * n_1_ + s*s) / n_;
+        ++n_;
+        ++n_1_;
+        dirty_ = true;
+        return *this;
+    }
+
+    inline Distribution & operator += (const Distribution &other)
+    {
+        std::size_t _n = n_1_ + other.n_1_;
+        double  _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
+        double  _squared = (_squared * n_1_ + other.squared_ * other.n_1_) / static_cast<double>(_n);
+        n_   = _n + 1;
+        n_1_ = _n;
+        mean_ = _mean;
+        dirty_ = true;
+        return *this;
+    }
+
+    inline std::size_t getN() const
+    {
+        return n_1_;
+    }
+
+    inline double getMean() const
+    {
+        return mean_;
+    }
+
+    inline double getVariance() const
+    {
+        return dirty_ ? updateReturnVariance() : variance_;
+    }
+
+    inline double getStandardDeviation() const
+    {
+        return dirty_ ? updateReturnStandardDeviation() : standard_deviation_;
+    }
+
+    inline double sample(const double s) const
+    {
+        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        const double x = (s - mean_);
+        return std::exp(-0.5 * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
+    }
+
+    inline double sampleNonNormalized(const double s) const
+    {
+        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        const double x = (s - mean_);
+        return std::exp(-0.5 * x * x / d);
+    }
+
+private:
+    double          mean_;
+    mutable double  variance_;
+    mutable double  standard_deviation_;
+    double          squared_;
+    bool            dirty_;
+    std::size_t     n_;
+    std::size_t     n_1_;
+
+    inline double updateReturnVariance() const
+    {
+        variance_ = squared_ - mean_ * mean_;
+        standard_deviation_ = std::sqrt(variance_);
+        return variance_;
+    }
+
+    inline double updateReturnStandardDeviation() const
+    {
+        variance_ = squared_ - mean_ * mean_;
+        standard_deviation_ = std::sqrt(variance_);
+        return standard_deviation_;
+    }
+};
+
+template<>
+class Distribution<1, true>
+{
+public:
+   static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+
+    inline Distribution() :
+        mean_(0.0),
+        variance_(0.0),
+        standard_deviation_(0.0),
+        squared_(0.0),
+        dirty_(false),
+        n_(1),
+        n_1_(0)
+    {
+    }
+
+    inline Distribution(const Distribution &other) = default;
+    inline Distribution(Distribution &&other) = default;
+    inline Distribution& operator=(const Distribution &other) = default;
+
+    inline void reset()
+    {
+        mean_       = 0.0;
+        squared_    = 0.0;
+        variance_   = 0.0;
+        standard_deviation_ = 0.0;
+        dirty_      = false;
+        n_          = 1;
+        n_1_        = 0;
+    }
+
+    inline void add(const double s)
+    {
+        mean_    = (mean_ * n_1_ + s) / n_;
+        squared_ = (squared_ * n_1_ + s*s) / n_;
+        ++n_;
+        ++n_1_;
+        dirty_ = true;
+    }
+
+    inline Distribution & operator += (const double s)
+    {
+        mean_    = (mean_ * n_1_ + s) / n_;
+        squared_ = (squared_ * n_1_ + s*s) / n_;
+        ++n_;
+        ++n_1_;
+        dirty_ = true;
+        return *this;
+    }
+
+    inline Distribution & operator += (const Distribution &other)
+    {
+        std::size_t _n = n_1_ + other.n_1_;
+        double  _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
+        double  _squared = (_squared * n_1_ + other.squared_ * other.n_1_) / static_cast<double>(_n);
+        n_   = _n + 1;
+        n_1_ = _n;
+        mean_ = _mean;
+        dirty_ = true;
+        return *this;
+    }
+
+    inline std::size_t getN() const
+    {
+        return n_1_;
+    }
+
+    inline double getMean() const
+    {
+        return mean_;
+    }
+
+    inline double getVariance() const
+    {
+        return dirty_ ? updateReturnVariance() : variance_;
+    }
+
+    inline double getStandardDeviation() const
+    {
+        return dirty_ ? updateReturnStandardDeviation() : standard_deviation_;
+    }
+
+    inline double sample(const double s) const
+    {
+        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        const double x = (s - mean_);
+        return std::exp(-0.5 * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
+    }
+
+    inline double sampleNonNormalized(const double s) const
+    {
+        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        const double x = (s - mean_);
+        return std::exp(-0.5 * x * x / d);
+    }
+
+private:
+    double          mean_;
+    mutable double  variance_;
+    mutable double  standard_deviation_;
+    double          squared_;
+    bool            dirty_;
+    std::size_t     n_;
+    std::size_t     n_1_;
+
+    inline double updateReturnVariance() const
+    {
+        variance_ = squared_ - mean_ * mean_;
+        standard_deviation_ = std::sqrt(variance_);
+        return variance_;
+    }
+
+    inline double updateReturnStandardDeviation() const
+    {
+        variance_ = squared_ - mean_ * mean_;
+        standard_deviation_ = std::sqrt(variance_);
+        return standard_deviation_;
+    }
+};
+
 }
 }
 

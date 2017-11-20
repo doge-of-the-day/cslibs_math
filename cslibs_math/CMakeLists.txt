@@ -11,8 +11,6 @@ include(cmake/cslibs_math_add_unit_test_gtest.cmake)
 
 find_package(catkin REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(tf                    QUIET)
-find_package(cslibs_boost_geometry QUIET)
 
 catkin_package(
     INCLUDE_DIRS    include
@@ -27,8 +25,6 @@ include_directories(
    include
   ${Eigen3_INCLUDE_DIR}
   ${catkin_INCLUDE_DIRS}
-  ${tf_INCLUDE_DIRS}
-  ${cslibs_boost_geometry_INCLUDE_DIRS}
 )
 
 cslibs_math_show_headers()
@@ -48,6 +44,12 @@ cslibs_math_add_unit_test_gtest(array
 cslibs_math_add_unit_test_gtest(hausdorff
     SRCS test/hausdorff.cpp
 )
+
+cslibs_math_add_unit_test_gtest(distribution
+    SRCS test/hausdorff.cpp
+    LIBS
+)
+
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

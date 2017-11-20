@@ -8,7 +8,10 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(catkin REQUIRED COMPONENTS
     cslibs_math
 )
+
 find_package(Eigen3 REQUIRED)
+find_package(tf                    QUIET)
+find_package(sensor_msgs           QUIET)
 
 catkin_package(
     INCLUDE_DIRS    include
@@ -18,6 +21,7 @@ catkin_package(
 
 include_directories(
     ${Eigen3_INCLUDE_DIR}
+    ${sensors_msgs_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
     include
 )
@@ -36,9 +40,6 @@ if(${tf_FOUND})
     cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_transform
         SRCS test/transform.cpp
     )
-#    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_vector
-#        SRCS test/vector.cpp
-#    )
 endif()
 
 install(DIRECTORY include/${PROJECT_NAME}/

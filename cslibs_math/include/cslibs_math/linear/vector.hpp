@@ -144,6 +144,18 @@ public:
         return Vector(vector_t(-data_));
     }
 
+    inline Vector & min(const Vector &other)
+    {
+        data_ = data_.cwiseMin(other.data_);
+        return *this;
+    }
+
+    inline Vector & max(const Vector &other)
+    {
+        data_ = data_.cwiseMax(other.data_);
+        return *this;
+    }
+
     operator const vector_t& () const
     {
         return data_;

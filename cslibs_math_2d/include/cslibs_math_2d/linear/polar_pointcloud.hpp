@@ -5,6 +5,6 @@
 #include <cslibs_math_2d/linear/polar_point.hpp>
 
 namespace cslibs_math_2d {
-using PointcloudPolar2d = cslibs_math::linear::Pointcloud<PolarPoint2d>;
+using PolarPointlcoud2d = cslibs_math::linear::Pointcloud<PolarPoint2d>;
 }
 #endif // CSLIBS_MATH_2D_POLAR_POINTCLOUD_HPP

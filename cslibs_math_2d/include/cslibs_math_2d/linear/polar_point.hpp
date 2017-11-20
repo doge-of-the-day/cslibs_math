@@ -53,6 +53,11 @@ public:
     {
     }
 
+    virtual ~PolarPoint2d()
+    {
+
+    }
+
     inline bool isNormal() const
     {
         return std::isnormal(rho_);
@@ -93,14 +98,14 @@ public:
 
     inline PolarPoint2d min(const PolarPoint2d &other) const
     {
-        return PolarPoint2d(cartesian_.min(other.cartesian_),
+        return PolarPoint2d(cslibs_math::linear::min(cartesian_, other.cartesian_),
                             std::min(theta_, other.theta_),
                             std::min(rho_, other.rho_));
     }
 
     inline PolarPoint2d max(const PolarPoint2d &other) const
     {
-        return PolarPoint2d(cartesian_.max(other.cartesian_),
+        return PolarPoint2d(cslibs_math::linear::max(cartesian_, other.cartesian_),
                             std::max(theta_, other.theta_),
                             std::max(rho_, other.rho_));
     }

@@ -8,7 +8,6 @@
 
 namespace cslibs_math {
 namespace linear {
-
 template<typename point_t>
 class Pointcloud
 {
@@ -18,12 +17,8 @@ public:
     using const_iterator_t = typename points_t::const_iterator;
 
     Pointcloud() :
-        min_()
-    {
-    }
-
-    Pointcloud(const std::size_t size) :
-        data_(size)
+        min_(std::numeric_limits<typename point_t::type_t>::max()),
+        max_(std::numeric_limits<typename point_t::type_t>::min())
     {
     }
 
@@ -31,17 +26,19 @@ public:
     {
     }
 
-    inline void insert(const point_t &pt)
+    inline virtual void insert(const point_t &pt)
     {
+        min_.min(pt);
+        max_.max(pt);
         data_.emplace_back(pt);
     }
 
-    inline void insertInvalid()
+    inline virtual void insertInvalid()
     {
         data_.emplace_back(point_t(std::numeric_limits<double>::infinity()));
     }
 
-    inline void clear()
+    inline virtual void clear()
     {
         data_.clear();
     }
@@ -73,25 +70,27 @@ public:
 
     inline point_t min() const
     {
-        point_t min(std::numeric_limits<double>::max());
-        std::for_each(data_.begin(), data_.end(),
-                      [&min](const point_t &p){min = min.min(p);});
-        return min;
+        return min_;
     }
 
     inline point_t max() const
     {
-        point_t max(std::numeric_limits<double>::min());
-        std::for_each(data_.begin(), data_.end(),
-                      [&max](const point_t &p){max = max.max(p);});
-        return max;
+        return max_;
     }
 
     template<typename transform_t>
     inline void transform(const transform_t &t)
     {
+        auto apply = [&t, this](point_t &p){
+             p = t * p;
+             min_.min(p);
+             max_.max(p);
+        };
+
+        min_ = point_t(std::numeric_limits<typename point_t::type_t>::max());
+        max_ = point_t(std::numeric_limits<typename point_t::type_t>::min());
         std::for_each(data_.begin(), data_.end(),
-                      [&t](point_t &p){p = t * p;});
+                      apply);
     }
 
 

@@ -111,9 +111,15 @@ public:
         mean = mean_;
     }
 
-    inline double getCovariance() const
+    inline double getVariance() const
     {
-        return -2.0 * std::log(std::hypot(complex_mean_.real(), complex_mean_.imag()));
+        return -std::log(complex_mean_.real() * complex_mean_.real() +
+                         complex_mean_.imag() * complex_mean_.imag());
+    }
+
+    inline double getStandardDeviation() const
+    {
+        return std::sqrt(getVariance());
     }
 
 private:

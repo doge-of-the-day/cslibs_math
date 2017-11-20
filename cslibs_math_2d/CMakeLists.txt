@@ -4,7 +4,11 @@ project(cslibs_math_2d)
 find_package(catkin REQUIRED COMPONENTS
     cslibs_math
 )
+
 find_package(Eigen3 REQUIRED)
+find_package(tf                    QUIET)
+find_package(cslibs_boost_geometry QUIET)
+
 
 catkin_package(
     INCLUDE_DIRS    include
@@ -13,6 +17,9 @@ catkin_package(
 )
 
 include_directories(
+    ${sensors_msgs_INCLUDE_DIRS}
+    ${tf_INCLUDE_DIRS}
+    ${cslibs_boost_geometry_INCLUDE_DIRS}
     ${Eigen3_INCLUDE_DIR}
     ${catkin_INCLUDE_DIRS}
     include
