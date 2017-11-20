@@ -66,8 +66,8 @@ public:
     }
 
     inline Transform3d(Transform3d &&other) :
-        translation_(other.translation_),
-        rotation_(other.rotation_)
+        translation_(std::move(other.translation_)),
+        rotation_(std::move(other.rotation_))
     {
     }
 

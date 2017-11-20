@@ -89,7 +89,7 @@ public:
     }
 
     inline Transform2d(Transform2d &&other) :
-        translation_(other.translation_),
+        translation_(std::move(other.translation_)),
         yaw_(other.yaw_),
         sin_(other.sin_),
         cos_(other.cos_)
