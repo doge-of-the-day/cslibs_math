@@ -14,7 +14,7 @@ inline double hausdorff(const point_t &point,
     double h = std::numeric_limits<double>::infinity();
     for(auto &compare : points) {
         if(compare.isNormal()) {
-            const double d = point.distance(compare);
+            const double d = cslibs_math::linear::distance(point, compare);
             h = std::min(d,h);
         }
     }
@@ -30,7 +30,7 @@ inline std::size_t nearestNeighbour(const point_t &point,
     for(std::size_t i = 0 ; i < points.size() ; ++i) {
         const point_t &compare = points.at(i);
         if(compare.isNormal()) {
-            const double d = point.distance(compare);
+            const double d = cslibs_math::linear::distance(point, compare);
             if(d < min) {
                 min_id = i;
                 min = d;

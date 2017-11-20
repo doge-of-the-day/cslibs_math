@@ -239,17 +239,18 @@ TEST(Test_cslibs_math_2d, testDistance)
         cslibs_math_2d::Vector2d v1(x1,y1);
         cslibs_math_2d::Vector2d d = v0 - v1;
 
-        EXPECT_NEAR(v0.distance(v1), d.length(), 1e-6);
-        EXPECT_NEAR(v1.distance(v0), d.length(), 1e-6);
-        EXPECT_NEAR(v0.distance2(v1), d.length2(), 1e-6);
-        EXPECT_NEAR(v1.distance2(v0), d.length2(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance(v0, v1), d.length(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance(v1, v0), d.length(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance2(v0, v1), d.length2(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance2(v1, v0), d.length2(), 1e-6);
 
 
         d = v1 - v0;
-        EXPECT_NEAR(v0.distance(v1), d.length(), 1e-6);
-        EXPECT_NEAR(v1.distance(v0), d.length(), 1e-6);
-        EXPECT_NEAR(v0.distance2(v1), d.length2(), 1e-6);
-        EXPECT_NEAR(v1.distance2(v0), d.length2(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance(v0, v1), d.length(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance(v1, v0), d.length(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance2(v0, v1), d.length2(), 1e-6);
+        EXPECT_NEAR(cslibs_math::linear::distance2(v1, v0), d.length2(), 1e-6);
+
     }
 }
 
