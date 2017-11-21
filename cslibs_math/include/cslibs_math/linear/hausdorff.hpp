@@ -115,15 +115,15 @@ inline double hausdorffMPE(const typename cslibs_math::linear::Pointcloud<point_
     return valid != 0 ? p_src / static_cast<double>(valid) : 0.0;
 }
 template<typename point_t>
-inline Matrix<double, point_t::SIZE, point_t::SIZE>
+inline Matrix<double, point_t::Dim, point_t::Dim>
     hausdorffCovariance(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
                         const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
 {
     if(points_src.size() == 0)
-        return Matrix<double, point_t::SIZE, point_t::SIZE>(std::numeric_limits<double>::infinity());
+        return Matrix<double, point_t::Dim, point_t::Dim>(std::numeric_limits<double>::infinity());
 
 
-    statistics::Distribution<point_t::SIZE> distribution;
+    statistics::Distribution<point_t::Dim> distribution;
     for(const point_t &point_src : points_src) {
         if(point_src.isNormal()) {
             std::size_t nn = nearestNeighbour(point_src, points_dst);
@@ -136,7 +136,7 @@ inline Matrix<double, point_t::SIZE, point_t::SIZE>
     }
 
     if(distribution.getN() < 3)
-        return  Matrix<double, point_t::SIZE, point_t::SIZE>(std::numeric_limits<double>::infinity()) ;
+        return  Matrix<double, point_t::Dim, point_t::Dim>(std::numeric_limits<double>::infinity()) ;
 
     return distribution.getCovariance();
 
