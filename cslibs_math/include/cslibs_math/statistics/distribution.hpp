@@ -22,7 +22,7 @@ public:
     using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
 
     static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
-    static constexpr double lambda_ratio = 1e-2;
+    static constexpr double lambda_ratio = 1e-3;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
@@ -32,7 +32,7 @@ public:
         n_(1),
         n_1_(0),
         covariance_(covariance_t::Zero()),
-        inverse_covariance_(covariance_t::Zero()),
+        information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(0.0),
@@ -41,19 +41,19 @@ public:
     {
     }
 
-    inline Distribution(const Distribution &other) = default;
-    inline Distribution(Distribution &&other) = default;
+    inline Distribution(const Distribution &other)            = default;
+    inline Distribution(Distribution &&other)                 = default;
     inline Distribution& operator=(const Distribution &other) = default;
 
     inline void reset()
     {
-        mean_ = sample_t::Zero();
-        covariance_ = covariance_t::Zero();
-        correlated_ = covariance_t::Zero();
-        n_ = 1;
-        n_1_ = 0;
-        dirty_ = true;
-        dirty_eigen_ = true;
+        mean_           = sample_t::Zero();
+        covariance_     = covariance_t::Zero();
+        correlated_     = covariance_t::Zero();
+        n_              = 1;
+        n_1_            = 0;
+        dirty_          = true;
+        dirty_eigen_    = true;
     }
 
     /// Modification
@@ -67,7 +67,7 @@ public:
         }
         ++n_;
         ++n_1_;
-        dirty_ = true;
+        dirty_       = true;
         dirty_eigen_ = true;
     }
 
@@ -79,19 +79,18 @@ public:
 
     inline Distribution& operator+=(const Distribution &other)
     {
-        std::size_t _n = n_1_ + other.n_1_;
-        sample_t   _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
-        covariance_t  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<double>(_n);
-        n_   = _n + 1;
-        n_1_ = _n;
-        mean_ = _mean;
-        correlated_ = _corr;
-        dirty_ = true;
-        dirty_eigen_ = true;
+        const std::size_t    _n   = n_1_ + other.n_1_;
+        const sample_t      _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
+        const covariance_t  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<double>(_n);
+        n_                        = _n + 1;
+        n_1_                      = _n;
+        mean_                     = _mean;
+        correlated_               = _corr;
+        dirty_                    = true;
+        dirty_eigen_              = true;
         return *this;
     }
 
-    /// Distribution properties
     inline std::size_t getN() const
     {
         return n_1_;
@@ -109,169 +108,135 @@ public:
 
     inline covariance_t getCovariance() const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            return covariance_;
-        }
-        return covariance_t::Zero();
+        auto update_return_covariance = [this](){update(); return covariance_;};
+        return n_1_ >= 2 ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
     }
 
     inline void getCovariance(covariance_t &covariance) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            covariance = covariance_;
-        } else {
-            covariance = covariance_t::Zero();
-        }
+        auto update_return_covariance = [this](){update(); return covariance_;};
+        covariance =  n_1_ >= 2 ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
     }
 
     inline covariance_t getInformationMatrix() const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            return inverse_covariance_;
-        }
-        return covariance_t::Zero();
+        auto update_return_information = [this](){update(); return information_matrix_;};
+        return n_1_ >= 2 ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
     }
 
-    inline void getInformationMatrix(covariance_t &inverse_covariance) const
+    inline void getInformationMatrix(covariance_t &information_matrix) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            inverse_covariance = inverse_covariance_;
-        } else {
-            inverse_covariance = covariance_t::Zero();
-        }
+        auto update_return_information = [this](){update(); return information_matrix_;};
+        information_matrix = n_1_ >= 2 ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
     }
 
     inline eigen_values_t getEigenValues(const bool abs = false) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            if(dirty_eigen_)
-                updateEigen();
-
-            if(abs)
-                return eigen_values_.cwiseAbs();
-            else
-                return eigen_values_;
-        }
-        return eigen_values_t::Zero();
+        auto update_return_eigen = [this, abs]() {
+            if(dirty_) update();
+            if(dirty_eigen_) update();
+            return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+        };
+        return n_1_ >= 2 ?  update_return_eigen() : eigen_values_t::Zero();
     }
 
     inline void getEigenValues(eigen_values_t &eigen_values,
                                const bool abs = false) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            if(dirty_eigen_)
-                updateEigen();
-
-            if(abs)
-                eigen_values = eigen_values_.cwiseAbs();
-            else
-                eigen_values = eigen_values_;
-        } else {
-            eigen_values = eigen_values_t::Zero();
-        }
+        auto update_return_eigen = [this, abs]() {
+            if(dirty_) update();
+            if(dirty_eigen_) update();
+            return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+        };
+        eigen_values = n_1_ >= 2 ?  update_return_eigen() : eigen_values_t::Zero();
     }
 
     inline eigen_vectors_t getEigenVectors() const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            if(dirty_eigen_)
-                updateEigen();
-
+        auto update_return_eigen = [this]() {
+            if(dirty_) update();
+            if(dirty_eigen_) update();
             return eigen_vectors_;
-        }
-        return eigen_vectors_t::Zero();
+        };
+        return n_1_ >= 2 ? update_return_eigen() : eigen_vectors_t::Zero();
     }
 
     inline void getEigenVectors(eigen_vectors_t &eigen_vectors) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            if(dirty_eigen_)
-                updateEigen();
-
-            eigen_vectors = eigen_vectors_;
-        } else {
-            eigen_vectors = eigen_vectors_t::Zero();
-        }
+        auto update_return_eigen = [this]() {
+            if(dirty_) update();
+            if(dirty_eigen_) update();
+            return eigen_vectors_;
+        };
+        eigen_vectors = n_1_ >= 2 ? update_return_eigen() : eigen_vectors_t::Zero();
     }
 
     /// Evaluation
+    inline double denominator() const
+    {
+        auto update_return = [this](){
+            if(dirty_) update();
+            return 1.0 / (determinant_ * sqrt_2_M_PI);
+        };
+        return n_1_ >= 2 ? update_return() : 0.0;
+    }
+
     inline double sample(const sample_t &p) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-            sample_t  q = p - mean_;
-            double exponent = -0.5 * double(q.transpose() * inverse_covariance_ * q);
-            double denominator = 1.0 / (covariance_.determinant() * sqrt_2_M_PI);
+        auto update_sample = [this, &p]() {
+            if(dirty_) update();
+            const sample_t  q        = p - mean_;
+            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+            const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
-        }
-        return 0.0;
+        };
+        return n_1_ >= 2 ? update_sample() : 0.0;
     }
 
     inline double sample(const sample_t &p,
                          sample_t &q) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
+        auto update_sample = [this, &p, &q]() {
+            if(dirty_) update();
             q = p - mean_;
-            double exponent = -0.5 * double(q.transpose() * inverse_covariance_ * q);
-            double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
+            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+            const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
-        }
-        return 0.0;
+        };
+        return n_1_ >= 2 ? update_sample() : 0.0;
     }
 
     inline double sampleNonNormalized(const sample_t &p) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
-
-            sample_t  q = p - mean_;
-            double exponent = -0.5 * double(q.transpose() * inverse_covariance_ * q);
+        auto update_sample = [this, &p]() {
+            if(dirty_) update();
+            const sample_t  q        = p - mean_;
+            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
             return std::exp(exponent);
-        }
-        return 0.0;
+        };
+        return n_1_ >= 2 ? update_sample() : 0.0;
     }
 
     inline double sampleNonNormalized(const sample_t &p,
                                       sample_t &q) const
     {
-        if(n_1_ >= 2) {
-            if(dirty_)
-                update();
+        auto update_sample = [this, &p, &q]() {
+            if(dirty_) update();
             q = p - mean_;
-            double exponent = -0.5 * double(q.transpose() * inverse_covariance_ * q);
+            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
             return std::exp(exponent);
-        }
-        return 0.0;
+        };
+        return n_1_ >= 2 ? update_sample() : 0.0;
     }
 
 private:
-    sample_t                    mean_;
-    covariance_t                correlated_;
-    std::size_t                 n_;
-    std::size_t                 n_1_;            /// actual amount of points in distribution
+    sample_t                     mean_;
+    covariance_t                 correlated_;
+    std::size_t                  n_;            /// actual amount of points
+    std::size_t                  n_1_;          /// for computation
 
     mutable covariance_t         covariance_;
-    mutable covariance_t         inverse_covariance_;
+    mutable covariance_t         information_matrix_;
     mutable eigen_values_t       eigen_values_;
     mutable eigen_vectors_t      eigen_vectors_;
     mutable double               determinant_;
@@ -281,11 +246,11 @@ private:
 
     inline void update() const
     {
-        double scale = n_1_ / static_cast<double>(n_1_ - 1);
+        const double scale = n_1_ / static_cast<double>(n_1_ - 1);
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
                 covariance_(i, j) = (correlated_(i, j) - (mean_(i) * mean_(j))) * scale;
-                covariance_(j, i) = covariance_(i, j);
+                covariance_(j, i) =  covariance_(i, j);
             }
         }
 
@@ -293,28 +258,22 @@ private:
             if(dirty_eigen_)
                 updateEigen();
 
-            double max_lambda = std::numeric_limits<double>::lowest();
-            for(std::size_t i = 0 ; i < Dim ; ++i) {
-                if(eigen_values_(i) > max_lambda)
-                    max_lambda = eigen_values_(i);
-            }
+            /// for this step see: https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix
+            const double max_lambda = eigen_values_.maxCoeff();
+            const double l          = max_lambda * lambda_ratio;
+
             covariance_t Lambda = covariance_t::Zero();
-            double l = max_lambda * lambda_ratio;
             for(std::size_t i = 0 ; i < Dim; ++i) {
-                if(fabs(eigen_values_(i)) < fabs(l)) {
-                    Lambda(i,i) = l;
-                } else {
-                    Lambda(i,i) = eigen_values_(i);
-                }
+                Lambda(i,i) = std::abs(eigen_values_(i)) < std::abs(l) ? l : eigen_values_(i);
             }
             covariance_ = eigen_vectors_ * Lambda * eigen_vectors_.transpose();
-            inverse_covariance_ = eigen_vectors_ * Lambda.inverse() * eigen_vectors_.transpose();
+            information_matrix_ = covariance_.inverse();
         } else {
-            inverse_covariance_ = covariance_.inverse();
+            information_matrix_ = covariance_.inverse();
         }
 
         determinant_ = covariance_.determinant();
-        dirty_ = false;
+        dirty_       = false;
         dirty_eigen_ = true;
     }
 
