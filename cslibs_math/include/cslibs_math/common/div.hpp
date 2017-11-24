@@ -1,13 +1,18 @@
 #ifndef CSLIBS_MATH_DIV_HPP
 #define CSLIBS_MATH_DIV_HPP
 
+#include <type_traits>
+
 namespace cslibs_math {
 namespace common {
 template<typename T>
 T div(const T a, const T b)
 {
+    static_assert(std::is_integral<T>::value, "Integral required.");
+
     assert(b > 0);
-    return a < 0 ? (a / b - 1) : (a / b);
+    const T d = a / b;
+    return a < 0 ? (d*b != a ? d - 1 : d) : d;
 }
 }
 }

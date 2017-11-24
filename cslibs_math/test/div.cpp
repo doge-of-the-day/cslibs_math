@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <cslibs_math/common/div.hpp>
-#include <cslibs_math/common/mod.hpp>
 
 TEST(Test_cslibs_math, testDiv)
 {
@@ -9,8 +8,6 @@ TEST(Test_cslibs_math, testDiv)
     EXPECT_EQ(cslibs_math::common::div(-1, 100), -1);
     EXPECT_EQ(cslibs_math::common::div(-2, 100), -1);
     EXPECT_EQ(cslibs_math::common::div(-100, 100), -1);
-    EXPECT_EQ(cslibs_math::common::mod(-1, 100), 99);
-    EXPECT_EQ(cslibs_math::common::mod(-2, 100), 98);
     EXPECT_EQ(cslibs_math::common::div(5, 3), 1);
     EXPECT_EQ(cslibs_math::common::div(3, 5), 0);
 }
