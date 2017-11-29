@@ -9,12 +9,14 @@
 #include <eigen3/Eigen/Eigen>
 #include <iostream>
 
+#include <cslibs_math/statistics/limit_covariance.hpp>
+
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, bool limit_covariance = false>
+template<std::size_t Dim, std::size_t lamda_ratio_exponent = 0>
 class Distribution {
 public:
-    using Ptr = std::shared_ptr<Distribution<Dim, limit_covariance>>;
+    using Ptr = std::shared_ptr<Distribution<Dim, lamda_ratio_exponent>>;
 
     using sample_t        = Eigen::Matrix<double, Dim, 1>;
     using covariance_t    = Eigen::Matrix<double, Dim, Dim>;
@@ -22,7 +24,6 @@ public:
     using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
 
     static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
-    static constexpr double lambda_ratio = 1e-3;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
@@ -36,8 +37,7 @@ public:
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(0.0),
-        dirty_(false),
-        dirty_eigen_(false)
+        dirty_(false)
     {
     }
 
@@ -53,7 +53,6 @@ public:
         n_              = 1;
         n_1_            = 0;
         dirty_          = true;
-        dirty_eigen_    = true;
     }
 
     /// Modification
@@ -68,7 +67,6 @@ public:
         ++n_;
         ++n_1_;
         dirty_       = true;
-        dirty_eigen_ = true;
     }
 
     inline Distribution& operator+=(const sample_t &p)
@@ -87,7 +85,6 @@ public:
         mean_                     = _mean;
         correlated_               = _corr;
         dirty_                    = true;
-        dirty_eigen_              = true;
         return *this;
     }
 
@@ -134,7 +131,6 @@ public:
     {
         auto update_return_eigen = [this, abs]() {
             if(dirty_) update();
-            if(dirty_eigen_) update();
             return abs ? eigen_values_.cwiseAbs() : eigen_values_;
         };
         return n_1_ >= 2 ?  update_return_eigen() : eigen_values_t::Zero();
@@ -145,7 +141,6 @@ public:
     {
         auto update_return_eigen = [this, abs]() {
             if(dirty_) update();
-            if(dirty_eigen_) update();
             return abs ? eigen_values_.cwiseAbs() : eigen_values_;
         };
         eigen_values = n_1_ >= 2 ?  update_return_eigen() : eigen_values_t::Zero();
@@ -155,7 +150,6 @@ public:
     {
         auto update_return_eigen = [this]() {
             if(dirty_) update();
-            if(dirty_eigen_) update();
             return eigen_vectors_;
         };
         return n_1_ >= 2 ? update_return_eigen() : eigen_vectors_t::Zero();
@@ -165,7 +159,6 @@ public:
     {
         auto update_return_eigen = [this]() {
             if(dirty_) update();
-            if(dirty_eigen_) update();
             return eigen_vectors_;
         };
         eigen_vectors = n_1_ >= 2 ? update_return_eigen() : eigen_vectors_t::Zero();
@@ -242,7 +235,6 @@ private:
     mutable double               determinant_;
 
     mutable bool                 dirty_;
-    mutable bool                 dirty_eigen_;
 
     inline void update() const
     {
@@ -254,41 +246,21 @@ private:
             }
         }
 
-        if(limit_covariance) {
-            if(dirty_eigen_)
-                updateEigen();
+        LimitCovariance<Dim, lamda_ratio_exponent>::apply(covariance_);
 
-            /// for this step see: https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix
-            const double max_lambda = eigen_values_.maxCoeff();
-            const double l          = max_lambda * lambda_ratio;
-
-            covariance_t Lambda = covariance_t::Zero();
-            for(std::size_t i = 0 ; i < Dim; ++i) {
-                Lambda(i,i) = std::abs(eigen_values_(i)) < std::abs(l) ? l : eigen_values_(i);
-            }
-            covariance_ = eigen_vectors_ * Lambda * eigen_vectors_.transpose();
-            information_matrix_ = covariance_.inverse();
-        } else {
-            information_matrix_ = covariance_.inverse();
-        }
-
-        determinant_ = covariance_.determinant();
-        dirty_       = false;
-        dirty_eigen_ = true;
-    }
-
-    inline void updateEigen() const
-    {
         Eigen::EigenSolver<covariance_t> solver;
         solver.compute(covariance_);
         eigen_vectors_ = solver.eigenvectors().real();
         eigen_values_  = solver.eigenvalues().real();
-        dirty_eigen_ = false;
+
+        information_matrix_ = covariance_.inverse();
+        determinant_        = covariance_.determinant();
+        dirty_              = false;
     }
 };
 
-template<>
-class Distribution<1, false>
+template<std::size_t lamda_ratio_exponent>
+class Distribution<1, lamda_ratio_exponent>
 {
 public:
    static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
@@ -407,128 +379,6 @@ private:
         return standard_deviation_;
     }
 };
-
-template<>
-class Distribution<1, true>
-{
-public:
-   static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
-
-    inline Distribution() :
-        mean_(0.0),
-        variance_(0.0),
-        standard_deviation_(0.0),
-        squared_(0.0),
-        dirty_(false),
-        n_(1),
-        n_1_(0)
-    {
-    }
-
-    inline Distribution(const Distribution &other) = default;
-    inline Distribution(Distribution &&other) = default;
-    inline Distribution& operator=(const Distribution &other) = default;
-
-    inline void reset()
-    {
-        mean_       = 0.0;
-        squared_    = 0.0;
-        variance_   = 0.0;
-        standard_deviation_ = 0.0;
-        dirty_      = false;
-        n_          = 1;
-        n_1_        = 0;
-    }
-
-    inline void add(const double s)
-    {
-        mean_    = (mean_ * n_1_ + s) / n_;
-        squared_ = (squared_ * n_1_ + s*s) / n_;
-        ++n_;
-        ++n_1_;
-        dirty_ = true;
-    }
-
-    inline Distribution & operator += (const double s)
-    {
-        mean_    = (mean_ * n_1_ + s) / n_;
-        squared_ = (squared_ * n_1_ + s*s) / n_;
-        ++n_;
-        ++n_1_;
-        dirty_ = true;
-        return *this;
-    }
-
-    inline Distribution & operator += (const Distribution &other)
-    {
-        std::size_t _n = n_1_ + other.n_1_;
-        double  _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
-        double  _squared = (_squared * n_1_ + other.squared_ * other.n_1_) / static_cast<double>(_n);
-        n_   = _n + 1;
-        n_1_ = _n;
-        mean_ = _mean;
-        dirty_ = true;
-        return *this;
-    }
-
-    inline std::size_t getN() const
-    {
-        return n_1_;
-    }
-
-    inline double getMean() const
-    {
-        return mean_;
-    }
-
-    inline double getVariance() const
-    {
-        return dirty_ ? updateReturnVariance() : variance_;
-    }
-
-    inline double getStandardDeviation() const
-    {
-        return dirty_ ? updateReturnStandardDeviation() : standard_deviation_;
-    }
-
-    inline double sample(const double s) const
-    {
-        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
-        const double x = (s - mean_);
-        return std::exp(-0.5 * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
-    }
-
-    inline double sampleNonNormalized(const double s) const
-    {
-        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
-        const double x = (s - mean_);
-        return std::exp(-0.5 * x * x / d);
-    }
-
-private:
-    double          mean_;
-    mutable double  variance_;
-    mutable double  standard_deviation_;
-    double          squared_;
-    bool            dirty_;
-    std::size_t     n_;
-    std::size_t     n_1_;
-
-    inline double updateReturnVariance() const
-    {
-        variance_ = squared_ - mean_ * mean_;
-        standard_deviation_ = std::sqrt(variance_);
-        return variance_;
-    }
-
-    inline double updateReturnStandardDeviation() const
-    {
-        variance_ = squared_ - mean_ * mean_;
-        standard_deviation_ = std::sqrt(variance_);
-        return standard_deviation_;
-    }
-};
-
 }
 }
 
