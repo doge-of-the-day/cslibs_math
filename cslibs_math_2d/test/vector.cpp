@@ -38,6 +38,23 @@ TEST(Test_cslibs_math_2d, testInitialization)
     }
 }
 
+TEST(Test_cslibs_math_2d, testArrayConversion)
+{
+    rng_t rng(-10.0, 10.0);
+
+    for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
+        std::array<double, 2> a0 = {{rng.get(), rng.get()}};
+        cslibs_math_2d::Vector2d v0(a0);
+        EXPECT_EQ(v0(0), a0[0]);
+        EXPECT_EQ(v0(1), a0[1]);
+
+        cslibs_math_2d::Vector2d v1(rng.get(), rng.get());
+        std::array<double, 2> a1 = v1.array();
+        EXPECT_EQ(a1[0], v1(0));
+        EXPECT_EQ(a1[1], v1(1));
+    }
+}
+
 TEST(Test_cslibs_math_2d, testMul)
 {
     rng_t rng(-10.0, 10.0);
@@ -204,8 +221,8 @@ TEST(Test_cslibs_math_2d, testMinMax)
         cslibs_math_2d::Vector2d v0(x0,y0);
         cslibs_math_2d::Vector2d v1(x1,y1);
 
-        cslibs_math_2d::Vector2d min = v0.min(v1);
-        cslibs_math_2d::Vector2d max = v0.max(v1);
+        cslibs_math_2d::Vector2d min = cslibs_math::linear::min(v0,v1);
+        cslibs_math_2d::Vector2d max = cslibs_math::linear::max(v0,v1);
 
         EXPECT_EQ(min(0), std::min(v0(0), v1(0)));
         EXPECT_EQ(min(1), std::min(v0(1), v1(1)));
@@ -213,8 +230,8 @@ TEST(Test_cslibs_math_2d, testMinMax)
         EXPECT_EQ(max(0), std::max(v0(0), v1(0)));
         EXPECT_EQ(max(1), std::max(v0(1), v1(1)));
 
-        min = v1.min(v0);
-        max = v1.max(v0);
+        min = cslibs_math::linear::min(v1, v0);
+        max = cslibs_math::linear::max(v1, v0);
 
         EXPECT_EQ(min(0), std::min(v0(0), v1(0)));
         EXPECT_EQ(min(1), std::min(v0(1), v1(1)));

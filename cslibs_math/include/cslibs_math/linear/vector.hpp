@@ -4,8 +4,10 @@
 #include <array>
 #include <cmath>
 #include <limits>
+#include <cstring>
 
 #include <eigen3/Eigen/Dense>
+
 #include <cslibs_math/linear/eigen.hpp>
 
 namespace cslibs_math {
@@ -17,6 +19,7 @@ public:
 
     using allocator_t             = Eigen::aligned_allocator<Vector>;
     using vector_t                = Eigen::Matrix<T, Dim, 1>;
+    using arr_t                   = std::array<T, Dim>;
     using type_t                  = T;
     const static std::size_t Dimension = Dim;
 
@@ -27,6 +30,11 @@ public:
 
     inline explicit Vector(const T &c) :
         data_(vector_t::Constant(c))
+    {
+    }
+
+    inline explicit Vector(const arr_t &a) :
+        data_(a.data())
     {
     }
 
@@ -206,6 +214,13 @@ public:
     inline static Vector maximum()
     {
         return Vector(std::numeric_limits<T>::maximum());
+    }
+
+    inline std::array<T, Dim> array() const
+    {
+        std::array<T, Dim> arr;
+        std::memcpy(arr.data(), data_.data(), sizeof(arr));
+        return arr;
     }
 
 private:

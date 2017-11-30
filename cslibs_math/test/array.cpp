@@ -8,37 +8,39 @@ using rng_t = cslibs_math::random::Uniform<1>;
 
 const std::size_t REPETITIONS = 10000;
 
+#include <eigen3/Eigen/Core>
+
 TEST(Test_cslibs_math, testArrayMinus)
 {
     rng_t rng(-100.0, 100.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
-        std::array<int, 2> i_2_0 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 2> i_2_1 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
+        std::array<int, 2> i_2_0 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
         std::array<int, 2> i_2_2 = i_2_1 - i_2_0;
         EXPECT_EQ(i_2_2[0], i_2_1[0] - i_2_0[0]);
         EXPECT_EQ(i_2_2[1], i_2_1[1] - i_2_0[1]);
 
-        std::array<double, 2> d_2_0 = {rng.get(), rng.get()};
-        std::array<double, 2> d_2_1 = {rng.get(), rng.get()};
+        std::array<double, 2> d_2_0 = {{rng.get(), rng.get()}};
+        std::array<double, 2> d_2_1 = {{rng.get(), rng.get()}};
         std::array<double, 2> d_2_2 = d_2_1 - d_2_0;
         EXPECT_EQ(d_2_2[0], d_2_1[0] - d_2_0[0]);
         EXPECT_EQ(d_2_2[1], d_2_1[1] - d_2_0[1]);
 
-        std::array<int, 3> i_3_0 = {static_cast<int>(rng.get()),
+        std::array<int, 3> i_3_0 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 3> i_3_1 = {static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 3> i_3_1 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};;
+                                    static_cast<int>(rng.get())}};;
         std::array<int, 3> i_3_2  = i_3_1 - i_3_0;
         EXPECT_EQ(i_3_2[0], i_3_1[0] - i_3_0[0]);
         EXPECT_EQ(i_3_2[1], i_3_1[1] - i_3_0[1]);
         EXPECT_EQ(i_3_2[2], i_3_1[2] - i_3_0[2]);
 
-        std::array<double, 3> d_3_0 = {rng.get(), rng.get(), rng.get()};
-        std::array<double, 3> d_3_1 = {rng.get(), rng.get(), rng.get()};
+        std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
+        std::array<double, 3> d_3_1 = {{rng.get(), rng.get(), rng.get()}};
         std::array<double, 3> d_3_2 = d_3_1 - d_3_0;
         EXPECT_EQ(d_3_2[0], d_3_1[0] - d_3_0[0]);
         EXPECT_EQ(d_3_2[1], d_3_1[1] - d_3_0[1]);
@@ -51,33 +53,33 @@ TEST(Test_cslibs_math, testArrayPlus)
 {
     rng_t rng(-100.0, 100.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
-        std::array<int, 2> i_2_0 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 2> i_2_1 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
+        std::array<int, 2> i_2_0 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
         std::array<int, 2> i_2_2 = i_2_1 + i_2_0;
         EXPECT_EQ(i_2_2[0], i_2_1[0] + i_2_0[0]);
         EXPECT_EQ(i_2_2[1], i_2_1[1] + i_2_0[1]);
 
-        std::array<double, 2> d_2_0 = {rng.get(), rng.get()};
-        std::array<double, 2> d_2_1 = {rng.get(), rng.get()};
+        std::array<double, 2> d_2_0 = {{rng.get(), rng.get()}};
+        std::array<double, 2> d_2_1 = {{rng.get(), rng.get()}};
         std::array<double, 2> d_2_2 = d_2_1 + d_2_0;
         EXPECT_EQ(d_2_2[0], d_2_1[0] + d_2_0[0]);
         EXPECT_EQ(d_2_2[1], d_2_1[1] + d_2_0[1]);
 
-        std::array<int, 3> i_3_0 = {static_cast<int>(rng.get()),
+        std::array<int, 3> i_3_0 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 3> i_3_1 = {static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 3> i_3_1 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};;
+                                    static_cast<int>(rng.get())}};;
         std::array<int, 3> i_3_2  = i_3_1 + i_3_0;
         EXPECT_EQ(i_3_2[0], i_3_1[0] + i_3_0[0]);
         EXPECT_EQ(i_3_2[1], i_3_1[1] + i_3_0[1]);
         EXPECT_EQ(i_3_2[2], i_3_1[2] + i_3_0[2]);
 
-        std::array<double, 3> d_3_0 = {rng.get(), rng.get(), rng.get()};
-        std::array<double, 3> d_3_1 = {rng.get(), rng.get(), rng.get()};
+        std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
+        std::array<double, 3> d_3_1 = {{rng.get(), rng.get(), rng.get()}};
         std::array<double, 3> d_3_2 = d_3_1 + d_3_0;
         EXPECT_EQ(d_3_2[0], d_3_1[0] + d_3_0[0]);
         EXPECT_EQ(d_3_2[1], d_3_1[1] + d_3_0[1]);
@@ -89,10 +91,10 @@ TEST(Test_cslibs_math, testArrayMult)
 {
     rng_t rng(-100.0, 100.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
-        std::array<int, 2> i_2_0 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 2> i_2_1 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
+        std::array<int, 2> i_2_0 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
         std::array<int, 2> i_2_2 = i_2_1 * i_2_0;
         EXPECT_EQ(i_2_2[0], i_2_1[0] * i_2_0[0]);
         EXPECT_EQ(i_2_2[1], i_2_1[1] * i_2_0[1]);
@@ -101,8 +103,8 @@ TEST(Test_cslibs_math, testArrayMult)
         EXPECT_EQ(i_2_2[0], i_2_1[0] * i_2_0[0] * mi);
         EXPECT_EQ(i_2_2[1], i_2_1[1] * i_2_0[1] * mi);
 
-        std::array<double, 2> d_2_0 = {rng.get(), rng.get()};
-        std::array<double, 2> d_2_1 = {rng.get(), rng.get()};
+        std::array<double, 2> d_2_0 = {{rng.get(), rng.get()}};
+        std::array<double, 2> d_2_1 = {{rng.get(), rng.get()}};
         std::array<double, 2> d_2_2 = d_2_1 * d_2_0;
         EXPECT_EQ(d_2_2[0], d_2_1[0] * d_2_0[0]);
         EXPECT_EQ(d_2_2[1], d_2_1[1] * d_2_0[1]);
@@ -111,12 +113,12 @@ TEST(Test_cslibs_math, testArrayMult)
         EXPECT_EQ(d_2_2[0], d_2_1[0] * d_2_0[0] * md);
         EXPECT_EQ(d_2_2[1], d_2_1[1] * d_2_0[1] * md);
 
-        std::array<int, 3> i_3_0 = {static_cast<int>(rng.get()),
+        std::array<int, 3> i_3_0 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 3> i_3_1 = {static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 3> i_3_1 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};;
+                                    static_cast<int>(rng.get())}};;
         std::array<int, 3> i_3_2  = i_3_1 * i_3_0;
         EXPECT_EQ(i_3_2[0], i_3_1[0] * i_3_0[0]);
         EXPECT_EQ(i_3_2[1], i_3_1[1] * i_3_0[1]);
@@ -126,7 +128,7 @@ TEST(Test_cslibs_math, testArrayMult)
         EXPECT_EQ(i_3_2[1], i_3_1[1] * i_3_0[1] * mi);
         EXPECT_EQ(i_3_2[2], i_3_1[2] * i_3_0[2] * mi);
 
-        std::array<double, 3> d_3_0 = {rng.get(), rng.get(), rng.get()};
+        std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
         std::array<double, 3> d_3_1 = {rng.get(), rng.get(), rng.get()};
         std::array<double, 3> d_3_2 = d_3_1 * d_3_0;
         EXPECT_EQ(d_3_2[0], d_3_1[0] * d_3_0[0]);
@@ -151,8 +153,8 @@ TEST(Test_cslibs_math, testArrayDiv)
     };
 
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
-        std::array<int, 2> i_2_0 = {irand(),irand()};
-        std::array<int, 2> i_2_1 = {irand(),irand()};
+        std::array<int, 2> i_2_0 = {{irand(),irand()}};
+        std::array<int, 2> i_2_1 = {{irand(),irand()}};
         std::array<int, 2> i_2_2 = i_2_1  / i_2_0;
         EXPECT_NEAR(i_2_2[0], i_2_1[0]  / i_2_0[0], 1e-9);
         EXPECT_NEAR(i_2_2[1], i_2_1[1]  / i_2_0[1], 1e-9);
@@ -161,8 +163,8 @@ TEST(Test_cslibs_math, testArrayDiv)
         EXPECT_NEAR(i_2_2[0], i_2_1[0]  / i_2_0[0]  / mi, 1e-9);
         EXPECT_NEAR(i_2_2[1], i_2_1[1]  / i_2_0[1]  / mi, 1e-9);
 
-        std::array<double, 2> d_2_0 = {rng.get(), rng.getNEQ(0.0)};
-        std::array<double, 2> d_2_1 = {rng.get(), rng.getNEQ(0.0)};
+        std::array<double, 2> d_2_0 = {{rng.get(), rng.getNEQ(0.0)}};
+        std::array<double, 2> d_2_1 = {{rng.get(), rng.getNEQ(0.0)}};
         std::array<double, 2> d_2_2 = d_2_1  / d_2_0;
         EXPECT_NEAR(d_2_2[0], d_2_1[0]  / d_2_0[0], 1e-9);
         EXPECT_NEAR(d_2_2[1], d_2_1[1]  / d_2_0[1], 1e-9);
@@ -171,8 +173,8 @@ TEST(Test_cslibs_math, testArrayDiv)
         EXPECT_NEAR(d_2_2[0], d_2_1[0]  / d_2_0[0]  / md, 1e-9);
         EXPECT_NEAR(d_2_2[1], d_2_1[1]  / d_2_0[1]  / md, 1e-9);
 
-        std::array<int, 3> i_3_0 = {irand(), irand(), irand()};
-        std::array<int, 3> i_3_1 = {irand(), irand(), irand()};
+        std::array<int, 3> i_3_0 = {{irand(), irand(), irand()}};
+        std::array<int, 3> i_3_1 = {{irand(), irand(), irand()}};
         std::array<int, 3> i_3_2  = i_3_1  / i_3_0;
         EXPECT_NEAR(i_3_2[0], i_3_1[0]  / i_3_0[0], 1e-9);
         EXPECT_NEAR(i_3_2[1], i_3_1[1]  / i_3_0[1], 1e-9);
@@ -182,8 +184,8 @@ TEST(Test_cslibs_math, testArrayDiv)
         EXPECT_NEAR(i_3_2[1], i_3_1[1]  / i_3_0[1]  / mi, 1e-9);
         EXPECT_NEAR(i_3_2[2], i_3_1[2]  / i_3_0[2]  / mi, 1e-9);
 
-        std::array<double, 3> d_3_0 = {rng.get(), rng.get(), rng.get()};
-        std::array<double, 3> d_3_1 = {rng.get(), rng.get(), rng.get()};
+        std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
+        std::array<double, 3> d_3_1 = {{rng.get(), rng.get(), rng.get()}};
         std::array<double, 3> d_3_2 = d_3_1  / d_3_0;
         EXPECT_NEAR(d_3_2[0], d_3_1[0]  / d_3_0[0], 1e-9);
         EXPECT_NEAR(d_3_2[1], d_3_1[1]  / d_3_0[1], 1e-9);
@@ -199,10 +201,10 @@ TEST(Test_cslibs_math, testArrayMin)
 {
     rng_t rng(-100.0, 100.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
-        std::array<int, 2> i_2_0 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 2> i_2_1 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
+        std::array<int, 2> i_2_0 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
 
         std::array<int, 2> i_2_2 = cslibs_math::common::min(i_2_0, i_2_1);
         EXPECT_EQ(i_2_2[0], std::min(i_2_1[0], i_2_0[0]));
@@ -212,8 +214,8 @@ TEST(Test_cslibs_math, testArrayMin)
         EXPECT_EQ(i_2_2[1], std::min(i_2_1[1], i_2_0[1]));
 
 
-        std::array<double, 2> d_2_0 = {rng.get(), rng.get()};
-        std::array<double, 2> d_2_1 = {rng.get(), rng.get()};
+        std::array<double, 2> d_2_0 = {{rng.get(), rng.get()}};
+        std::array<double, 2> d_2_1 = {{rng.get(), rng.get()}};
 
         std::array<double, 2> d_2_2 = cslibs_math::common::min(d_2_0, d_2_1);
         EXPECT_EQ(d_2_2[0], std::min(d_2_1[0], d_2_0[0]));
@@ -222,12 +224,12 @@ TEST(Test_cslibs_math, testArrayMin)
         EXPECT_EQ(d_2_2[0], std::min(d_2_0[0], d_2_1[0]));
         EXPECT_EQ(d_2_2[1], std::min(d_2_0[1], d_2_1[1]));
 
-        std::array<int, 3> i_3_0 = {static_cast<int>(rng.get()),
+        std::array<int, 3> i_3_0 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 3> i_3_1 = {static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 3> i_3_1 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
+                                    static_cast<int>(rng.get())}};
 
         std::array<int, 3> i_3_2  = cslibs_math::common::min(i_3_1, i_3_0);
         EXPECT_EQ(i_3_2[0], std::min(i_3_1[0], i_3_0[0]));
@@ -238,8 +240,8 @@ TEST(Test_cslibs_math, testArrayMin)
         EXPECT_EQ(i_3_2[1], std::min(i_3_1[1], i_3_0[1]));
         EXPECT_EQ(i_3_2[2], std::min(i_3_1[2], i_3_0[2]));
 
-        std::array<double, 3> d_3_0 = {rng.get(), rng.get(), rng.get()};
-        std::array<double, 3> d_3_1 = {rng.get(), rng.get(), rng.get()};
+        std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
+        std::array<double, 3> d_3_1 = {{rng.get(), rng.get(), rng.get()}};
 
         std::array<double, 3> d_3_2 = cslibs_math::common::min(d_3_1, d_3_0);
         EXPECT_EQ(d_3_2[0], std::min(d_3_1[0], d_3_0[0]));
@@ -256,10 +258,10 @@ TEST(Test_cslibs_math, testArrayMax)
 {
     rng_t rng(-100.0, 100.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
-        std::array<int, 2> i_2_0 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 2> i_2_1 = {static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
+        std::array<int, 2> i_2_0 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
 
         std::array<int, 2> i_2_2 = cslibs_math::common:: max(i_2_0, i_2_1);
         EXPECT_EQ(i_2_2[0], std:: max(i_2_1[0], i_2_0[0]));
@@ -269,8 +271,8 @@ TEST(Test_cslibs_math, testArrayMax)
         EXPECT_EQ(i_2_2[1], std:: max(i_2_1[1], i_2_0[1]));
 
 
-        std::array<double, 2> d_2_0 = {rng.get(), rng.get()};
-        std::array<double, 2> d_2_1 = {rng.get(), rng.get()};
+        std::array<double, 2> d_2_0 = {{rng.get(), rng.get()}};
+        std::array<double, 2> d_2_1 = {{rng.get(), rng.get()}};
 
         std::array<double, 2> d_2_2 = cslibs_math::common:: max(d_2_0, d_2_1);
         EXPECT_EQ(d_2_2[0], std:: max(d_2_1[0], d_2_0[0]));
@@ -279,12 +281,12 @@ TEST(Test_cslibs_math, testArrayMax)
         EXPECT_EQ(d_2_2[0], std:: max(d_2_0[0], d_2_1[0]));
         EXPECT_EQ(d_2_2[1], std:: max(d_2_0[1], d_2_1[1]));
 
-        std::array<int, 3> i_3_0 = {static_cast<int>(rng.get()),
+        std::array<int, 3> i_3_0 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
-        std::array<int, 3> i_3_1 = {static_cast<int>(rng.get()),
+                                    static_cast<int>(rng.get())}};
+        std::array<int, 3> i_3_1 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())};
+                                    static_cast<int>(rng.get())}};
 
         std::array<int, 3> i_3_2  = cslibs_math::common:: max(i_3_1, i_3_0);
         EXPECT_EQ(i_3_2[0], std:: max(i_3_1[0], i_3_0[0]));
@@ -295,8 +297,8 @@ TEST(Test_cslibs_math, testArrayMax)
         EXPECT_EQ(i_3_2[1], std:: max(i_3_1[1], i_3_0[1]));
         EXPECT_EQ(i_3_2[2], std:: max(i_3_1[2], i_3_0[2]));
 
-        std::array<double, 3> d_3_0 = {rng.get(), rng.get(), rng.get()};
-        std::array<double, 3> d_3_1 = {rng.get(), rng.get(), rng.get()};
+        std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
+        std::array<double, 3> d_3_1 = {{rng.get(), rng.get(), rng.get()}};
 
         std::array<double, 3> d_3_2 = cslibs_math::common:: max(d_3_1, d_3_0);
         EXPECT_EQ(d_3_2[0], std:: max(d_3_1[0], d_3_0[0]));
