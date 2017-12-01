@@ -206,10 +206,10 @@ TEST(Test_cslibs_math, testArrayMin)
         std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get())}};
 
-        std::array<int, 2> i_2_2 = cslibs_math::common::min(i_2_0, i_2_1);
+        std::array<int, 2> i_2_2 = std::min(i_2_0, i_2_1);
         EXPECT_EQ(i_2_2[0], std::min(i_2_1[0], i_2_0[0]));
         EXPECT_EQ(i_2_2[1], std::min(i_2_1[1], i_2_0[1]));
-        i_2_2 = cslibs_math::common::min(i_2_1, i_2_0);
+        i_2_2 = std::min(i_2_1, i_2_0);
         EXPECT_EQ(i_2_2[0], std::min(i_2_1[0], i_2_0[0]));
         EXPECT_EQ(i_2_2[1], std::min(i_2_1[1], i_2_0[1]));
 
@@ -217,10 +217,10 @@ TEST(Test_cslibs_math, testArrayMin)
         std::array<double, 2> d_2_0 = {{rng.get(), rng.get()}};
         std::array<double, 2> d_2_1 = {{rng.get(), rng.get()}};
 
-        std::array<double, 2> d_2_2 = cslibs_math::common::min(d_2_0, d_2_1);
+        std::array<double, 2> d_2_2 = std::min(d_2_0, d_2_1);
         EXPECT_EQ(d_2_2[0], std::min(d_2_1[0], d_2_0[0]));
         EXPECT_EQ(d_2_2[1], std::min(d_2_1[1], d_2_0[1]));
-        d_2_2 = cslibs_math::common::min(d_2_1, d_2_0);
+        d_2_2 = std::min(d_2_1, d_2_0);
         EXPECT_EQ(d_2_2[0], std::min(d_2_0[0], d_2_1[0]));
         EXPECT_EQ(d_2_2[1], std::min(d_2_0[1], d_2_1[1]));
 
@@ -231,11 +231,11 @@ TEST(Test_cslibs_math, testArrayMin)
                                     static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get())}};
 
-        std::array<int, 3> i_3_2  = cslibs_math::common::min(i_3_1, i_3_0);
+        std::array<int, 3> i_3_2  = std::min(i_3_1, i_3_0);
         EXPECT_EQ(i_3_2[0], std::min(i_3_1[0], i_3_0[0]));
         EXPECT_EQ(i_3_2[1], std::min(i_3_1[1], i_3_0[1]));
         EXPECT_EQ(i_3_2[2], std::min(i_3_1[2], i_3_0[2]));
-        i_3_2  = cslibs_math::common::min(i_3_0, i_3_1);
+        i_3_2  = std::min(i_3_0, i_3_1);
         EXPECT_EQ(i_3_2[0], std::min(i_3_1[0], i_3_0[0]));
         EXPECT_EQ(i_3_2[1], std::min(i_3_1[1], i_3_0[1]));
         EXPECT_EQ(i_3_2[2], std::min(i_3_1[2], i_3_0[2]));
@@ -243,11 +243,11 @@ TEST(Test_cslibs_math, testArrayMin)
         std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
         std::array<double, 3> d_3_1 = {{rng.get(), rng.get(), rng.get()}};
 
-        std::array<double, 3> d_3_2 = cslibs_math::common::min(d_3_1, d_3_0);
+        std::array<double, 3> d_3_2 = std::min(d_3_1, d_3_0);
         EXPECT_EQ(d_3_2[0], std::min(d_3_1[0], d_3_0[0]));
         EXPECT_EQ(d_3_2[1], std::min(d_3_1[1], d_3_0[1]));
         EXPECT_EQ(d_3_2[2], std::min(d_3_1[2], d_3_0[2]));
-        d_3_2 = cslibs_math::common::min(d_3_0, d_3_1);
+        d_3_2 = std::min(d_3_0, d_3_1);
         EXPECT_EQ(d_3_2[0], std::min(d_3_1[0], d_3_0[0]));
         EXPECT_EQ(d_3_2[1], std::min(d_3_1[1], d_3_0[1]));
         EXPECT_EQ(d_3_2[2], std::min(d_3_1[2], d_3_0[2]));
@@ -263,10 +263,10 @@ TEST(Test_cslibs_math, testArrayMax)
         std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get())}};
 
-        std::array<int, 2> i_2_2 = cslibs_math::common:: max(i_2_0, i_2_1);
+        std::array<int, 2> i_2_2 = std::max(i_2_0, i_2_1);
         EXPECT_EQ(i_2_2[0], std:: max(i_2_1[0], i_2_0[0]));
         EXPECT_EQ(i_2_2[1], std:: max(i_2_1[1], i_2_0[1]));
-        i_2_2 = cslibs_math::common:: max(i_2_1, i_2_0);
+        i_2_2 = std::max(i_2_1, i_2_0);
         EXPECT_EQ(i_2_2[0], std:: max(i_2_1[0], i_2_0[0]));
         EXPECT_EQ(i_2_2[1], std:: max(i_2_1[1], i_2_0[1]));
 
@@ -274,10 +274,10 @@ TEST(Test_cslibs_math, testArrayMax)
         std::array<double, 2> d_2_0 = {{rng.get(), rng.get()}};
         std::array<double, 2> d_2_1 = {{rng.get(), rng.get()}};
 
-        std::array<double, 2> d_2_2 = cslibs_math::common:: max(d_2_0, d_2_1);
+        std::array<double, 2> d_2_2 = std::max(d_2_0, d_2_1);
         EXPECT_EQ(d_2_2[0], std:: max(d_2_1[0], d_2_0[0]));
         EXPECT_EQ(d_2_2[1], std:: max(d_2_1[1], d_2_0[1]));
-        d_2_2 = cslibs_math::common:: max(d_2_1, d_2_0);
+        d_2_2 = std::max(d_2_1, d_2_0);
         EXPECT_EQ(d_2_2[0], std:: max(d_2_0[0], d_2_1[0]));
         EXPECT_EQ(d_2_2[1], std:: max(d_2_0[1], d_2_1[1]));
 
@@ -288,11 +288,11 @@ TEST(Test_cslibs_math, testArrayMax)
                                     static_cast<int>(rng.get()),
                                     static_cast<int>(rng.get())}};
 
-        std::array<int, 3> i_3_2  = cslibs_math::common:: max(i_3_1, i_3_0);
+        std::array<int, 3> i_3_2  = std::max(i_3_1, i_3_0);
         EXPECT_EQ(i_3_2[0], std:: max(i_3_1[0], i_3_0[0]));
         EXPECT_EQ(i_3_2[1], std:: max(i_3_1[1], i_3_0[1]));
         EXPECT_EQ(i_3_2[2], std:: max(i_3_1[2], i_3_0[2]));
-        i_3_2  = cslibs_math::common:: max(i_3_0, i_3_1);
+        i_3_2  = std::max(i_3_0, i_3_1);
         EXPECT_EQ(i_3_2[0], std:: max(i_3_1[0], i_3_0[0]));
         EXPECT_EQ(i_3_2[1], std:: max(i_3_1[1], i_3_0[1]));
         EXPECT_EQ(i_3_2[2], std:: max(i_3_1[2], i_3_0[2]));
@@ -300,11 +300,11 @@ TEST(Test_cslibs_math, testArrayMax)
         std::array<double, 3> d_3_0 = {{rng.get(), rng.get(), rng.get()}};
         std::array<double, 3> d_3_1 = {{rng.get(), rng.get(), rng.get()}};
 
-        std::array<double, 3> d_3_2 = cslibs_math::common:: max(d_3_1, d_3_0);
+        std::array<double, 3> d_3_2 = std::max(d_3_1, d_3_0);
         EXPECT_EQ(d_3_2[0], std:: max(d_3_1[0], d_3_0[0]));
         EXPECT_EQ(d_3_2[1], std:: max(d_3_1[1], d_3_0[1]));
         EXPECT_EQ(d_3_2[2], std:: max(d_3_1[2], d_3_0[2]));
-        d_3_2 = cslibs_math::common:: max(d_3_0, d_3_1);
+        d_3_2 = std::max(d_3_0, d_3_1);
         EXPECT_EQ(d_3_2[0], std:: max(d_3_1[0], d_3_0[0]));
         EXPECT_EQ(d_3_2[1], std:: max(d_3_1[1], d_3_0[1]));
         EXPECT_EQ(d_3_2[2], std:: max(d_3_1[2], d_3_0[2]));
