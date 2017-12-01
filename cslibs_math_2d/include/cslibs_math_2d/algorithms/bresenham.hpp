@@ -71,10 +71,16 @@ public:
         return done() ? *this : iterate();
     }
 
-    inline int length2() const
+    inline int distance2() const
     {
         auto sq = [](const int d) { return d*d;};
         return sq(index_[0] - end_[0]) + sq(index_[1] - end_[1]);
+    }
+
+    inline int traversed2() const
+    {
+        auto sq = [](const int d) { return d*d;};
+        return sq(index_[0] - start_[0]) + sq(index_[1] - start_[1]);
     }
 
     inline bool done() const
