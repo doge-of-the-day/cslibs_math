@@ -2,7 +2,7 @@
 <package format="2">
   <name>cslibs_math_3d</name>
   <version>0.0.1</version>
-  <description>The muse_smc_math_2d package</description>
+  <description>The muse_smc_math_3d package</description>
 
   <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
   <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>

@@ -258,7 +258,8 @@ inline cslibs_math_3d::Transform3d operator * (const cslibs_math_3d::Transform3d
 
 inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Transform3d &t)
 {
-    out << "[" << t.tx() << "," << t.ty() << "," << t.roll() << "," << t.pitch() << "," << t.yaw() << "]";
+    out << "[" << t.tx() << "," << t.ty() << ", " << t.tz() << ","
+        << t.roll() << "," << t.pitch() << "," << t.yaw() << "]";
     return out;
 }
 

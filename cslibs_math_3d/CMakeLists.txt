@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(cslibs_math_3d)
 
 find_package(catkin REQUIRED COMPONENTS
-  cslibs_math
-)
-
-find_package(catkin REQUIRED COMPONENTS
     cslibs_math
 )
 
