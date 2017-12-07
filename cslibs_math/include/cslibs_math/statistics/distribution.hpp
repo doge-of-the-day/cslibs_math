@@ -199,6 +199,11 @@ public:
         return n_1_ >= 3 ? update_sample() : 0.0;
     }
 
+    inline double sampleMean() const
+    {
+        return sample(getMean());
+    }
+
     inline double sampleNonNormalized(const sample_t &p) const
     {
         auto update_sample = [this, &p]() {
@@ -220,6 +225,11 @@ public:
             return std::exp(exponent);
         };
         return n_1_ >= 3 ? update_sample() : 0.0;
+    }
+
+    inline double sampleNonNormalizedMean() const
+    {
+        return sampleNonNormalized(getMean());
     }
 
 private:
