@@ -2,7 +2,10 @@
 <package>
   <name>cslibs_math</name>
   <version>0.0.1</version>
-  <description>The muse_smc_math package</description>
+  <description>
+    The cslibs_math package provides different math utility classes for e.g. multidimensional
+    statistics and linear algebra.
+  </description>
 
   <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
   <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>

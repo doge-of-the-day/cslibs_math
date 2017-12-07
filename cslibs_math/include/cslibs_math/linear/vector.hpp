@@ -206,21 +206,27 @@ public:
         return v;
     }
 
-    inline static Vector minimum()
-    {
-        return Vector(std::numeric_limits<T>::lowest());
-    }
-
-    inline static Vector maximum()
-    {
-        return Vector(std::numeric_limits<T>::maximum());
-    }
-
     inline std::array<T, Dim> array() const
     {
         std::array<T, Dim> arr;
         std::memcpy(arr.data(), data_.data(), sizeof(arr));
         return arr;
+    }
+
+    static inline Vector inf()
+    {
+        return Vector(std::numeric_limits<T>::infinity());
+    }
+
+
+    inline static Vector min()
+    {
+        return Vector(std::numeric_limits<T>::lowest());
+    }
+
+    inline static Vector max()
+    {
+        return Vector(std::numeric_limits<T>::max());
     }
 
 private:

@@ -18,6 +18,7 @@ catkin_package(
 include_directories(
     ${Eigen3_INCLUDE_DIR}
     ${sensors_msgs_INCLUDE_DIRS}
+    ${tf_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
     include
 )
@@ -25,11 +26,7 @@ include_directories(
 cslibs_math_3d_show_headers()
 
 #### test
-find_package(tf QUIET)
 if(${tf_FOUND})
-    include_directories(
-        ${tf_INCLUDE_DIRS}
-    )
     cslibs_math_3d_add_unit_test_gtest(${PROJECT_NAME}_test_quaternion
         SRCS test/quaternion.cpp
     )

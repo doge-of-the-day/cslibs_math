@@ -28,11 +28,7 @@ include_directories(
 cslibs_math_2d_show_headers()
 
 #### test
-find_package(tf QUIET)
 if(${tf_FOUND})
-    include_directories(
-        ${tf_INCLUDE_DIRS}
-    )
     cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_transform
         SRCS test/transform.cpp
     )

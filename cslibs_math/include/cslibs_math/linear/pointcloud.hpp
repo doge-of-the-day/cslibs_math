@@ -17,14 +17,12 @@ public:
     using const_iterator_t = typename points_t::const_iterator;
 
     Pointcloud() :
-        min_(std::numeric_limits<typename point_t::type_t>::max()),
-        max_(std::numeric_limits<typename point_t::type_t>::min())
+        min_(point_t::max()),
+        max_(point_t::min())
     {
     }
 
-    virtual ~Pointcloud()
-    {
-    }
+    virtual ~Pointcloud() = default;
 
     inline virtual void insert(const point_t &pt)
     {
@@ -35,7 +33,7 @@ public:
 
     inline virtual void insertInvalid()
     {
-        data_.emplace_back(point_t(std::numeric_limits<double>::infinity()));
+        data_.emplace_back(point_t::inf());
     }
 
     inline virtual void clear()

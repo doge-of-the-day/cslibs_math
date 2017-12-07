@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<package format="2"     >
-  <name>cslibs_math_2d</name>
+<package format="2">
+  <name>cslibs_math_ros</name>
   <version>0.0.1</version>
   <description>
-    The cslibs_math_2d package mainly provides template instances and algorithms for the 2d space.
+    The cslibs_math_ros package provides functionality to convert TF math data types
+    to cslibs_math types.
   </description>
 
   <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
