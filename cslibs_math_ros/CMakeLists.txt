@@ -15,7 +15,6 @@ find_package(cslibs_math_3d QUIET)
 
 catkin_package(
     INCLUDE_DIRS    include
-    DEPENDS         Eigen3
 )
 
 include_directories(

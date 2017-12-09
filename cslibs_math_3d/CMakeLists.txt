@@ -12,7 +12,6 @@ find_package(sensor_msgs           QUIET)
 catkin_package(
     INCLUDE_DIRS    include
     CATKIN_DEPENDS  cslibs_math
-    DEPENDS         Eigen3
 )
 
 include_directories(

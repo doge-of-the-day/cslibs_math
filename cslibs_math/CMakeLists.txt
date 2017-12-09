@@ -14,7 +14,6 @@ find_package(Eigen3 REQUIRED)
 
 catkin_package(
     INCLUDE_DIRS    include
-    DEPENDS         Eigen3
     CFG_EXTRAS      cslibs_math_extras.cmake
                     cslibs_math_enable_c++11.cmake
                     cslibs_math_openmp.cmake
