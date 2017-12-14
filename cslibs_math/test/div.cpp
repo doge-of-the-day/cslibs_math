@@ -4,7 +4,7 @@
 
 TEST(Test_cslibs_math, testDiv)
 {
-    EXPECT_EQ(cslibs_math::common::div(-11101,100), -112);
+    EXPECT_EQ(cslibs_math::common::div(-11101, 100), -112);
     EXPECT_EQ(cslibs_math::common::div(-1, 100), -1);
     EXPECT_EQ(cslibs_math::common::div(-2, 100), -1);
     EXPECT_EQ(cslibs_math::common::div(-100, 100), -1);
