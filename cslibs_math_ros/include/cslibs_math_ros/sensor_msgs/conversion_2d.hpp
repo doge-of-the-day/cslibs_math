@@ -1,6 +1,7 @@
 #ifndef CSLIBS_MATH_ROS_CONVERSION_HPP
 #define CSLIBS_MATH_ROS_CONVERSION_HPP
 
+#include <cslibs_math_2d/linear/pointcloud.hpp>
 #include <cslibs_math_2d/linear/polar_pointcloud.hpp>
 #include <cslibs_math_ros/tf/tf_listener_2d.hpp>
 #include <cslibs_time/time_frame.hpp>
@@ -89,6 +90,52 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
          dst);
 }
 
+inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
+                 const interval_t &linear_interval,
+                 const interval_t &angular_interval,
+                 cslibs_math_2d::Pointcloud2d::Ptr &dst)
+{
+    const float range_min = std::max(linear_interval[0],  src->range_min);
+    const float range_max = std::min(linear_interval[1],  src->range_max);
+    const float angle_min = std::max(angular_interval[0], src->angle_min);
+    const float angle_max = std::min(angular_interval[1], src->angle_max);
+
+    auto in_linear_interval = [range_min, range_max](const float range)
+    {
+        return range >= range_min && range <= range_max;
+    };
+    auto in_angular_interval = [angle_min, angle_max](const float angle)
+    {
+        return angle >= angle_min && angle <= angle_max;
+    };
+
+
+    dst.reset(new cslibs_math_2d::Pointcloud2d);
+    const float angle_incr = src->angle_increment;
+    float angle = angle_min;
+    for(const float range : src->ranges) {
+        if(in_linear_interval(range) && in_angular_interval(angle)) {
+            const cslibs_math_2d::Point2d p(static_cast<double>(std::cos(angle) * range),
+                                            static_cast<double>(std::sin(angle) * range));
+            dst->insert(p);
+        } else {
+            dst->insertInvalid();
+        }
+        angle += angle_incr;
+    };
+}
+
+
+
+inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
+                 cslibs_math_2d::Pointcloud2d::Ptr &dst)
+
+{
+    from(src,
+         {{src->range_min, src->range_max}},
+         {{src->angle_min, src->angle_max}},
+         dst);
+}
 
 inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
                  const interval_t    &linear_interval,

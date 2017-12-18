@@ -9,7 +9,6 @@ find_package(Eigen3 REQUIRED)
 find_package(tf                    QUIET)
 find_package(cslibs_boost_geometry QUIET)
 
-
 catkin_package(
     INCLUDE_DIRS    include
     CATKIN_DEPENDS  cslibs_math
