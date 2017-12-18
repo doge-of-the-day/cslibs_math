@@ -1,5 +1,5 @@
-#ifndef CSLIBS_MATH_ROS_CONVERSION_HPP
-#define CSLIBS_MATH_ROS_CONVERSION_HPP
+#ifndef CSLIBS_MATH_ROS_SENSOR_MSGS_CONVERSION_2D_HPP
+#define CSLIBS_MATH_ROS_SENSOR_MSGS_CONVERSION_2D_HPP
 
 #include <cslibs_math_2d/linear/pointcloud.hpp>
 #include <cslibs_math_2d/linear/polar_pointcloud.hpp>
@@ -182,7 +182,7 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
         return;
     }
 
-    cslibs_math_2d::Transform2d end_T_start = f_T_start * f_T_end;
+    cslibs_math_2d::Transform2d end_T_start = f_T_end.inverse() * f_T_start;
     auto  angle = angle_min;
     double dt = 0.0;
     for(const auto range : src->ranges) {
@@ -217,4 +217,4 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
 }
 }
 
-#endif // CSLIBS_MATH_ROS_CONVERSION_HPP
+#endif // CSLIBS_MATH_ROS_SENSOR_MSGS_CONVERSION_2D_HPP

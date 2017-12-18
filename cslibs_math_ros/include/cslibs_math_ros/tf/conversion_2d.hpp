@@ -1,5 +1,5 @@
-#ifndef CSLIBS_MATH_ROS_CONVERSION_2D_HPP
-#define CSLIBS_MATH_ROS_CONVERSION_2D_HPP
+#ifndef CSLIBS_MATH_ROS_TF_CONVERSION_2D_HPP
+#define CSLIBS_MATH_ROS_TF_CONVERSION_2D_HPP
 
 #include <tf/tf.h>
 
@@ -41,7 +41,7 @@ inline void from(const std::vector<::tf::Transform> &src,
 }
 
 inline void from(const std::vector<::tf::Vector3> &src,
-                 std::vector<cslibs_math_2d::Transform2d> &dst)
+                 std::vector<cslibs_math_2d::Vector2d> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -70,4 +70,4 @@ inline void from(const std::vector<cslibs_math_2d::Vector2d> &src,
 }
 }
 
-#endif // CSLIBS_MATH_ROS_CONVERSION_2D_HPP
+#endif // CSLIBS_MATH_ROS_TF_CONVERSION_2D_HPP

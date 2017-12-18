@@ -44,8 +44,8 @@ inline void assign(Array &arr, const T t, const Ts... ts)
     const static constexpr unsigned int cols = Array::ColsAtCompileTime;
 
     static constexpr unsigned int i = sizeof...(ts);
-    static constexpr unsigned int r = rows - 1ul - i / cols;
-    static constexpr unsigned int c = cols - 1ul - i % cols;
+    static constexpr unsigned int r = rows - 1u - i / cols;
+    static constexpr unsigned int c = cols - 1u - i % cols;
     arr(r,c) = t;
     assign(arr, ts...);
 }

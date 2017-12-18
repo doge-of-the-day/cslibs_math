@@ -1,4 +1,81 @@
-#ifndef CSLIBS_MATH_ROS_CONVERSION_HPP
-#define CSLIBS_MATH_ROS_CONVERSION_HPP
+#ifndef CSLIBS_MATH_ROS_GEOMETRY_MSGS_CONVERSION_2D_HPP
+#define CSLIBS_MATH_ROS_GEOMETRY_MSGS_CONVERSION_2D_HPP
 
-#endif // CSLIBS_MATH_ROS_CONVERSION_HPP
+#include <tf/tf.h>
+
+#include <geometry_msgs/Pose.h>
+
+#include <cslibs_math_2d/linear/covariance.hpp>
+#include <cslibs_math_2d/linear/transform.hpp>
+
+namespace cslibs_math_ros {
+namespace geometry_msgs {
+namespace conversion_2d {
+inline cslibs_math_2d::Vector2d from(const ::geometry_msgs::Point &p)
+{
+    return cslibs_math_2d::Vector2d(p.x, p.y, 0.0);
+}
+
+inline cslibs_math_2d::Transform2d from(const ::geometry_msgs::Pose &p)
+{
+    return cslibs_math_2d::Transform2d(from(p.position),
+                                        ::tf::getYaw(p.orientation));
+}
+
+inline ::geometry_msgs::Point from(const cslibs_math_2d::Vector2d &v)
+{
+    ::geometry_msgs::Point p;
+    p.x = v(0);
+    p.y = v(1);
+    p.z = 0.0;
+    return p;
+}
+
+inline ::geometry_msgs::Pose from(const cslibs_math_2d::Transform2d &t)
+{
+    ::geometry_msgs::Pose p;
+    p.orientation = ::tf::createQuaternionMsgFromYaw(t.yaw());
+    p.position = from(t.translation());
+    return p;
+}
+
+inline void from(const std::vector<::geometry_msgs::Pose> &src,
+                 std::vector<cslibs_math_2d::Transform2d> &dst)
+{
+    dst.resize(src.size());
+    std::transform(src.begin(), src.end(),
+                   dst.begin(),
+                  [](const ::geometry_msgs::Pose &p){return from(p);});
+}
+
+inline void from(const std::vector<::geometry_msgs::Point> &src,
+                 std::vector<cslibs_math_2d::Vector2d> &dst)
+{
+    dst.resize(src.size());
+    std::transform(src.begin(), src.end(),
+                   dst.begin(),
+                   [](const ::geometry_msgs::Point &p){return from(p);});
+}
+
+inline void from(const std::vector<cslibs_math_2d::Transform2d> &src,
+                 std::vector<::geometry_msgs::Pose> &dst)
+{
+    dst.resize(src.size());
+    std::transform(src.begin(), src.end(),
+                   dst.begin(),
+                  [](const cslibs_math_2d::Transform2d &t){return from(t);});
+}
+
+inline void from(const std::vector<cslibs_math_2d::Vector2d> &src,
+                 std::vector<::geometry_msgs::Point> &dst)
+{
+    dst.resize(src.size());
+    std::transform(src.begin(), src.end(),
+                   dst.begin(),
+                  [](const cslibs_math_2d::Vector2d &v){return from(v);});
+}
+}
+}
+}
+
+#endif // CSLIBS_MATH_ROS_GEOMETRY_MSGS_CONVERSION_2D_HPP

@@ -57,7 +57,7 @@ public:
 
     inline bool isNormal() const
     {
-        return std::isnormal(rho_);
+        return std::isnormal(rho_) && !std::isinf(rho_);
     }
 
     inline void setRho(const double rho)

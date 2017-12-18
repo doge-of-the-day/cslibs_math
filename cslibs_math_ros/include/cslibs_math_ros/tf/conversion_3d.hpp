@@ -1,5 +1,5 @@
-#ifndef CSLIBS_MATH_ROS_CONVERSION_3D_HPP
-#define CSLIBS_MATH_ROS_CONVERSION_3D_HPP
+#ifndef CSLIBS_MATH_ROS_TF_CONVERSION_3D_HPP
+#define CSLIBS_MATH_ROS_TF_CONVERSION_3D_HPP
 
 #include <tf/tf.h>
 
@@ -79,4 +79,4 @@ inline void from(const std::vector<cslibs_math_3d::Vector3d> &src,
 }
 }
 }
-#endif // CSLIBS_MATH_ROS_CONVERSION_3D_HPP
+#endif // CSLIBS_MATH_ROS_TF_CONVERSION_3D_HPP
