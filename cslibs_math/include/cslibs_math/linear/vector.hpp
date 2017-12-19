@@ -48,12 +48,6 @@ public:
     {
     }
 
-    template<typename... args_t, typename = typename std::enable_if<sizeof...(args_t) == Dim>>
-    inline explicit Vector(const args_t ... values) :
-        data_(eigen::create<vector_t>(values...))
-    {
-    }
-
     inline Vector(const Vector &other) :
         data_(other.data_)
     {
@@ -63,6 +57,14 @@ public:
         data_(std::move(other.data_))
     {
     }
+
+    template<typename... args_t, typename = typename std::enable_if<sizeof...(args_t) == Dim>>
+    inline explicit Vector(const args_t ... values) :
+        data_(eigen::create<vector_t>(values...))
+    {
+        static_assert(Dimension == sizeof...(args_t), "Dimension of the parameters must match the geometric dimension!");
+    }
+
 
     inline Vector& operator = (const vector_t &data)
     {

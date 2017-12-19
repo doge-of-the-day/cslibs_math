@@ -55,10 +55,6 @@ public:
         return max_;
     }
 
-    inline Point3d lu() const
-    {
-        return Point3d(min_(0), max_(1));
-    }
 
     inline Point3d ll() const
     {
@@ -68,11 +64,6 @@ public:
     inline Point3d ru() const
     {
         return max_;
-    }
-
-    inline Point3d rl() const
-    {
-        return Point3d(max_(0), min_(1));
     }
 
     inline bool intersects(const Line3d &line) const

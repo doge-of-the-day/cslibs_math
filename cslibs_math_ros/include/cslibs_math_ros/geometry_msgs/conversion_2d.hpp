@@ -13,7 +13,7 @@ namespace geometry_msgs {
 namespace conversion_2d {
 inline cslibs_math_2d::Vector2d from(const ::geometry_msgs::Point &p)
 {
-    return cslibs_math_2d::Vector2d(p.x, p.y, 0.0);
+    return cslibs_math_2d::Vector2d(p.x, p.y);
 }
 
 inline cslibs_math_2d::Transform2d from(const ::geometry_msgs::Pose &p)
