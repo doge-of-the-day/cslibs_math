@@ -4,7 +4,7 @@
 
 #include <cslibs_math_3d/linear/transform.hpp>
 #include <cslibs_math_3d/linear/point.hpp>
-#include <cslibs_math_3d/conversion/tf.hpp>
+//#include <cslibs_math_3d/conversion/tf.hpp>
 
 #include <gtest/gtest.h>
 #include <tf/tf.h>
@@ -320,7 +320,7 @@ TEST(Test_cslibs_math_3d, testTransformRotation)
     tf::Transform t_0_tf = tf::Transform(tf::createQuaternionFromRPY(roll_0, pitch_0, yaw_0),
                                          tf::Vector3(0.0,0.0,0.0));
     cslibs_math_3d::Point3d p = cslibs_math_3d::Point3d::random();
-    tf::Point p_tf            = cslibs_math_3d::conversion::from(p);
+    tf::Point p_tf(p(0), p(1), p(2));
 
     EXPECT_EQ(p(0), p_tf.x());
     EXPECT_EQ(p(1), p_tf.y());
