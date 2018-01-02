@@ -55,7 +55,7 @@ struct TestDimension {
             YAML::Node n(d);
 
             // de-serialization
-            distribution_t d_converted = n.as<distribution_t>();
+            const distribution_t & d_converted = n.as<distribution_t>();
 
             // tests
             EXPECT_EQ(d.getN(), d_converted.getN());

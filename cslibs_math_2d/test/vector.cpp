@@ -165,8 +165,8 @@ TEST(Test_cslibs_math_2d, testDot)
         cslibs_math_2d::Vector2d v0(x0,y0);
         cslibs_math_2d::Vector2d v1(x1,y1);
 
-        EXPECT_EQ(v0.dot(v1), x0 * x1 + y0 * y1);
-        EXPECT_EQ(v1.dot(v0), x1 * x0 + y1 * y0);
+        EXPECT_NEAR(v0.dot(v1), x0 * x1 + y0 * y1, 1e-9);
+        EXPECT_NEAR(v1.dot(v0), x1 * x0 + y1 * y0, 1e-9);
     }
 }
 
