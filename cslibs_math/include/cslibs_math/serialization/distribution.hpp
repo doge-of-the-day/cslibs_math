@@ -24,12 +24,13 @@ struct convert<cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             for (std::size_t j = 0 ; j < Dim ; ++ j)
                 n.push_back(correlated(i, j));
+
         return n;
     }
 
     static bool decode(const Node& n, cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent> &rhs)
     {
-        if(!n.IsSequence() || n.size() != (1 + Dim + Dim * Dim))
+        if (!n.IsSequence() || n.size() != (1 + Dim + Dim * Dim))
             return false;
 
         std::size_t p = 0;
@@ -58,6 +59,7 @@ struct convert<cslibs_math::statistics::Distribution<1, lambda_ratio_exponent>>
         n.push_back(rhs.getN());
         n.push_back(rhs.getMean());
         n.push_back(rhs.getSquared());
+
         return n;
     }
 
