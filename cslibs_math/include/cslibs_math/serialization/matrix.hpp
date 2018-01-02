@@ -27,6 +27,7 @@ struct convert<cslibs_math::linear::Matrix<T, N, M>>
         for(std::size_t i = 0 ; i < N ; ++i) {
             for(std::size_t j = 0 ; j < M ; ++j) {
                 rhs(i,j) = n[p].as<T>();
+                ++p;
             }
         }
         return true;

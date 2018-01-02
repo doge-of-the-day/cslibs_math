@@ -45,8 +45,10 @@ cslibs_math_add_unit_test_gtest(hausdorff
 )
 
 cslibs_math_add_unit_test_gtest(distribution
-    SRCS test/hausdorff.cpp
-    LIBS
+    SRCS test/distribution.cpp
+)
+target_link_libraries(distribution
+    yaml-cpp
 )
 
 

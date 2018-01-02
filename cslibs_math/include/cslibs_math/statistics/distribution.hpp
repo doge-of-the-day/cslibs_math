@@ -41,6 +41,23 @@ public:
     {
     }
 
+    inline Distribution(
+            std::size_t  n,
+            sample_t     mean,
+            covariance_t correlated) :
+        mean_(mean),
+        correlated_(correlated),
+        n_(n + 1),
+        n_1_(n),
+        covariance_(covariance_t::Zero()),
+        information_matrix_(covariance_t::Zero()),
+        eigen_values_(eigen_values_t::Zero()),
+        eigen_vectors_(eigen_vectors_t::Zero()),
+        determinant_(0.0),
+        dirty_(true)
+    {
+    }
+
     inline Distribution(const Distribution &other)            = default;
     inline Distribution(Distribution &&other)                 = default;
     inline Distribution& operator=(const Distribution &other) = default;
@@ -77,7 +94,7 @@ public:
 
     inline Distribution& operator+=(const Distribution &other)
     {
-        const std::size_t    _n   = n_1_ + other.n_1_;
+        const std::size_t   _n    = n_1_ + other.n_1_;
         const sample_t      _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
         const covariance_t  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<double>(_n);
         n_                        = _n + 1;
@@ -101,6 +118,11 @@ public:
     inline void getMean(sample_t &_mean) const
     {
         _mean = mean_;
+    }
+
+    inline covariance_t getCorrelated() const
+    {
+        return correlated_;
     }
 
     inline covariance_t getCovariance() const
@@ -286,6 +308,20 @@ public:
     {
     }
 
+    inline Distribution(
+            std::size_t n,
+            double      mean,
+            double      squared) :
+        mean_(mean),
+        variance_(0.0),
+        standard_deviation_(0.0),
+        squared_(squared),
+        dirty_(true),
+        n_(n + 1),
+        n_1_(n)
+    {
+    }
+
     inline Distribution(const Distribution &other) = default;
     inline Distribution(Distribution &&other) = default;
     inline Distribution& operator=(const Distribution &other) = default;
@@ -340,6 +376,11 @@ public:
     inline double getMean() const
     {
         return mean_;
+    }
+
+    inline double getSquared() const
+    {
+        return squared_;
     }
 
     inline double getVariance() const
