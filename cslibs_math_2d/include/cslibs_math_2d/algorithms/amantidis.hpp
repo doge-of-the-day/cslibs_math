@@ -9,7 +9,7 @@
 #include <cslibs_math_2d/linear/point.hpp>
 
 namespace cslibs_math_2d {
-namespace algrotihms {
+namespace algorithms {
 class Amantidis
 {
 public:

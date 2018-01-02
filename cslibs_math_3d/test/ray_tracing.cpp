@@ -13,7 +13,7 @@ TEST( Test_cslibs_math_3d, testAmantidisDryrun)
     auto test = [](const cslibs_math_3d::Point3d &p0,
             const cslibs_math_3d::Point3d &p1)
     {
-        cslibs_math_3d::algrotihms::Amantidis a0(p0, p1, 1.0);
+        cslibs_math_3d::algorithms::Amantidis a0(p0, p1, 1.0);
 
         while(!a0.done()) {
             std::cout << "[" << a0.x() << "," << a0.y() << "," << a0.z() << "]";
@@ -34,7 +34,7 @@ TEST( Test_cslibs_math_3d, testAmantidisRuntime)
     auto exec =  [](const cslibs_math_3d::Point3d &p0,
                     const cslibs_math_3d::Point3d &p1)
     {
-        cslibs_math_3d::algrotihms::Amantidis a0(p0, p1, 1.0);
+        cslibs_math_3d::algorithms::Amantidis a0(p0, p1, 1.0);
         while(!a0.done()) {
             ++a0;
         }
@@ -58,7 +58,7 @@ TEST( Test_cslibs_math_3d, testBresenhamDryrun)
     auto test = [](const cslibs_math_3d::Point3d &p0,
             const cslibs_math_3d::Point3d &p1)
     {
-        cslibs_math_3d::algrotihms::Bresenham a0(p0, p1, 1.0);
+        cslibs_math_3d::algorithms::Bresenham a0(p0, p1, 1.0);
         while(!a0.done()) {
             std::cout << "[" << a0.x() << "," << a0.y() << "," << a0.z() << "]";
             ++a0;
@@ -78,7 +78,7 @@ TEST( Test_cslibs_math_3d, testBresenhamRuntime)
     auto exec =  [](const cslibs_math_3d::Point3d &p0,
             const cslibs_math_3d::Point3d &p1)
     {
-        cslibs_math_3d::algrotihms::Amantidis a0(p0, p1, 1.0);
+        cslibs_math_3d::algorithms::Amantidis a0(p0, p1, 1.0);
         while(!a0.done()) {
             ++a0;
         }

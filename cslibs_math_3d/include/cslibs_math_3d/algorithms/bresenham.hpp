@@ -6,7 +6,7 @@
 #include <cslibs_math_3d/linear/point.hpp>
 
 namespace cslibs_math_3d {
-namespace algrotihms {
+namespace algorithms {
 
 class Bresenham
 {
