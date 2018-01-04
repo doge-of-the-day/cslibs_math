@@ -2,6 +2,7 @@
 #define CSLIBS_MATH_3D_SERIALIZATION_TRANSFORM_HPP
 
 #include <cslibs_math/serialization/vector.hpp>
+#include <cslibs_math_3d/serialization/quaternion.hpp>
 #include <cslibs_math_3d/linear/quaternion.hpp>
 #include <cslibs_math_3d/linear/transform.hpp>
 #include <yaml-cpp/yaml.h>
@@ -13,8 +14,8 @@ struct convert<cslibs_math_3d::Transform3d>
     static Node encode(const cslibs_math_3d::Transform3d &rhs)
     {
         Node n;
-        n["t"] << rhs.translation();
-        n["r"] << rhs.rotation();
+        n["t"] = rhs.translation();
+        n["r"] = rhs.rotation();
         return n;
     }
     static bool decode(const Node& n, cslibs_math_3d::Transform3d &rhs)

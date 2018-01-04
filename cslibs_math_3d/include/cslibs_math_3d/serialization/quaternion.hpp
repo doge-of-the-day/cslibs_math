@@ -12,20 +12,21 @@ struct convert<cslibs_math_3d::Quaternion>
     {
         Node n;
         n.push_back(rhs.x());
-        n.push_back(rhs.y);
+        n.push_back(rhs.y());
         n.push_back(rhs.z());
         n.push_back(rhs.w());
         return n;
     }
+
     static bool decode(const Node& n, cslibs_math_3d::Quaternion &rhs)
     {
         if(!n.IsSequence() || n.size() != 4)
             return false;
 
         rhs.x() = n[0].as<double>();
-        rhs.y() = n[0].as<double>();
-        rhs.z() = n[0].as<double>();
-        rhs.w() = n[0].as<double>();
+        rhs.y() = n[1].as<double>();
+        rhs.z() = n[2].as<double>();
+        rhs.w() = n[3].as<double>();
         return true;
     }
 };
