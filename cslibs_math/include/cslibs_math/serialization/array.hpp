@@ -3,6 +3,17 @@
 
 #include <yaml-cpp/yaml.h>
 
+template<typename T, std::size_t Dim>
+inline YAML::Emitter& operator << (YAML::Emitter& out, const std::array<T, Dim>& a) {
+    out << YAML::Flow;
+    out << YAML::BeginSeq;
+    for(const T& e : a) {
+        out << e;
+    }
+    out << YAML::EndSeq;
+    return out;
+}
+
 namespace YAML {
 template <typename T, std::size_t Dim>
 struct convert<std::array<T, Dim>>
