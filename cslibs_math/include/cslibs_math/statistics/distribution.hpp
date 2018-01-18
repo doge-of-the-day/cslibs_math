@@ -295,7 +295,8 @@ template<std::size_t lamda_ratio_exponent>
 class Distribution<1, lamda_ratio_exponent>
 {
 public:
-   static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+    using Ptr = std::shared_ptr<Distribution<1, lamda_ratio_exponent>>;
+    static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
 
     inline Distribution() :
         mean_(0.0),

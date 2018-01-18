@@ -30,8 +30,8 @@ public:
     inline explicit Bresenham(const point_t &p0,
                               const point_t &p1,
                               const double resolution):
-        Bresenham({{static_cast<int>(p0(0) / resolution), static_cast<int>(p0(1)), static_cast<int>(p0(2) / resolution)}},
-    {{static_cast<int>(p1(0) / resolution), static_cast<int>(p1(1)), static_cast<int>(p1(2) / resolution)}})
+        Bresenham({{static_cast<int>(p0(0) / resolution), static_cast<int>(p0(1) / resolution), static_cast<int>(p0(2) / resolution)}},
+                  {{static_cast<int>(p1(0) / resolution), static_cast<int>(p1(1) / resolution), static_cast<int>(p1(2) / resolution)}})
     {
     }
 
@@ -94,7 +94,9 @@ public:
     inline int length2() const
     {
         auto sq = [](const int d) { return d*d;};
-        return sq(index_[0] - end_[0]) + sq(index_[1] - end_[1] + sq(index_[2] - end_[2]));
+        return sq(index_[0] - end_[0]) +
+               sq(index_[1] - end_[1]) +
+               sq(index_[2] - end_[2]);
     }
 
     inline bool done() const
