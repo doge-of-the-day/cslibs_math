@@ -14,6 +14,12 @@ public:
     using index_t       = std::array<int, 3>;
     using point_t       = Point3d;
 
+    inline explicit SimpleIterator(const index_t &start,
+                                   const index_t &end) :
+        SimpleIterator(point_t(start[0], start[1], start[2]), point_t(end[0], end[1], end[2]), 1.0)
+    {
+    }
+
     inline explicit SimpleIterator(const point_t &p0,
                                    const point_t &p1,
                                    const double  &resolution) :
