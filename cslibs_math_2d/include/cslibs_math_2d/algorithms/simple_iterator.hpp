@@ -54,8 +54,8 @@ public:
         index_t i({{index_[0], index_[1]}});
         do {
             point_ += diff_;
-            i[0] = std::max(min_[0], std::min(max_[0], static_cast<int>(std::floor(start_[0] + point_(0)/resolution_))));
-            i[1] = std::max(min_[1], std::min(max_[1], static_cast<int>(std::floor(start_[1] + point_(1)/resolution_))));
+            i[0] = std::max(min_[0], std::min(max_[0], static_cast<int>(std::round(start_[0] + point_(0)/resolution_))));
+            i[1] = std::max(min_[1], std::min(max_[1], static_cast<int>(std::round(start_[1] + point_(1)/resolution_))));
         } while (i[0] == index_[0] && i[1] == index_[1]);
         index_ = i;
 
