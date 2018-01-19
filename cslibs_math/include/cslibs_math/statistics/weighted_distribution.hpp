@@ -50,6 +50,8 @@ public:
         mean_       = sample_t::Zero();
         covariance_ = covariance_t::Zero();
         correlated_ = covariance_t::Zero();
+        eigen_vectors_ = eigen_vectors_t::Zero();
+        eigen_values_  = eigen_values_t::Zero();
         W_ = 1;
         W_1_ = 0;
         sample_count_ = 0;
@@ -94,7 +96,7 @@ public:
         return W_;
     }
 
-    inline sample_t getMean() const
+    inline sample_t const & getMean() const
     {
         return mean_;
     }
@@ -104,7 +106,7 @@ public:
         mean = mean_;
     }
 
-    inline covariance_t getCovariance() const
+    inline covariance_t const & getCovariance() const
     {
         auto update_return_covariance = [this](){update(); return covariance_;};
         return sample_count_ >= 3 ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
@@ -116,7 +118,7 @@ public:
         covariance =  sample_count_ >= 3 ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
     }
 
-    inline covariance_t getInformationMatrix() const
+    inline covariance_t const & getInformationMatrix() const
     {
         auto update_return_information = [this](){update(); return information_matrix_;};
         return sample_count_ >= 3 ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
@@ -128,7 +130,7 @@ public:
         information_matrix = sample_count_ >= 3 ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
     }
 
-    inline eigen_values_t getEigenValues(const bool abs = false) const
+    inline eigen_values_t const & getEigenValues(const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
             if(dirty_) update();
@@ -147,7 +149,7 @@ public:
         eigen_values = sample_count_ >= 3 ?  update_return_eigen() : eigen_values_t::Zero();
     }
 
-    inline eigen_vectors_t getEigenVectors() const
+    inline eigen_vectors_t const & getEigenVectors() const
     {
         auto update_return_eigen = [this]() {
             if(dirty_) update();
