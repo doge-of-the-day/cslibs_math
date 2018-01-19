@@ -112,7 +112,7 @@ public:
         return n_1_;
     }
 
-    inline sample_t const & getMean() const
+    inline sample_t getMean() const
     {
         return mean_;
     }
@@ -122,12 +122,12 @@ public:
         _mean = mean_;
     }
 
-    inline covariance_t const & getCorrelated() const
+    inline covariance_t getCorrelated() const
     {
         return correlated_;
     }
 
-    inline covariance_t const & getCovariance() const
+    inline covariance_t getCovariance() const
     {
         auto update_return_covariance = [this](){update(); return covariance_;};
         return (n_1_ >= 3 && dirty_) ? update_return_covariance() : covariance_;
@@ -144,7 +144,7 @@ public:
         covariance = n_1_ >= 3 ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
     }
 
-    inline covariance_t const & getInformationMatrix() const
+    inline covariance_t getInformationMatrix() const
     {
         auto update_return_information = [this](){update(); return information_matrix_;};
         return (n_1_ >= 3 && dirty_) ? update_return_information() : information_matrix_;
@@ -156,7 +156,7 @@ public:
         information_matrix = n_1_ >= 3 ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
     }
 
-    inline eigen_values_t const & getEigenValues(const bool abs = false) const
+    inline eigen_values_t getEigenValues(const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
             if(dirty_) update();
@@ -175,7 +175,7 @@ public:
         eigen_values = n_1_ >= 3 ?  update_return_eigen() : eigen_values_t::Zero();
     }
 
-    inline eigen_vectors_t const & getEigenVectors() const
+    inline eigen_vectors_t getEigenVectors() const
     {
         auto update_return_eigen = [this]() {
             if(dirty_) update();
