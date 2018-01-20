@@ -3,15 +3,32 @@
 
 #include <yaml-cpp/yaml.h>
 
-template<typename T, std::size_t Dim>
-inline YAML::Emitter& operator << (YAML::Emitter& out, const std::array<T, Dim>& a) {
-    out << YAML::Flow;
-    out << YAML::BeginSeq;
-    for(const T& e : a) {
-        out << e;
+#include <cslibs_math/serialization/binary.hpp>
+
+namespace cslibs_math {
+namespace serialization {
+namespace array {
+template <typename T, std::size_t Dim>
+struct binary {
+    inline static std::size_t read(std::ifstream      &in,
+                                   std::array<T, Dim> &array)
+    {
+        for(std::size_t i = 0 ; i < Dim ; ++i) {
+            array[i] = io<T>::read(in);
+        }
+        return Dim * sizeof(T);
     }
-    out << YAML::EndSeq;
-    return out;
+
+    inline static void write(const std::array<T, Dim> &array,
+                             std::ofstream &out)
+    {
+        for(std::size_t i = 0 ; i < Dim ; ++i) {
+            io<T>::write(array[i], out);
+        }
+    }
+};
+}
+}
 }
 
 namespace YAML {

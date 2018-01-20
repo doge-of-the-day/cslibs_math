@@ -2,7 +2,80 @@
 #define CSLIBS_MATH_SERIALIZATION_DISTRIBUTION_HPP
 
 #include <cslibs_math/statistics/distribution.hpp>
+
 #include <yaml-cpp/yaml.h>
+#include <fstream>
+
+#include <cslibs_math/serialization/binary.hpp>
+
+namespace cslibs_math {
+namespace serialization {
+namespace distribution {
+template <std::size_t Dim, std::size_t lambda_ratio_exponent>
+struct binary {
+    using distribution_t    = cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>;
+    using sample_t          = typename distribution_t::sample_t;
+    using correlated_t      = typename distribution_t::covariance_t;
+
+    static const std::size_t size = sizeof(std::size_t) + Dim * sizeof(double) + Dim * Dim * sizeof(double);
+
+    inline static std::size_t read(std::ifstream  &in,
+                                   distribution_t &distribution)
+    {
+        sample_t     mean;
+        correlated_t corr;
+
+        std::size_t  n = io<std::size_t>::read(in);
+
+        for(std::size_t i = 0 ; i < Dim ; ++i)
+            mean(i) = io<double>::read(in);
+
+        for(std::size_t i = 0 ; i < Dim; ++i) {
+            for(std::size_t j = 0 ; j < Dim ; ++j) {
+                corr(i,j) = io<double>::read(in);
+            }
+        }
+        distribution = distribution_t(n, mean, corr);
+
+        return size;
+    }
+
+    inline static void  write(std::ofstream &out)
+    {
+        io<std::size_t>::write(0, out);
+
+        for(std::size_t i = 0 ; i < Dim ; ++i)
+            io<double>::write(0.0, out);
+
+        for(std::size_t i = 0 ; i < Dim; ++i) {
+            for(std::size_t j = 0 ; j < Dim ; ++j) {
+                io<double>::write(0.0, out);
+            }
+        }
+    }
+
+    inline static void  write(const distribution_t &distribution,
+                              std::ofstream &out)
+    {
+        const sample_t      mean = distribution.getMean();
+        const correlated_t  corr = distribution.getCorrelated();
+        const std::size_t   n    = distribution.getN();
+
+        io<std::size_t>::write(n, out);
+
+        for(std::size_t i = 0 ; i < Dim ; ++i)
+            io<double>::write(mean(i), out);
+
+        for(std::size_t i = 0 ; i < Dim; ++i) {
+            for(std::size_t j = 0 ; j < Dim ; ++j) {
+                io<double>::write(corr(i,j), out);
+            }
+        }
+    }
+};
+}
+}
+}
 
 namespace YAML {
 template<std::size_t Dim, std::size_t lambda_ratio_exponent>
