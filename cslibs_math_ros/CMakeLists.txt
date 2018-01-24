@@ -12,6 +12,7 @@ find_package(cslibs_utility QUIET)
 find_package(cslibs_math    QUIET)
 find_package(cslibs_math_2d QUIET)
 find_package(cslibs_math_3d QUIET)
+find_package(PCL REQUIRED COMPONENTS common filters segmentation io)
 
 catkin_package(
     INCLUDE_DIRS    include
@@ -28,8 +29,10 @@ include_directories(
     ${cslibs_math_INCLUDE_DIRS}
     ${cslibs_math_2d_ty_INCLUDE_DIRS}
     ${cslibs_math_3d_INCLUDE_DIRS}
+    ${PCL_INCLUDE_DIRS}
     include
 )
+link_directories(${PCL_LIBRARY_DIRS})
 
 cslibs_math_ros_show_headers()
 
