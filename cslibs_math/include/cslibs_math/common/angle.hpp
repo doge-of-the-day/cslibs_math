@@ -41,7 +41,13 @@ inline double normalize2Pi(const double angle)
  */
 inline double difference(double a, double b)
 {
-    return a - b;
+    auto norm = [](double v) { return std::atan2(std::sin(v), std::cos(v)); };
+    a = norm(a);
+    b = norm(b);
+
+    double d1 = a - b;
+    double d2 = (_2_M_PI - std::fabs(d1)) * (d1 > 0.0 ? -1.0 : 1.0);
+    return std::fabs(d1) < std::fabs(d2) ? d1 : d2;
 }
 
 /**
