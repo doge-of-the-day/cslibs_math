@@ -29,6 +29,9 @@ public:
                                 const ros::Time      &time,
                                 stamped_t            &transform)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         ::tf::Transform tf_transform;
         if(lookupTransform(target_frame, source_frame,time, tf_transform)) {
             transform.data() =  conversion_2d::from(tf_transform);
@@ -44,6 +47,9 @@ public:
                                 stamped_t    &transform,
                                 const ros::Duration         &timeout)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         ::tf::Transform tf_transform;
         if(lookupTransform(target_frame,
                            source_frame,
@@ -63,6 +69,9 @@ public:
                                 const ros::Time                &time,
                                 cslibs_math_2d::Transform2d    &transform)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         ::tf::Transform tf_transform;
         if(lookupTransform(target_frame, source_frame, time, tf_transform)) {
             transform = conversion_2d::from(tf_transform);
@@ -77,6 +86,9 @@ public:
                                 cslibs_math_2d::Transform2d    &transform,
                                 const ros::Duration  &timeout)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         ::tf::Transform tf_transform;
         if(lookupTransform(target_frame,
                            source_frame,
@@ -94,6 +106,9 @@ public:
                                 const ros::Time      &time,
                                 ::tf::StampedTransform &transform)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         lock_t l(mutex_);
         std::string error;
         if(tf_.canTransform(target_frame, source_frame, time, &error)) {
@@ -110,6 +125,9 @@ public:
                                 ::tf::StampedTransform &transform,
                                 const ros::Duration    &timeout)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         lock_t l(mutex_);
         if(tf_.waitForTransform(target_frame, source_frame, time, timeout)) {
             tf_.lookupTransform(target_frame, source_frame, time, transform);
@@ -124,6 +142,9 @@ public:
                                 const ros::Time      &time,
                                 ::tf::Transform        &transform)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         lock_t l(mutex_);
         std::string error;
         if(tf_.canTransform(target_frame, source_frame, time, &error)) {
@@ -139,9 +160,12 @@ public:
     inline bool lookupTransform(const std::string    &target_frame,
                                 const std::string    &source_frame,
                                 const ros::Time      &time,
-                                ::tf::Transform        &transform,
+                                ::tf::Transform      &transform,
                                 const ros::Duration  &timeout)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         lock_t l(mutex_);
         ::tf::StampedTransform stamped;
         if(tf_.waitForTransform(target_frame, source_frame, time, timeout)) {
@@ -156,6 +180,9 @@ public:
                              const std::string &source_frame,
                              const ros::Time   &time)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         lock_t l(mutex_);
         return tf_.canTransform(target_frame, source_frame, time);
     }
@@ -165,6 +192,9 @@ public:
                                  const ros::Time &time,
                                  const ros::Duration &timeout)
     {
+        assert (target_frame != "");
+        assert (source_frame != "");
+
         lock_t l(mutex_);
         return tf_.waitForTransform(target_frame, source_frame, time, timeout);
     }
