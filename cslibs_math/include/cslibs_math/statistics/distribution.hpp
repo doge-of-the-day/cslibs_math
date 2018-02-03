@@ -1,7 +1,6 @@
 #ifndef CSLIBS_MATH_DISTRIBUTION_HPP
 #define CSLIBS_MATH_DISTRIBUTION_HPP
 
-#undef NDEBUG
 #include <assert.h>
 #include <memory>
 #include <mutex>
