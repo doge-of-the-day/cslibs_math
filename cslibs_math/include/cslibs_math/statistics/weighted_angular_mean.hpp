@@ -16,7 +16,8 @@ public:
         dirty_(true),
         mean_(0.0),
         complex_mean_(0.0, 0.0),
-        W_(0.0)
+        W_(1.0),
+        W_1_(0.0)
     {
     }
 
@@ -63,23 +64,25 @@ public:
         dirty_ = true;
         mean_ = 0.0;
         complex_mean_ = 0.0;
-        W_ = 0.0;
+        W_ = 1.0;
+        W_1_ = 0.0;
     }
 
     inline void add(const double rad, const double w)
     {
-        double _W = W_ + w;
-        complex_mean_ = (complex_mean_ * W_1_ + common::angle::toComplex(rad) * w) / _W;
-        W_ = _W;
+        W_ += w;
+        complex_mean_ = (complex_mean_ * W_1_ + common::angle::toComplex(rad) * w) / W_;
+        W_1_ = W_;
         dirty_ = true;
     }
 
     inline WeightedAngularMean& operator += (const WeightedAngularMean& other)
     {
-        dirty_ = true;
         double _W = W_ + other.W_;
         complex_mean_ = (complex_mean_ * W_ + other.complex_mean_ * other.W_) / _W;
         W_ = _W;
+        W_1_ = W_;
+        dirty_ = true;
         return *this;
     }
 
