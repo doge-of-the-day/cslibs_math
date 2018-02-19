@@ -72,7 +72,7 @@ public:
             return;
 
         double _W = W_ + w;
-        complex_mean_ = (complex_mean_ * W_ + complex(2.0 * std::cos(rad), 2.0 * std::sin(rad)) * w) / _W;
+        complex_mean_ = (complex_mean_ * W_ + complex(std::cos(rad), std::sin(rad)) * w) / _W;
         W_ = _W;
         dirty_ = true;
     }
@@ -94,7 +94,7 @@ public:
     inline double getMean() const
     {
         if(dirty_) {
-            mean_ = 0.5 * std::atan2(complex_mean_(1), complex_mean_(0));
+            mean_ = std::atan2(complex_mean_(1), complex_mean_(0));
             dirty_ = false;
         }
         return mean_;
@@ -102,7 +102,7 @@ public:
 
     inline void getMean(double &mean) {
         if(dirty_) {
-            mean_ = 0.5 * std::atan2(complex_mean_(1), complex_mean_(0));
+            mean_ = std::atan2(complex_mean_(1), complex_mean_(0));
             dirty_ = false;
         }
         mean = mean_;
