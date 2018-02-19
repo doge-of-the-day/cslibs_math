@@ -144,8 +144,8 @@ public:
 
     inline Transform2d inverse() const
     {
-        return Transform2d(Vector2d(-cos_ * translation_(0) - sin_ * translation_(1),
-                                     sin_ * translation_(0) - cos_ * translation_(1)),
+        return Transform2d(Vector2d(-(cos_ *  translation_(0) + sin_ * translation_(1)),
+                                    -(-sin_ * translation_(0) + cos_ * translation_(1))),
                            -yaw_,
                            -sin_,
                            cos_);
