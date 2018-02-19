@@ -51,8 +51,8 @@ public:
         correlated_ = covariance_t::Zero();
         eigen_vectors_ = eigen_vectors_t::Zero();
         eigen_values_  = eigen_values_t::Zero();
-        W_ = 1;
-        W_1_ = 0;
+        W_ = 0.0;
+        W_1_ = 0.0;
         sample_count_ = 0;
         dirty_ = true;
     }
@@ -60,6 +60,9 @@ public:
     /// Modification
     inline void add(const sample_t &p, const double w)
     {
+        if(w == 0.0)
+            return;
+
         W_  += w;
         mean_ = (mean_ * W_1_ + w * p) / W_;
         for(std::size_t i = 0 ; i < Dim ; ++i) {

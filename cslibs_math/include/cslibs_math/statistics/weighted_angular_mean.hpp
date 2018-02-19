@@ -4,13 +4,16 @@
 #include <memory>
 #include <complex>
 #include <cslibs_math/common/angle.hpp>
+#include <eigen3/Eigen/Core>
 
 namespace cslibs_math {
 namespace statistics {
 class WeightedAngularMean {
 public:
     using Ptr = std::shared_ptr<WeightedAngularMean>;
-    using complex = std::complex<double>;
+    using complex = Eigen::Vector2d;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     WeightedAngularMean() :
         dirty_(true),
@@ -62,14 +65,17 @@ public:
     {
         dirty_ = true;
         mean_ = 0.0;
-        complex_mean_ = 0.0;
+        complex_mean_ = {0.0, 0.0};
         W_ = 0.0;
     }
 
     inline void add(const double rad, const double w)
     {
+        if(w == 0.0)
+            return;
+
         double _W = W_ + w;
-        complex_mean_ = (complex_mean_ * W_ + common::angle::toComplex(rad) * w) / _W;
+        complex_mean_ = (complex_mean_ * W_ + complex(std::cos(rad), std::sin(rad)) * w) / _W;
         W_ = _W;
         dirty_ = true;
     }
@@ -91,7 +97,7 @@ public:
     inline double getMean() const
     {
         if(dirty_) {
-            mean_ = common::angle::fromComplex(complex_mean_);
+            mean_ = std::atan2(complex_mean_(1), complex_mean_(0));
             dirty_ = false;
         }
         return mean_;
@@ -99,7 +105,7 @@ public:
 
     inline void getMean(double &mean) {
         if(dirty_) {
-            mean_ = common::angle::fromComplex(complex_mean_);
+            mean_ = std::atan2(complex_mean_(1), complex_mean_(0));
             dirty_ = false;
         }
         mean = mean_;
@@ -107,7 +113,7 @@ public:
 
     inline double getCovariance() const
     {
-        return -2.0 * std::log(std::hypot(complex_mean_.real(), complex_mean_.imag()));
+        return -2.0 * std::log(std::hypot(complex_mean_(0), complex_mean_(1)));
     }
 
 private:
