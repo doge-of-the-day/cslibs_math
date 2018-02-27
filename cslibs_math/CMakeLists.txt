@@ -40,10 +40,6 @@ cslibs_math_add_unit_test_gtest(array
     SRCS test/array.cpp
 )
 
-cslibs_math_add_unit_test_gtest(hausdorff
-    SRCS test/hausdorff.cpp
-)
-
 cslibs_math_add_unit_test_gtest(distribution_serialization
     SRCS test/distribution_serialization.cpp
 )
@@ -51,6 +47,9 @@ target_link_libraries(distribution_serialization
     yaml-cpp
 )
 
+add_executable(hausdorff
+    test/hausdorff.cpp
+)
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
