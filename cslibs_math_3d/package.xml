@@ -6,8 +6,11 @@
     The cslibs_math_3d package mainly provides template instances and algorithms for the 3d space.
   </description>
 
+  <maintainer email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</maintainer>
   <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
   <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>
+  <author email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</author>
+
 
   <license>BSD</license>
 
