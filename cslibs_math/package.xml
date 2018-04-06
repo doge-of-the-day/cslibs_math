@@ -7,11 +7,11 @@
     statistics and linear algebra.
   </description>
 
-  <maintainer email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</maintainer>
-  <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
   <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>
   <author email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</author>
 
+  <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
+  <maintainer email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</maintainer>
 
   <license>BSD</license>
 

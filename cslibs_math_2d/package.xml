@@ -6,11 +6,11 @@
     The cslibs_math_2d package mainly provides template instances and algorithms for the 2d space.
   </description>
 
-  <maintainer email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</maintainer>
-  <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
   <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>
   <author email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</author>
 
+  <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
+  <maintainer email="cornelia.schulz@uni-tuebingen.de">Cornelia Schulz</maintainer>
 
   <license>BSD</license>
 
