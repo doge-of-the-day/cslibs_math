@@ -16,6 +16,7 @@ namespace random {
 /**
  * @brief Interface for random generator independent from dimensionality and distribution type.
  */
+template<typename Generator = std::mt19937_64>
 class RandomGenerator {
 public:
     typedef std::shared_ptr<RandomGenerator> Ptr;
@@ -34,22 +35,21 @@ protected:
 
     RandomGenerator(const RandomGenerator &other) = delete;
 
-
-    std::random_device         random_device_;
-    std::default_random_engine random_engine_;
-
+    std::random_device random_device_;
+    Generator          random_engine_;
 };
 
 /**
  * @brief The multi-dimensional uniform random generator class.
  */
-template<std::size_t Dim>
-class Uniform : public RandomGenerator
+template<std::size_t Dim, typename Generator = std::mt19937_64>
+class Uniform : public RandomGenerator<Generator>
 {
 public:
     using Ptr            = std::shared_ptr<Uniform>;
     using distribution_t = std::uniform_real_distribution<double>;
     using sample_t       = Eigen::Matrix<double, Dim, 1>;
+    using base_t         = RandomGenerator<Generator>;
 
     Uniform() = delete;
 
@@ -62,7 +62,7 @@ public:
     Uniform(const sample_t &min,
             const sample_t &max,
             const unsigned int seed) :
-        RandomGenerator(seed)
+        RandomGenerator<Generator>(seed)
     {
         set(min, max);
     }
@@ -79,7 +79,7 @@ public:
     {
         sample_t sample;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
-            sample[i] = distributions_[i](random_engine_);
+            sample[i] = distributions_[i](base_t::random_engine_);
         }
         return sample;
     }
@@ -87,7 +87,7 @@ public:
     inline void get(sample_t &sample)
     {
         for(std::size_t i = 0 ; i < Dim ; ++i) {
-            sample[i] = distributions_[i](random_engine_);
+            sample[i] = distributions_[i](base_t::random_engine_);
         }
     }
 
@@ -98,12 +98,13 @@ private:
 /**
  * @brief The one-dimensional uniform random generator class.
  */
-template<>
-class Uniform<1> : public RandomGenerator
+template<typename Generator>
+class Uniform<1, Generator> : public RandomGenerator<Generator>
 {
 public:
     using Ptr            = std::shared_ptr<Uniform>;
     using distribution_t = std::uniform_real_distribution<double>;
+    using base_t         = RandomGenerator<Generator>;
 
     Uniform() = delete;
 
@@ -116,7 +117,7 @@ public:
     Uniform(const double min,
             const double max,
             const unsigned int seed) :
-        RandomGenerator(seed)
+        RandomGenerator<Generator>(seed)
     {
         set(min, max);
     }
@@ -130,7 +131,7 @@ public:
 
     inline double get()
     {
-        return distribution_(random_engine_);
+        return distribution_(base_t::random_engine_);
     }
 
     inline double getNEQ(const double neq)
@@ -144,19 +145,18 @@ public:
 
     inline void get(double &sample)
     {
-        sample = distribution_(random_engine_);
+        sample = distribution_(base_t::random_engine_);
     }
 
 private:
     distribution_t distribution_;
-
 };
 
 /**
  * @brief The multi-dimensional normally distributed random generator class.
  */
-template<std::size_t Dim>
-class Normal : public RandomGenerator
+template<std::size_t Dim, typename Generator = std::mt19937_64>
+class Normal : public RandomGenerator<Generator>
 {
 public:
     using Ptr = std::shared_ptr<Normal>;
@@ -164,6 +164,7 @@ public:
     using matrix_t       = Eigen::Matrix<double, Dim, Dim>;
     using distribution_t = std::normal_distribution<double>;
     using solver_t       = Eigen::EigenSolver<matrix_t>;
+    using base_t         = RandomGenerator<Generator>;
 
     Normal() = delete;
 
@@ -176,7 +177,7 @@ public:
     Normal(const sample_t &mean,
            const matrix_t &covariance,
            const unsigned int seed) :
-        RandomGenerator(seed)
+        RandomGenerator<Generator>(seed)
     {
         set(mean, covariance);
     }
@@ -196,14 +197,14 @@ public:
     {
         sample_t sample;
         for(std::size_t i = 0 ; i < Dim ; ++i)
-            sample(i) = distribution_(random_engine_) * scale_(i);
+            sample(i) = distribution_(base_t::random_engine_) * scale_(i);
         return rotation_ * sample + mean_;
     }
 
     inline void get(sample_t &sample)
     {
         for(std::size_t i = 0 ; i < Dim ; ++i)
-            sample(i) = distribution_(random_engine_) * scale_(i);
+            sample(i) = distribution_(base_t::random_engine_) * scale_(i);
         sample = rotation_ * sample + mean_;
     }
 
@@ -218,12 +219,13 @@ private:
 /**
  * @brief The one-dimensional normally distributed  random generator class.
  */
-template<>
-class Normal<1> : public RandomGenerator
+template<typename Generator>
+class Normal<1, Generator> : public RandomGenerator<Generator>
 {
 public:
     using Ptr            = std::shared_ptr<Normal>;
     using distribution_t = std::normal_distribution<double> ;
+    using base_t         = RandomGenerator<Generator>;
 
     Normal() = delete;
 
@@ -236,7 +238,7 @@ public:
     Normal(const double mean,
            const double _sigma,
            const unsigned int seed) :
-        RandomGenerator(seed)
+        RandomGenerator<Generator>(seed)
     {
         set(mean, _sigma);
     }
@@ -249,12 +251,12 @@ public:
 
     inline double get()
     {
-        return distribution_(random_engine_);
+        return distribution_(base_t::random_engine_);
     }
 
     inline void get(double &sample)
     {
-        sample = distribution_(random_engine_);
+        sample = distribution_(base_t::random_engine_);
     }
 
 private:
