@@ -221,6 +221,16 @@ public:
         return data_;
     }
 
+    inline Matrix inverse()
+    {
+        return data_.inverse();
+    }
+
+    inline Matrix transpose()
+    {
+        return data_.transpose();
+    }
+
 private:
     matrix_t data_;
 };
