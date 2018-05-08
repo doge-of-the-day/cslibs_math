@@ -231,6 +231,11 @@ public:
         return data_.transpose();
     }
 
+    inline double determinant()
+    {
+        return data.determinant();
+    }
+
 private:
     matrix_t data_;
 };
