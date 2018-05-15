@@ -231,6 +231,11 @@ public:
         return Vector(std::numeric_limits<T>::max());
     }
 
+    inline Vector transpose()
+    {
+        return data_.transpose();
+    }
+
 private:
     vector_t data_;
 };

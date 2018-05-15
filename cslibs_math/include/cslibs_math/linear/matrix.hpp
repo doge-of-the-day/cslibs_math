@@ -42,6 +42,11 @@ public:
     {
     }
 
+    static Matrix identity()
+    {
+        return Matrix(matrix_t::Eye());
+    }
+
     template<typename... args_t, typename = typename std::enable_if<sizeof...(args_t) == N*M>>
     inline explicit Matrix(const args_t ... values) :
         data_(eigen::create<matrix_t>(values...))
@@ -87,9 +92,10 @@ public:
         return Matrix(matrix_t(data_ * s));
     }
 
-    inline vector_t operator * (const vector_t &v) const
+    template <std::size_t X>
+    inline Matrix<T, N, X> operator * (const Matrix<T, M, X> &m) const
     {
-        return vector_t(data_ * v);
+        return Matrix<T, N, X>(data_ * m.data());
     }
 
     inline Matrix operator / (const T s) const
@@ -219,6 +225,26 @@ public:
     inline matrix_t& data()
     {
         return data_;
+    }
+
+    inline const Matrix<T, M, N> inverse() const
+    {
+        return Matrix<T, M, N>(data_.inverse());
+    }
+
+    inline Matrix<T, M, N> inverse()
+    {
+        return Matrix<T, M, N>(data_.inverse());
+    }
+
+    inline Matrix<T, M, N> transpose()
+    {
+        return Matrix<T, M, N>(data_.transpose());
+    }
+
+    inline double determinant()
+    {
+        return data.determinant();
     }
 
 private:
