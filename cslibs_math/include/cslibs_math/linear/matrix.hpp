@@ -44,7 +44,7 @@ public:
 
     static Matrix identity()
     {
-        return Matrix(matrix_t::Eye());
+        return Matrix(matrix_t::Identity());
     }
 
     template<typename... args_t, typename = typename std::enable_if<sizeof...(args_t) == N*M>>
