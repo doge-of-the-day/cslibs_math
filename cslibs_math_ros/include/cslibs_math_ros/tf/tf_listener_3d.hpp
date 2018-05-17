@@ -31,7 +31,7 @@ public:
     {
         ::tf::Transform tf_transform;
         if(lookupTransform(target_frame, source_frame,time, tf_transform)) {
-            transform.data() = from(tf_transform);
+            transform.data()  = conversion_3d::from(tf_transform);
             transform.stamp() = cslibs_time::Time(time.toNSec());
             return true;
         }
@@ -50,7 +50,7 @@ public:
                            time,
                            tf_transform,
                            timeout)) {
-            transform.data()  = from(tf_transform);
+            transform.data()  = conversion_3d::from(tf_transform);
             transform.stamp() = cslibs_time::Time(time.toNSec());
             return true;
         }
@@ -65,7 +65,7 @@ public:
     {
         ::tf::Transform tf_transform;
         if(lookupTransform(target_frame, source_frame, time, tf_transform)) {
-            transform = from(tf_transform);
+            transform = conversion_3d::from(tf_transform);
             return true;
         }
         return false;
@@ -83,7 +83,7 @@ public:
                            time,
                            tf_transform,
                            timeout)) {
-            transform = from(tf_transform);
+            transform = conversion_3d::from(tf_transform);
             return true;
         }
         return false;
