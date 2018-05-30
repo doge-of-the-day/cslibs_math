@@ -15,6 +15,9 @@
 namespace cslibs_math_ros {
 namespace tf {
 class TFListener3d {
+
+#warning TFListener2d is deprecated.
+
 public:
     using Ptr       = std::shared_ptr<TFListener3d>;
     using stamped_t = cslibs_time::Stamped<cslibs_math_3d::Transform3d>;
