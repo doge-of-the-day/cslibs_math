@@ -9,9 +9,13 @@
 #include <eigen3/Eigen/Dense>
 
 #include <cslibs_math/linear/eigen.hpp>
+#include <cslibs_math/linear/matrix.hpp>
 
 namespace cslibs_math {
 namespace linear {
+template<typename T, std::size_t N, std::size_t M>
+class Matrix;
+
 template<typename T, std::size_t Dim>
 class Vector {
 public:
@@ -55,6 +59,11 @@ public:
 
     inline Vector(Vector &&other) :
         data_(std::move(other.data_))
+    {
+    }
+
+    inline Vector(const Matrix<T, Dim, 1>& m) :
+        data_(m.data())
     {
     }
 

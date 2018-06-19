@@ -10,6 +10,9 @@
 
 namespace cslibs_math {
 namespace linear {
+template<typename T, std::size_t Dim>
+class Vector;
+
 template<typename T, std::size_t N, std::size_t M>
 class Matrix {
 public:
@@ -39,6 +42,12 @@ public:
 
     inline Matrix(const matrix_t & data) :
         data_(data)
+    {
+    }
+
+    template <std::size_t m = M>
+    inline Matrix(const Vector<T, N>& v, std::enable_if<m == 1>) :
+        data_(v.data())
     {
     }
 
