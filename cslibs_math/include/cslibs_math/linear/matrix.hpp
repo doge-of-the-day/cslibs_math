@@ -251,9 +251,19 @@ public:
         return Matrix<T, M, N>(Eigen::Matrix<T, M, N>(data_.transpose()));
     }
 
+    inline Matrix<T, M, N> transpose() const
+    {
+        return Matrix<T, M, N>(Eigen::Matrix<T, M, N>(data_.transpose()));
+    }
+
     inline double determinant()
     {
-        return data.determinant();
+        return data_.determinant();
+    }
+
+    inline double determinant() const
+    {
+        return data_.determinant();
     }
 
 private:
