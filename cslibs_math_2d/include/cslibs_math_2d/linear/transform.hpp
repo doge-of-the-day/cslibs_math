@@ -213,6 +213,16 @@ public:
         return Eigen::Vector3d(translation_(0), translation_(1), yaw_);
     }
 
+    inline Eigen::Matrix2d getEigenRotation() const
+    {
+        Eigen::Matrix2d rot;
+        rot(0,0) =  cos_;
+        rot(0,1) = -sin_;
+        rot(1,0) =  sin_;
+        rot(1,1) =  cos_;
+        return rot;
+    }
+
     inline void setFrom(const Eigen::Vector3d &eigen)
     {
         translation_(0) = eigen(0);
