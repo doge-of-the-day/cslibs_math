@@ -46,6 +46,9 @@ template<std::size_t Dim, typename Generator = std::mt19937_64>
 class Uniform : public RandomGenerator<Generator>
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using allocator_t    = Eigen::aligned_allocator<Uniform>;
     using Ptr            = std::shared_ptr<Uniform>;
     using distribution_t = std::uniform_real_distribution<double>;
     using sample_t       = Eigen::Matrix<double, Dim, 1>;
@@ -102,6 +105,9 @@ template<typename Generator>
 class Uniform<1, Generator> : public RandomGenerator<Generator>
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using allocator_t    = Eigen::aligned_allocator<Uniform>;
     using Ptr            = std::shared_ptr<Uniform>;
     using distribution_t = std::uniform_real_distribution<double>;
     using base_t         = RandomGenerator<Generator>;
@@ -159,7 +165,10 @@ template<std::size_t Dim, typename Generator = std::mt19937_64>
 class Normal : public RandomGenerator<Generator>
 {
 public:
-    using Ptr = std::shared_ptr<Normal>;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using allocator_t    = Eigen::aligned_allocator<Normal>;
+    using Ptr            = std::shared_ptr<Normal>;
     using sample_t       = Eigen::Matrix<double, Dim, 1>;
     using matrix_t       = Eigen::Matrix<double, Dim, Dim>;
     using distribution_t = std::normal_distribution<double>;
@@ -223,6 +232,9 @@ template<typename Generator>
 class Normal<1, Generator> : public RandomGenerator<Generator>
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using allocator_t    = Eigen::aligned_allocator<Normal>;
     using Ptr            = std::shared_ptr<Normal>;
     using distribution_t = std::normal_distribution<double> ;
     using base_t         = RandomGenerator<Generator>;

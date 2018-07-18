@@ -7,14 +7,18 @@ namespace cslibs_math_2d {
 class PolarPoint2d
 {
 public:
-    PolarPoint2d() :
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using allocator_t = Eigen::aligned_allocator<PolarPoint2d>;
+
+    inline PolarPoint2d() :
         cartesian_(std::numeric_limits<double>::infinity()),
         theta_(0.0),
         rho_(std::numeric_limits<double>::infinity())
     {
     }
 
-    PolarPoint2d(const double theta,
+    inline PolarPoint2d(const double theta,
                  const double rho) :
         cartesian_(std::cos(theta) * rho,
                    std::sin(theta) * rho),
@@ -23,14 +27,14 @@ public:
     {
     }
 
-    PolarPoint2d(const Point2d &cartesian) :
+    inline PolarPoint2d(const Point2d &cartesian) :
         cartesian_(cartesian),
         theta_(cslibs_math_2d::angle(cartesian)),
         rho_(cartesian.length())
     {
     }
 
-    PolarPoint2d(const Point2d &cartesian,
+    inline PolarPoint2d(const Point2d &cartesian,
                  const double theta,
                  const double rho) :
         cartesian_(cartesian),
@@ -39,14 +43,14 @@ public:
     {
     }
 
-    PolarPoint2d(const PolarPoint2d &other) :
+    inline PolarPoint2d(const PolarPoint2d &other) :
         cartesian_(other.cartesian_),
         theta_(other.theta_),
         rho_(other.rho_)
     {
     }
 
-    PolarPoint2d(PolarPoint2d &&other) :
+    inline PolarPoint2d(PolarPoint2d &&other) :
         cartesian_(std::move(other.cartesian_)),
         theta_(other.theta_),
         rho_(other.rho_)
@@ -141,7 +145,6 @@ private:
         theta_ = std::atan2(cartesian_(1), cartesian_(0));
         rho_   = cartesian_.length();
     }
-
-}__attribute__ ((aligned (32)));
+};
 }
 #endif // CSLIBS_MATH_2D_POLAR_HPP

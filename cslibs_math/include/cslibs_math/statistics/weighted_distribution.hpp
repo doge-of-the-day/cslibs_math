@@ -21,10 +21,12 @@ public:
     using covariance_t    = Eigen::Matrix<double, Dim, Dim>;
     using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
     using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
+    using allocator_t     = Eigen::aligned_allocator<WeightedDistribution>;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
 
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     WeightedDistribution() :
         sample_count_(0),

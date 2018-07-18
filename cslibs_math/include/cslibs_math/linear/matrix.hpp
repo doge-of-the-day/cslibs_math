@@ -18,8 +18,9 @@ class Matrix {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    using vector_t = Eigen::Matrix<T, N, 1>;
-    using matrix_t = Eigen::Matrix<T, N, M>;
+    using allocator_t = Eigen::aligned_allocator<Matrix>;
+    using vector_t    = Eigen::Matrix<T, N, 1>;
+    using matrix_t    = Eigen::Matrix<T, N, M>;
 
     using type_t                  = T;
     const static std::size_t ROWS = N;

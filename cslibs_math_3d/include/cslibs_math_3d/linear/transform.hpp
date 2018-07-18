@@ -8,6 +8,8 @@
 namespace cslibs_math_3d {
 class Transform3d {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t       = Eigen::aligned_allocator<Transform3d>;
     using eigen_vector_6d_t = Eigen::Matrix<double, 6, 1>;
 
     inline Transform3d()
@@ -238,9 +240,9 @@ public:
     }
 
 private:
-   Vector3d    translation_;
+    Vector3d    translation_;
     Quaternion  rotation_;
-} __attribute__ ((aligned (64)));
+};
 }
 
 inline cslibs_math_3d::Vector3d operator * (const cslibs_math_3d::Transform3d &t,

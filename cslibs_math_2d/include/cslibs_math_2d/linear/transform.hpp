@@ -15,6 +15,10 @@ inline cslibs_math_2d::Vector2d operator * (const cslibs_math_2d::Transform2d &t
 namespace cslibs_math_2d {
 class Transform2d {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using allocator_t = Eigen::aligned_allocator<Transform2d>;
+
     inline Transform2d() :
         translation_(0.0, 0.0),
         yaw_(0.0),
@@ -269,7 +273,7 @@ private:
     double   yaw_;
     double   sin_;
     double   cos_;
-} __attribute__ ((aligned (64)));
+};
 }
 
 inline cslibs_math_2d::Vector2d operator * (const cslibs_math_2d::Transform2d &t,

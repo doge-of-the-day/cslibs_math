@@ -12,7 +12,10 @@ namespace cslibs_math_2d {
 class Box2d
 {
 public:
-    using point_set_t    = std::set<Point2d>;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using allocator_t     = Eigen::aligned_allocator<Box2d>;
+    using point_set_t    = std::set<Point2d, Point2d::allocator_t>;
     using coefficients_t = std::array<double, 2>;
 
     inline Box2d() :
@@ -174,8 +177,7 @@ public:
 private:
     Point2d min_;
     Point2d max_;
-
-}__attribute__ ((aligned (32)));
+};
 }
 
 inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Box2d &b)
