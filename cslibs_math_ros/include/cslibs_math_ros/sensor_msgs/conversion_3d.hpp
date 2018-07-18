@@ -21,7 +21,6 @@ inline cslibs_time::TimeFrame from(const ::sensor_msgs::PointCloud2ConstPtr &src
 
 inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
                  cslibs_math_3d::Pointcloud3d::Ptr &dst)
-
 {
     pcl::PointCloud<pcl::PointXYZ> tmp;
     std::vector<int> indices;
