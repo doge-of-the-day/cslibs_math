@@ -14,13 +14,13 @@ public:
 
     using allocator_t    = Eigen::aligned_allocator<Normal>;
     using Ptr            = std::shared_ptr<Normal>;
-    using rng_t          = cslibs_math::random::Normal<Dimension>;
 
+
+    static const std::size_t Dimension = sizeof...(Types);
     static_assert(sizeof...(Types) > 0, "Constraint : Dimension > 0");
     static_assert(is_valid_type<Types...>::value, "Parameter list contains forbidden type!");
 
-    static const std::size_t Dimension = sizeof...(Types);
-
+    using rng_t          = cslibs_math::random::Normal<Dimension>;
 
     Normal() = delete;
     Normal(const Normal &other) = delete;

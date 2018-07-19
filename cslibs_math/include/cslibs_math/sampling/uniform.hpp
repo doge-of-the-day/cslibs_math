@@ -15,13 +15,14 @@ public:
 
     using Ptr         = std::shared_ptr<Uniform>;
     using allocator_t = Eigen::aligned_allocator<Uniform>;
-    using rng_t    = cslibs_math::random::Uniform<Dimension>;
-    using sample_t = typename rng_t::sample_t;
 
     static_assert(sizeof...(Types) > 0, "Constraint : Dimension > 0");
     static_assert(is_valid_type<Types...>::value, "Parameter list contains forbidden type!");
 
     static const std::size_t Dimension = sizeof...(Types);
+
+    using rng_t    = cslibs_math::random::Uniform<Dimension>;
+    using sample_t = typename rng_t::sample_t;
 
     Uniform() = delete;
     Uniform(const Uniform &other) = delete;

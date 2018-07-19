@@ -445,4 +445,22 @@ private:
 }
 }
 
+template<std::size_t D, std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<D,L> &d)
+{
+  out << d.getMean() << "\n";
+  out << d.getCovariance() << "\n";
+  out << d.getN() << "\n";
+  return out;
+}
+
+template<std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<1,L> &d)
+{
+  out << d.getMean() << "\n";
+  out << d.getVariance() << "\n";
+  out << d.getN() << "\n";
+  return out;
+}
+
 #endif /* CSLIBS_MATH_DISTRIBUTION_HPP */
