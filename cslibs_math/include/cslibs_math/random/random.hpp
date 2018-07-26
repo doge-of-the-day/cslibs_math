@@ -43,7 +43,7 @@ protected:
  * @brief The multi-dimensional uniform random generator class.
  */
 template<std::size_t Dim, typename Generator = std::mt19937_64>
-class Uniform : public RandomGenerator<Generator>
+class  Uniform : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -96,13 +96,13 @@ public:
 
 private:
     std::array<distribution_t, Dim> distributions_;
-};
+}__attribute__ ((aligned (16)));
 
 /**
  * @brief The one-dimensional uniform random generator class.
  */
 template<typename Generator>
-class Uniform<1, Generator> : public RandomGenerator<Generator>
+class  Uniform<1, Generator> : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -156,13 +156,13 @@ public:
 
 private:
     distribution_t distribution_;
-};
+}__attribute__ ((aligned (16)));
 
 /**
  * @brief The multi-dimensional normally distributed random generator class.
  */
 template<std::size_t Dim, typename Generator = std::mt19937_64>
-class Normal : public RandomGenerator<Generator>
+class  Normal : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -223,13 +223,13 @@ private:
     matrix_t                        covariance_;
     Eigen::Matrix<double, Dim, Dim> rotation_;
     Eigen::Matrix<double, Dim, 1>   scale_;
-};
+}__attribute__ ((aligned (16)));
 
 /**
  * @brief The one-dimensional normally distributed  random generator class.
  */
 template<typename Generator>
-class Normal<1, Generator> : public RandomGenerator<Generator>
+class  Normal<1, Generator> : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -273,7 +273,7 @@ public:
 
 private:
     distribution_t distribution_;
-};
+}__attribute__ ((aligned (16)));
 }
 }
 

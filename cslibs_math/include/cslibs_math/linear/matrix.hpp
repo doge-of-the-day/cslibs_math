@@ -14,7 +14,7 @@ template<typename T, std::size_t Dim>
 class Vector;
 
 template<typename T, std::size_t N, std::size_t M>
-class Matrix {
+class EIGEN_ALIGN16 Matrix {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

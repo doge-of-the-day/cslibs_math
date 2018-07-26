@@ -297,7 +297,7 @@ private:
     determinant_        = covariance_.determinant();
     dirty_              = false;
   }
-};
+}__attribute__ ((aligned (16)));
 
 template<std::size_t lamda_ratio_exponent>
 class Distribution<1, lamda_ratio_exponent>
@@ -441,7 +441,7 @@ private:
     standard_deviation_ = std::sqrt(variance_);
     return standard_deviation_;
   }
-};
+}__attribute__ ((aligned (16)));
 }
 }
 
