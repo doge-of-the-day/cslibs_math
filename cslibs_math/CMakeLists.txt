@@ -8,6 +8,8 @@ include(cmake/cslibs_math_extras.cmake)
 include(cmake/cslibs_math_openmp.cmake)
 include(cmake/cslibs_math_show_headers.cmake)
 include(cmake/cslibs_math_add_unit_test_gtest.cmake)
+include(cmake/cslibs_math_add_unit_test_ros.cmake)
+
 
 find_package(catkin REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -42,10 +44,15 @@ cslibs_math_add_unit_test_gtest(array
 
 cslibs_math_add_unit_test_gtest(distribution_serialization
     SRCS test/distribution_serialization.cpp
+    LIBS yaml-cpp
 )
-target_link_libraries(distribution_serialization
-    yaml-cpp
+
+cslibs_math_add_unit_test_ros(distribution
+    LAUNCH test/test_distribution.test
+    SRCS test/test_node_distribution.cpp
+    LIBS yaml-cpp ${Boost_LIBRARIES} ${catkin_LIBRARIES}
 )
+
 
 add_executable(hausdorff
     test/hausdorff.cpp

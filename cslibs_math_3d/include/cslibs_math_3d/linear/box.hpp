@@ -12,7 +12,10 @@ namespace cslibs_math_3d {
 class Box3d
 {
 public:
-    using point_set_t    = std::set<Point3d>;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<Box3d>;
+
+    using point_set_t    = std::set<Point3d, Point3d::allocator_t>;
     using coefficients_t = std::array<double, 3>;
 
     inline Box3d() :
@@ -164,7 +167,7 @@ private:
     Point3d min_;
     Point3d max_;
 
-}__attribute__ ((aligned (32)));
+};
 }
 
 inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Box3d &b)

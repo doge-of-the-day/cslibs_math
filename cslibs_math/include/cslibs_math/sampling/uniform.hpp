@@ -11,7 +11,10 @@ namespace state_space_samplers {
 template<typename... Types>
 class Uniform {
 public:
-    typedef std::shared_ptr<Uniform> Ptr;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using Ptr         = std::shared_ptr<Uniform>;
+    using allocator_t = Eigen::aligned_allocator<Uniform>;
 
     static_assert(sizeof...(Types) > 0, "Constraint : Dimension > 0");
     static_assert(is_valid_type<Types...>::value, "Parameter list contains forbidden type!");

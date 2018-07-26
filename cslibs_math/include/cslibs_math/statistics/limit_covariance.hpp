@@ -53,7 +53,6 @@ struct LimitCovariance<Dim, 0ul>
 
     static inline void apply(covariance_t &)
     {
-
     }
 };
 }

@@ -10,14 +10,17 @@ namespace state_space_samplers {
 template<typename... Types>
 class Normal {
 public:
-    typedef std::shared_ptr<Normal> Ptr;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+    using allocator_t    = Eigen::aligned_allocator<Normal>;
+    using Ptr            = std::shared_ptr<Normal>;
+
+
+    static const std::size_t Dimension = sizeof...(Types);
     static_assert(sizeof...(Types) > 0, "Constraint : Dimension > 0");
     static_assert(is_valid_type<Types...>::value, "Parameter list contains forbidden type!");
 
-    static const std::size_t Dimension = sizeof...(Types);
-
-    using rng_t = cslibs_math::random::Normal<Dimension>;
+    using rng_t          = cslibs_math::random::Normal<Dimension>;
 
     Normal() = delete;
     Normal(const Normal &other) = delete;

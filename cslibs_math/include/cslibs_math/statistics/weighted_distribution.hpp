@@ -21,10 +21,12 @@ public:
     using covariance_t    = Eigen::Matrix<double, Dim, Dim>;
     using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
     using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
+    using allocator_t     = Eigen::aligned_allocator<WeightedDistribution>;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
 
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     WeightedDistribution() :
         sample_count_(0),
@@ -244,7 +246,7 @@ private:
 
     inline void update() const
     {
-        const double scale = 1.0 / W_;
+        const double scale = W_ / (W_ - 1.0);
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
                 covariance_(i, j) = (correlated_(i, j) - (mean_(i) * mean_(j))) * scale;
