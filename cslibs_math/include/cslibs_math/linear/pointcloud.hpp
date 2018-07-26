@@ -13,6 +13,7 @@ class Pointcloud
 {
 public:
     using Ptr              = std::shared_ptr<Pointcloud>;
+
     using points_t         = std::vector<point_t, typename point_t::allocator_t>;
     using const_iterator_t = typename points_t::const_iterator;
 
@@ -98,7 +99,7 @@ protected:
     points_t data_;
     point_t  min_;
     point_t  max_;
-};
+}__attribute__ ((aligned (16)));
 }
 }
 

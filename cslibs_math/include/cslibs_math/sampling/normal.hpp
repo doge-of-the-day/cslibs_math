@@ -41,7 +41,7 @@ public:
 
 private:
     rng_t rng_;
-};
+}__attribute__ ((aligned (16)));
 }
 }
 
