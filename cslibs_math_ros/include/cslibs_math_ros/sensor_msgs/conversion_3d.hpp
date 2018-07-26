@@ -2,12 +2,10 @@
 #define CSLIBS_MATH_ROS_SENSOR_MSGS_CONVERSION_3D_HPP
 
 #include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/point_cloud2_iterator.h>
 
 #include <cslibs_time/time_frame.hpp>
 #include <cslibs_math_3d/linear/pointcloud.hpp>
-
-#include <pcl_conversions/pcl_conversions.h>
-#include <pcl/filters/filter.h>
 
 namespace cslibs_math_ros {
 namespace sensor_msgs {
@@ -22,14 +20,18 @@ inline cslibs_time::TimeFrame from(const ::sensor_msgs::PointCloud2ConstPtr &src
 inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
                  cslibs_math_3d::Pointcloud3d::Ptr &dst)
 {
-    pcl::PointCloud<pcl::PointXYZ> tmp;
-    std::vector<int> indices;
-    pcl::fromROSMsg(*src, tmp);
-    pcl::removeNaNFromPointCloud(tmp, tmp, indices);
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_z(*src, "z");
 
     dst.reset(new cslibs_math_3d::Pointcloud3d);
-    for (const pcl::PointXYZ &p : tmp)
-        dst->insert(cslibs_math_3d::Point3d(p.x, p.y, p.z));
+    for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
+        if (!std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z)) {
+            cslibs_math_3d::Point3d p(*iter_x, *iter_y, *iter_z);
+            if (p.isNormal())
+                dst->insert(p);
+        }
+    }
 }
 }
 }
