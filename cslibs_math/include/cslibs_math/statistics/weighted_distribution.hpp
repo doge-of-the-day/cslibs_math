@@ -246,7 +246,7 @@ private:
 
     inline void update() const
     {
-        const double scale = W_ / (W_ - 1.0);
+        const double scale = W_ / (W_ - (W_ / static_cast<double>(sample_count_)));
 
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
