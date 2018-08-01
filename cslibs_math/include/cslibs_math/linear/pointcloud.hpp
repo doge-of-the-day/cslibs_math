@@ -25,6 +25,13 @@ public:
     {
     }
 
+    Pointcloud(const Pointcloud &other) :
+        data_(other.data_),
+        min_(other.min_),
+        max_(other.max_)
+    {
+    }
+
     virtual ~Pointcloud() = default;
 
     inline virtual void insert(const point_t &pt)
@@ -83,7 +90,7 @@ public:
     inline void transform(const transform_t &t)
     {
         auto apply = [&t, this](point_t &p){
-             p = t * p;
+             p = t.apply(p);
              min_.min(p);
              max_.max(p);
         };

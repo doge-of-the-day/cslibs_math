@@ -55,9 +55,7 @@ inline Array create(const Ts... ts)
     Array arr;
     assign(arr, ts...);
     return arr;
-};
-
-
+}
 
 
 template<typename Array>

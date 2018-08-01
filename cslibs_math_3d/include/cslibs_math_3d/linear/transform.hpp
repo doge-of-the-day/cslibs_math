@@ -200,6 +200,11 @@ public:
                                                                      rotation_.roll(), rotation_.pitch(), rotation_.yaw());
     }
 
+    inline Vector3d apply(const Vector3d &v) const
+    {
+        return rotation_ * v + translation_;
+    }
+
     inline void setFrom(const eigen_vector_6d_t &eigen)
     {
         translation_(0) = eigen(0);
