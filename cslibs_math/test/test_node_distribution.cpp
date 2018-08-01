@@ -345,22 +345,13 @@ TEST(TestMuseMCL, testWeightedDistribution)
   EXPECT_NEAR(4.086956521739131, mean(0), 1e-6);
   EXPECT_NEAR(4.086956521739131, mean(1), 1e-6);
 
-  cs::WeightedDistribution<2> wdd;
-  for(std::size_t i = 0 ; i < 10 ; ++i) {
-    wdd.add(Eigen::Vector2d(i,i), 0.1);
-  }
-
-  mean = wdd.getMean();
-  EXPECT_NEAR(4.5, mean(0), 1e-6);
-  EXPECT_NEAR(4.5, mean(1), 1e-6);
-
 }
 
 TEST(TestMuseMCL, testWeightedDistributionAddition)
 {
   const double tolerance = 1e-3;
 
-  auto test = [tolerance](const muse_mcl::TestDistribution<2> &t) {
+  auto test_addition = [tolerance](const muse_mcl::TestDistribution<2> &t) {
     cs::WeightedDistribution<2> wa;
     cs::WeightedDistribution<2> wb;
     cs::WeightedDistribution<2> wc;
@@ -405,9 +396,34 @@ TEST(TestMuseMCL, testWeightedDistributionAddition)
 
   };
 
-  test(test_distribution_200);
-  test(test_distribution_500);
-  test(test_distribution_5000);
+  auto test_scale = [tolerance](const muse_mcl::TestDistribution<2> &t) {
+    cs::WeightedDistribution<2> w;
+
+    const double weight = 1.0 / (t.data.size() + 1.0);
+    for(std::size_t i = 0 ; i < t.data.size() ; ++i) {
+      w.add(t.data[i], weight);
+    }
+
+    auto mean = w.getMean();
+    auto cov  = w.getCovariance();
+
+    EXPECT_NEAR(t.mean(0), mean(0), tolerance);
+    EXPECT_NEAR(t.mean(1), mean(1), tolerance);
+    EXPECT_NEAR(t.covariance(0,0), cov(0,0), tolerance);
+    EXPECT_NEAR(t.covariance(0,1), cov(0,1), tolerance);
+    EXPECT_NEAR(t.covariance(1,0), cov(1,0), tolerance);
+    EXPECT_NEAR(t.covariance(1,1), cov(1,1), tolerance);
+  };
+
+
+  test_addition(test_distribution_200);
+  test_addition(test_distribution_500);
+  test_addition(test_distribution_5000);
+
+  test_scale(test_distribution_200);
+  test_scale(test_distribution_500);
+  test_scale(test_distribution_5000);
+
 }
 
 
