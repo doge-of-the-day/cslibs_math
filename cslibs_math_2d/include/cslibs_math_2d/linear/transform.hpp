@@ -273,7 +273,7 @@ private:
     double   yaw_;
     double   sin_;
     double   cos_;
-};
+}__attribute__ ((aligned (16)));
 }
 
 inline cslibs_math_2d::Vector2d operator * (const cslibs_math_2d::Transform2d &t,

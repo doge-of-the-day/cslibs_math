@@ -344,8 +344,17 @@ TEST(TestMuseMCL, testWeightedDistribution)
   mean = wdc.getMean();
   EXPECT_NEAR(4.086956521739131, mean(0), 1e-6);
   EXPECT_NEAR(4.086956521739131, mean(1), 1e-6);
-}
 
+  cs::WeightedDistribution<2> wdd;
+  for(std::size_t i = 0 ; i < 10 ; ++i) {
+    wdd.add(Eigen::Vector2d(i,i), 0.1);
+  }
+
+  mean = wdd.getMean();
+  EXPECT_NEAR(4.5, mean(0), 1e-6);
+  EXPECT_NEAR(4.5, mean(1), 1e-6);
+
+}
 
 TEST(TestMuseMCL, testWeightedDistributionAddition)
 {

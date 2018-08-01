@@ -356,7 +356,7 @@ private:
         return d < 0.0 ? std::acos(dot(data_, (-q).data_) / s) : std::acos(d / s);
     }
 
-}__attribute__ ((aligned (32)));
+}__attribute__ ((aligned (16)));
 }
 
 

@@ -246,7 +246,8 @@ private:
 
     inline void update() const
     {
-        const double scale = W_ / (W_ - 1.0);
+        const double w = W_ > 1.0 ? W_ : W_ + 1.0;
+        const double scale = w / (w - 1.0);
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
                 covariance_(i, j) = (correlated_(i, j) - (mean_(i) * mean_(j))) * scale;
