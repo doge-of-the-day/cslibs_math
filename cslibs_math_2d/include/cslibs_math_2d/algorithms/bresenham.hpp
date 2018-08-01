@@ -36,7 +36,7 @@ public:
         steep_(std::abs(end[1] - start[1]) > std::abs(end[0] - start[0])),
         error_(0)
     {
-        if(steep_) {
+        if (steep_) {
             std::swap(start_[0], start_[1]);
             std::swap(end_[0], end_[1]);
         }
@@ -49,7 +49,6 @@ public:
 
         step_[0] = start_[0] < end_[0] ? 1 : -1;
         step_[1] = start_[1] < end_[1] ? 1 : -1;
-
     }
 
     inline virtual ~Bresenham()
@@ -91,11 +90,11 @@ public:
 private:
     inline Bresenham &iterate()
     {
-        index_[0]       += step_[0];
-        error_ += delta_error_;
-        if(2 * error_ >= delta_[0]) {
-            index_[1]       += step_[1];
-            error_          -= delta_[0];
+        index_[0] += step_[0];
+        error_    += delta_error_;
+        if (2 * error_ >= delta_[0]) {
+            index_[1] += step_[1];
+            error_    -= delta_[0];
         }
         return *this;
     }
@@ -109,7 +108,6 @@ private:
     bool    steep_;
     int     error_;
     int     delta_error_;
-
 };
 }
 }
