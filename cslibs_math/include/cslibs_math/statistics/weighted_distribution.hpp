@@ -17,11 +17,12 @@ class WeightedDistribution {
 public:
     using Ptr = std::shared_ptr<WeightedDistribution<Dim, lamda_ratio_exponent>> ;
 
-    using sample_t        = Eigen::Matrix<double, Dim, 1>;
-    using covariance_t    = Eigen::Matrix<double, Dim, Dim>;
-    using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
-    using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
-    using allocator_t     = Eigen::aligned_allocator<WeightedDistribution>;
+    using sample_t            = Eigen::Matrix<double, Dim, 1>;
+    using sample_transposed_t = Eigen::Matrix<double, 1, Dim>;
+    using covariance_t        = Eigen::Matrix<double, Dim, Dim>;
+    using eigen_values_t      = Eigen::Matrix<double, Dim, 1>;
+    using eigen_vectors_t     = Eigen::Matrix<double, Dim, Dim>;
+    using allocator_t         = Eigen::aligned_allocator<WeightedDistribution>;
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
@@ -186,7 +187,7 @@ public:
         auto update_sample = [this, &p]() {
             if(dirty_) update();
             const sample_t  q        = p - mean_;
-            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
@@ -199,7 +200,7 @@ public:
         auto update_sample = [this, &p, &q]() {
             if(dirty_) update();
             q = p - mean_;
-            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
@@ -211,7 +212,7 @@ public:
         auto update_sample = [this, &p]() {
             if(dirty_) update();
             const sample_t  q        = p - mean_;
-            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             return std::exp(exponent);
         };
         return sample_count_ >= 3 ? update_sample() : 0.0;
@@ -223,7 +224,7 @@ public:
         auto update_sample = [this, &p, &q]() {
             if(dirty_) update();
             q = p - mean_;
-            const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             return std::exp(exponent);
         };
         return sample_count_ >= 3 ? update_sample() : 0.0;

@@ -17,12 +17,13 @@ class Distribution {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  using allocator_t     = Eigen::aligned_allocator<Distribution>;
-  using Ptr             = std::shared_ptr<Distribution<Dim, lamda_ratio_exponent>>;
-  using sample_t        = Eigen::Matrix<double, Dim, 1>;
-  using covariance_t    = Eigen::Matrix<double, Dim, Dim>;
-  using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
-  using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
+  using allocator_t         = Eigen::aligned_allocator<Distribution>;
+  using Ptr                 = std::shared_ptr<Distribution<Dim, lamda_ratio_exponent>>;
+  using sample_t            = Eigen::Matrix<double, Dim, 1>;
+  using sample_transposed_t = Eigen::Matrix<double, 1, Dim>;
+  using covariance_t        = Eigen::Matrix<double, Dim, Dim>;
+  using eigen_values_t      = Eigen::Matrix<double, Dim, 1>;
+  using eigen_vectors_t     = Eigen::Matrix<double, Dim, Dim>;
 
   static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
 
@@ -209,7 +210,8 @@ public:
     auto update_sample = [this, &p]() {
       if(dirty_) update();
       const sample_t  q        = p - mean_;
-      const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+      const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                            information_matrix_ * q);
       const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
       return denominator * std::exp(exponent);
     };
@@ -222,7 +224,8 @@ public:
     auto update_sample = [this, &p, &q]() {
       if(dirty_) update();
       q = p - mean_;
-      const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+      const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                            information_matrix_ * q);
       const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
       return denominator * std::exp(exponent);
     };
@@ -239,7 +242,8 @@ public:
     auto update_sample = [this, &p]() {
       if(dirty_) update();
       const sample_t  q        = p - mean_;
-      const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+      const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                            information_matrix_ * q);
       return std::exp(exponent);
     };
     return n_1_ >= 3 ? update_sample() : 0.0;
@@ -251,7 +255,8 @@ public:
     auto update_sample = [this, &p, &q]() {
       if(dirty_) update();
       q = p - mean_;
-      const double exponent    = -0.5 * double(q.transpose() * information_matrix_ * q);
+      const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                            information_matrix_ * q);
       return std::exp(exponent);
     };
     return n_1_ >= 3 ? update_sample() : 0.0;

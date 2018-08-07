@@ -23,6 +23,7 @@ public:
 
     using allocator_t             = Eigen::aligned_allocator<Vector>;
     using vector_t                = Eigen::Matrix<T, Dim, 1>;
+    using vector_transposed_t     = Eigen::Matrix<T, 1, Dim>;
     using arr_t                   = std::array<T, Dim>;
     using type_t                  = T;
     const static std::size_t Dimension = Dim;
@@ -240,9 +241,9 @@ public:
         return Vector(std::numeric_limits<T>::max());
     }
 
-    inline Vector transpose()
+    inline vector_transposed_t transpose()
     {
-        return data_.transpose();
+        return static_cast<vector_transposed_t>(data_.transpose());
     }
 
 private:

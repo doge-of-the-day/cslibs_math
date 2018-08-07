@@ -249,12 +249,12 @@ public:
 
     inline Matrix<T, M, N> transpose()
     {
-        return Matrix<T, M, N>(Eigen::Matrix<T, M, N>(data_.transpose()));
+        return Matrix<T, M, N>(static_cast<Eigen::Matrix<T, M, N>>(data_.transpose()));
     }
 
     inline Matrix<T, M, N> transpose() const
     {
-        return Matrix<T, M, N>(Eigen::Matrix<T, M, N>(data_.transpose()));
+        return Matrix<T, M, N>(static_cast<Eigen::Matrix<T, M, N>>(data_.transpose()));
     }
 
     inline double determinant()
