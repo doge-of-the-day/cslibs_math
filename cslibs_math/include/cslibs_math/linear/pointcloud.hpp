@@ -13,6 +13,7 @@ class Pointcloud
 {
 public:
     using Ptr              = std::shared_ptr<Pointcloud>;
+    using ConstPtr         = std::shared_ptr<const Pointcloud>;
 
     using points_t         = std::vector<point_t, typename point_t::allocator_t>;
     using const_iterator_t = typename points_t::const_iterator;
