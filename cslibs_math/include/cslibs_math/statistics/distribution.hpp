@@ -8,7 +8,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <iostream>
 
-#include <cslibs_math/statistics/limit_covariance.hpp>
+#include <cslibs_math/statistics/limit_eigen_values.hpp>
 
 namespace cslibs_math {
 namespace statistics {
@@ -291,7 +291,7 @@ private:
       }
     }
 
-    LimitCovariance<Dim, lamda_ratio_exponent>::apply(covariance_);
+    LimitEigenValues<Dim, lamda_ratio_exponent>::apply(covariance_);
 
     Eigen::EigenSolver<covariance_t> solver;
     solver.compute(covariance_);

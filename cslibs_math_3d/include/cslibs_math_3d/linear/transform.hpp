@@ -61,6 +61,17 @@ public:
     {
     }
 
+    inline Transform3d(const double x,
+                       const double y,
+                       const double z,
+                       const double roll,
+                       const double pitch,
+                       const double yaw) :
+        translation_(x, y, z),
+        rotation_(roll, pitch, yaw)
+    {
+    }
+
     inline Transform3d(const Transform3d &other) :
         translation_(other.translation_),
         rotation_(other.rotation_)

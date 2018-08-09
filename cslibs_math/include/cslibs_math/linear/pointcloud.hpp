@@ -20,16 +20,16 @@ public:
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    Pointcloud() :
-        min_(point_t::max()),
-        max_(point_t::min())
+    inline Pointcloud() :
+          min_(point_t::max()),
+          max_(point_t::min())
     {
     }
 
-    Pointcloud(const Pointcloud &other) :
-        data_(other.data_),
-        min_(other.min_),
-        max_(other.max_)
+    inline Pointcloud(const Pointcloud &other) :
+          data_(other.data_),
+          min_(other.min_),
+          max_(other.max_)
     {
     }
 
