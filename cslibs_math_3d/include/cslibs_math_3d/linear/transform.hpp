@@ -274,6 +274,16 @@ inline cslibs_math_3d::Transform3d operator * (const cslibs_math_3d::Transform3d
                                        a.rotation() * b.rotation());
 }
 
+namespace std {
+inline std::string to_string(const cslibs_math_3d::Transform3d &t)
+{
+
+    return "[" + std::to_string(t.tx())   + " " + std::to_string(t.ty()) + " " + std::to_string(t.tz()) +
+           " " + std::to_string(t.roll()) + " " + std::to_string(t.pitch()) + " " + std::to_string(t.yaw()) +
+           "]";
+}
+}
+
 inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Transform3d &t)
 {
     out << "[" << t.tx() << "," << t.ty() << ", " << t.tz() << ","

@@ -72,6 +72,11 @@ public:
         return data_;
     }
 
+    inline void reserve(const std::size_t s)
+    {
+        return data_.reserve(s);
+    }
+
     inline std::size_t size() const
     {
         return data_.size();
@@ -108,6 +113,22 @@ protected:
     point_t  min_;
     point_t  max_;
 }__attribute__ ((aligned (16)));
+
+template<typename point_t>
+inline void subsample(const typename Pointcloud<point_t>::ConstPtr &src,
+                      typename Pointcloud<point_t>::Ptr &dst,
+                      const std::size_t skip = 1)
+{
+    dst.reset(new Pointcloud<point_t>);
+    dst->reserve(src->size() / (1 + skip));
+
+    const std::size_t size = src->size();
+    const auto &points = src->getPoints();
+    const std::size_t step = 1 + skip;
+    for(std::size_t i = 0 ; i < size ; i += step) {
+        dst->insert(points[i]);
+    }
+}
 }
 }
 
