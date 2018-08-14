@@ -67,7 +67,7 @@ public:
         return data_.at(i);
     }
 
-    inline std::vector<point_t> const & getPoints() const
+    inline points_t const & getPoints() const
     {
         return data_;
     }
