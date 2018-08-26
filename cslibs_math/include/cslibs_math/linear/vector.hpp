@@ -100,7 +100,7 @@ public:
         return *this;
     }
 
-    inline T dot(const Vector &other)
+    inline T dot(const Vector &other) const
     {
         return data_.dot(other.data_);
     }

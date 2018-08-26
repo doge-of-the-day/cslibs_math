@@ -11,6 +11,27 @@ class Quaternion {
 public:
     using data_t = double[4];
 
+    static Quaternion fromAngleAxis(const Vector3d& angle_axis)
+    {
+
+        auto scale = 0.5;
+        auto w = 1.0;
+        if (angle_axis.length2() > 1e-8)
+        {
+            const auto norm = angle_axis.length();
+            scale = std::sin(norm / 2.) / norm;
+            w = std::cos(norm / 2.);
+        }
+
+        const auto xyz = angle_axis * scale;
+        return {xyz(0), xyz(1), xyz(2), w};
+    }
+
+    static Quaternion fromEigen(const Eigen::Quaterniond& eigen)
+    {
+        return Quaternion{ eigen.x(), eigen.y(), eigen.z(), eigen.w() };
+    }
+
     inline Quaternion() :
         data_{0.0, 0.0, 0.0, 1.0}
     {
@@ -270,6 +291,23 @@ public:
         Quaternion q;
         conjugate(data_, q.data_);
         return q;
+    }
+
+    cslibs_math_3d::Vector3d toAngleAxis() const
+    {
+        auto normed = normalized();
+        if (normed.w() < 0)
+            normed = -normed;
+        const auto xyz = cslibs_math_3d::Vector3d(normed.x(), normed.y(), normed.z());
+
+        const auto angle = 2 * std::atan2(xyz.length(), normed.w());
+        const auto scale = angle < 1e-7 ? 2. : angle / std::sin(angle / 2.);
+        return xyz * scale;
+    }
+
+    Eigen::Quaterniond toEigen() const
+    {
+        return Eigen::Quaterniond{ w(), x(), y(), z() };
     }
 
 private:
