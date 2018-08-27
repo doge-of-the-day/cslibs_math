@@ -246,18 +246,17 @@ public:
     inline Transform2d interpolate(const Transform2d &other,
                                    const double ratio) const
     {
-        assert(ratio  >= 0.0);
+        assert(ratio >= 0.0);
         assert(ratio <= 1.0);
-        if(ratio == 0.0) {
+        if (ratio == 0.0)
             return *this;
-        }
-        if(ratio == 1.0) {
+
+        if (ratio == 1.0)
             return other;
-        }
 
         const  double ratio_inverse = 1.0 - ratio;
         const  Vector2d translation = translation_ * ratio_inverse + other.translation_ * ratio;
-        const  double   yaw = cslibs_math::common::angle::normalize(yaw_ + ratio * cslibs_math::common::angle::normalize(other.yaw_ - yaw_));
+        const  double   yaw = cslibs_math::common::angle::normalize(yaw_ + ratio * /*cslibs_math::common::angle::normalize(*/other.yaw_ - yaw_);
         return Transform2d(translation, yaw);
     }
 
