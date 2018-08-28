@@ -2,7 +2,6 @@
 #define CSLIBS_MATH_ROS_TF_CONVERSION_2D_HPP
 
 #include <tf/tf.h>
-
 #include <cslibs_math_2d/linear/covariance.hpp>
 #include <cslibs_math_2d/linear/transform.hpp>
 
