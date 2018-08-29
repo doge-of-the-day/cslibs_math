@@ -34,7 +34,6 @@ public:
         mean_(sample_t::Zero()),
         correlated_(covariance_t::Zero()),
         W_(0.0),
-        W_1_(0.0),
         covariance_(covariance_t::Zero()),
         information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
@@ -55,7 +54,6 @@ public:
         eigen_vectors_ = eigen_vectors_t::Zero();
         eigen_values_  = eigen_values_t::Zero();
         W_ = 0.0;
-        W_1_ = 0.0;
         sample_count_ = 0;
         dirty_ = true;
     }
@@ -66,25 +64,25 @@ public:
         if(w == 0.0)
             return;
 
-        W_  += w;
-        mean_ = (mean_ * W_1_ + w * p) / W_;
+        const double _W = W_ + w;
+        mean_ = (mean_ * W_ + w * p) / _W;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
-                correlated_(i, j) = (correlated_(i, j) * W_1_ + w * p(i) * p(j)) / static_cast<double>(W_);
+                correlated_(i, j) = (correlated_(i, j) * W_ + w * p(i) * p(j)) / static_cast<double>(_W);
             }
         }
         ++sample_count_;
-        W_1_ = W_;
+        W_ = _W;
         dirty_ = true;
     }
 
 
     inline WeightedDistribution& operator+=(const WeightedDistribution &other)
     {
-        mean_ = (mean_ * W_ + other.mean_ * other.W_) / (W_ + other.W_);
-        correlated_ = (correlated_ * W_ +  other.correlated_ * other.W_) / (W_ + other.W_);
-        W_ += other.W_;
-        W_1_ = W_;
+        const double _W = W_ + other.W_;
+        mean_ = (mean_ * W_ + other.mean_ * other.W_) / _W;
+        correlated_ = (correlated_ * W_ +  other.correlated_ * other.W_) / _W;
+        W_ = _W;
         sample_count_ += other.sample_count_;
         dirty_ = true;
         return *this;
@@ -235,7 +233,6 @@ private:
     sample_t                  mean_;
     covariance_t              correlated_;
     double                    W_;
-    double                    W_1_;            /// actual amount of points in distribution
 
     mutable covariance_t      covariance_;
     mutable covariance_t      information_matrix_;
@@ -283,8 +280,7 @@ public:
         standard_deviation_(0.0),
         squared_(0.0),
         dirty_(false),
-        W_(1.0),
-        W_1_(0.0)
+        W_(0.0)
     {
     }
 
@@ -299,27 +295,26 @@ public:
         variance_       = 0.0;
         standard_deviation_ = 0.0;
         dirty_          = false;
-        W_              = 1.0;
-        W_1_            = 0.0;
+        W_              = 0.0;
         sample_count_   = 0;
     }
 
     inline void add(const double s, const double w)
     {
-        W_      += w;
-        mean_    = (mean_ * W_1_ + s * w) / W_;
-        squared_ = (squared_ * W_1_ + s*s * w) / W_;
+        const double _W = W_ + w;
+        mean_    = (mean_ * W_ + s * w) / _W;
+        squared_ = (squared_ * W_ + s*s * w) / _W;
+        W_ = _W;
         ++sample_count_;
-        W_1_ = W_;
         dirty_ = true;
     }
 
     inline WeightedDistribution & operator += (const WeightedDistribution &other)
     {
-        mean_    = (mean_ * W_ + other.mean_ * other.W_) / (W_ + other.W_);
-        squared_ = (squared_ * W_ +  other.squared_ * other.W_) / (W_ + other.W_);
-        W_ += other.W_;
-        W_1_ = W_;
+        const double _W = W_ + other.W_;
+        mean_    = (mean_ * W_ + other.mean_ * other.W_) / _W;
+        squared_ = (squared_ * W_ +  other.squared_ * other.W_) / _W;
+        W_ = _W;
         sample_count_ += other.sample_count_;
         dirty_ = true;
         return *this;
@@ -367,7 +362,6 @@ private:
     double          squared_;
     bool            dirty_;
     double          W_;
-    double          W_1_;
 
     inline double updateReturnVariance() const
     {
