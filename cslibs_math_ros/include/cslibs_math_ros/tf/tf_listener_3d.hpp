@@ -6,6 +6,8 @@
 
 #include <cslibs_math_ros/tf/conversion_3d.hpp>
 
+#include <cslibs_math/utility/stamped.hpp>
+
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 #include <memory>
@@ -20,7 +22,7 @@ class TFListener3d {
 
 public:
     using Ptr       = std::shared_ptr<TFListener3d>;
-    using stamped_t = cslibs_time::Stamped<cslibs_math_3d::Transform3d>;
+    using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
     using mutex_t   = std::mutex;
     using lock_t    = std::unique_lock<mutex_t>;
 
