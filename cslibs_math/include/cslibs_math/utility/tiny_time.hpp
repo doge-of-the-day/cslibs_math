@@ -10,6 +10,22 @@ using clock_t    = std::chrono::high_resolution_clock;
 using time_t     = clock_t::time_point;
 using duration_t = clock_t::duration;
 
+
+inline time_t fromMilliseconds(const int64_t n)
+{
+    return time_t(std::chrono::milliseconds(n));
+}
+
+inline time_t fromMicroseconds(const int64_t n)
+{
+    return time_t(std::chrono::microseconds(n));
+}
+
+inline time_t fromNanoseconds(const int64_t n)
+{
+    return time_t(std::chrono::nanoseconds(n));
+}
+
 inline double seconds(const time_t &time)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count() * 1e-9;
