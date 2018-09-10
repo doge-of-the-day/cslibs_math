@@ -6,8 +6,8 @@
 #include <array>
 #include <typeinfo>
 
-namespace muse_smc {
-namespace state_space_samplers {
+namespace cslibs_math {
+namespace sampling {
 /**
  * @brief The Radian struct represents a semantic type,
  *        Radian values should be normalized.

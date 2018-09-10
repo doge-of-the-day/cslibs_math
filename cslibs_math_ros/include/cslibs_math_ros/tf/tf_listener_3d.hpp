@@ -8,6 +8,8 @@
 
 #include <cslibs_math/utility/stamped.hpp>
 
+#include <cslibs_math_3d/linear/transform.hpp>
+
 #include <tf/tf.h>
 #include <tf/transform_listener.h>
 #include <memory>
@@ -18,11 +20,11 @@ namespace cslibs_math_ros {
 namespace tf {
 class TFListener3d {
 
-#warning TFListener2d is deprecated.
+#warning TFListener3d is deprecated.
 
 public:
     using Ptr       = std::shared_ptr<TFListener3d>;
-    using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
+    using stamped_t = cslibs_math::utility::Stamped<cslibs_math_3d::Transform3d>;
     using mutex_t   = std::mutex;
     using lock_t    = std::unique_lock<mutex_t>;
 
@@ -37,7 +39,7 @@ public:
         ::tf::Transform tf_transform;
         if(lookupTransform(target_frame, source_frame,time, tf_transform)) {
             transform.data()  = conversion_3d::from(tf_transform);
-            transform.stamp() = cslibs_time::Time(time.toNSec());
+            transform.stamp() = cslibs_math::utility::tiny_time::fromNanoseconds(time.toNSec());
             return true;
         }
         return false;
@@ -56,7 +58,7 @@ public:
                            tf_transform,
                            timeout)) {
             transform.data()  = conversion_3d::from(tf_transform);
-            transform.stamp() = cslibs_time::Time(time.toNSec());
+            transform.stamp() = cslibs_math::utility::tiny_time::fromNanoseconds(time.toNSec());
             return true;
         }
         return false;
