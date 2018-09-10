@@ -5,8 +5,8 @@
 #include <cslibs_math/random/random.hpp>
 #include "traits.hpp"
 
-namespace muse_smc {
-namespace state_space_samplers {
+namespace cslibs_math {
+namespace sampling {
 template<typename... Types>
 class Normal {
 public:
@@ -14,7 +14,6 @@ public:
 
     using allocator_t    = Eigen::aligned_allocator<Normal>;
     using Ptr            = std::shared_ptr<Normal>;
-
 
     static const std::size_t Dimension = sizeof...(Types);
     static_assert(sizeof...(Types) > 0, "Constraint : Dimension > 0");
@@ -25,7 +24,7 @@ public:
     Normal() = delete;
     Normal(const Normal &other) = delete;
 
-    Normal(const typename rng_t::sample_t   &pose,
+    Normal(const typename rng_t::sample_t &pose,
            const typename rng_t::matrix_t &covariance,
            const unsigned int seed = 0) :
         rng_(pose, covariance, seed)

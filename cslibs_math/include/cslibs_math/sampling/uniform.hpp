@@ -6,8 +6,8 @@
 #include <cslibs_math/random/random.hpp>
 #include "traits.hpp"
 
-namespace muse_smc {
-namespace state_space_samplers {
+namespace cslibs_math {
+namespace sampling {
 template<typename... Types>
 class Uniform {
 public:
