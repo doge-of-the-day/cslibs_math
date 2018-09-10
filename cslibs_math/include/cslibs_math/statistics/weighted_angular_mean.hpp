@@ -119,7 +119,7 @@ private:
   mutable double  mean_;
   complex_t complex_mean_;
   double  W_;
-}__attribute__ ((aligned (16)));
+};
 }
 }
 #endif // CSLIBS_MATH_WEIGHTED_ANGULAR_MEAN_HPP

@@ -46,7 +46,7 @@ private:
         return dot < 0.0;
     }
 
-}__attribute__ ((aligned (16)));
+};
 }
 }
 #endif // CSLIBS_MATH_WEIGHTED_QUATERNION_MEAN_HPP

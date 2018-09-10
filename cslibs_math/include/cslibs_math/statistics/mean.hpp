@@ -36,7 +36,7 @@ private:
   sample_t    mean_;
   std::size_t n_;
   std::size_t n_1;
-}__attribute__ ((aligned (16)));
+};
 
 template<>
 class Mean<1>
@@ -66,7 +66,7 @@ private:
   std::size_t n_;
   std::size_t n_1;
 
-}__attribute__ ((aligned (16)));
+};
 }
 }
 

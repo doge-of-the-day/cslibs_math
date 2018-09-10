@@ -96,7 +96,7 @@ public:
 
 private:
     std::array<distribution_t, Dim> distributions_;
-}__attribute__ ((aligned (16)));
+};
 
 /**
  * @brief The one-dimensional uniform random generator class.
@@ -156,7 +156,7 @@ public:
 
 private:
     distribution_t distribution_;
-}__attribute__ ((aligned (16)));
+};
 
 /**
  * @brief The multi-dimensional normally distributed random generator class.
@@ -223,7 +223,7 @@ private:
     matrix_t                        covariance_;
     Eigen::Matrix<double, Dim, Dim> rotation_;
     Eigen::Matrix<double, Dim, 1>   scale_;
-}__attribute__ ((aligned (16)));
+};
 
 /**
  * @brief The one-dimensional normally distributed  random generator class.
@@ -273,7 +273,7 @@ public:
 
 private:
     distribution_t distribution_;
-}__attribute__ ((aligned (16)));
+};
 }
 }
 

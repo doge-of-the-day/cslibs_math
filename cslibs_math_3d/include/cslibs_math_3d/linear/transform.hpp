@@ -258,7 +258,7 @@ public:
 private:
     Vector3d    translation_;
     Quaternion  rotation_;
-}__attribute__ ((aligned (16)));
+};
 }
 
 inline cslibs_math_3d::Vector3d operator * (const cslibs_math_3d::Transform3d &t,

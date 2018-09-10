@@ -248,7 +248,7 @@ public:
 
 private:
     vector_t data_;
-} __attribute__ ((aligned (16)));
+} ;
 
 template<typename T, std::size_t Dim>
 inline T distance(const cslibs_math::linear::Vector<T, Dim> &a,

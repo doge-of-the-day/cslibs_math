@@ -112,7 +112,7 @@ protected:
     points_t data_;
     point_t  min_;
     point_t  max_;
-}__attribute__ ((aligned (16)));
+};
 
 template<typename point_t>
 inline void subsample(const typename Pointcloud<point_t>::ConstPtr &src,

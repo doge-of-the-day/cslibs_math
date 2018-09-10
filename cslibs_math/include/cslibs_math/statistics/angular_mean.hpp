@@ -128,7 +128,7 @@ private:
     complex complex_mean_;
     std::size_t n_;
     std::size_t n_1_;
-} __attribute__ ((aligned (16)));
+} ;
 }
 }
 #endif // ANGULAR_MEAN_HPP
