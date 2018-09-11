@@ -9,7 +9,7 @@
 #include <set>
 
 namespace cslibs_math_3d {
-class Box3d
+class EIGEN_ALIGN16 Box3d
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

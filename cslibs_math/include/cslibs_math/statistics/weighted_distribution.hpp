@@ -13,7 +13,7 @@
 namespace cslibs_math {
 namespace statistics {
 template<std::size_t Dim, std::size_t lamda_ratio_exponent = 0>
-class WeightedDistribution {
+class EIGEN_ALIGN16 WeightedDistribution {
 public:
     using Ptr = std::shared_ptr<WeightedDistribution<Dim, lamda_ratio_exponent>> ;
 

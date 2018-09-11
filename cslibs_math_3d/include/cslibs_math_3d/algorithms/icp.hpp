@@ -6,7 +6,7 @@
 namespace cslibs_math_3d {
 namespace algorithms {
 namespace icp {
-class Result {
+class EIGEN_ALIGN16 Result {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
@@ -71,7 +71,7 @@ private:
 };
 
 
-class Parameters {
+class EIGEN_ALIGN16 Parameters {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

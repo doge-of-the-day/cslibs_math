@@ -10,7 +10,7 @@
 
 namespace cslibs_math_3d {
 namespace algorithms {
-class Amantidis
+class EIGEN_ALIGN16 Amantidis
 {
 public:
     using Ptr           = std::shared_ptr<Amantidis>;
@@ -18,6 +18,8 @@ public:
     using delta_t       = std::array<double, 3>;
     using delta_mask_t  = std::array<bool, 3>;
     using point_t       = Point3d;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline Amantidis() :
         start_{{0, 0, 0}},

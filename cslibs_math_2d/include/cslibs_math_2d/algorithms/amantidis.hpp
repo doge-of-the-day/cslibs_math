@@ -10,9 +10,12 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
-class Amantidis
+class EIGEN_ALIGN16 Amantidis
 {
 public:
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     using Ptr           = std::shared_ptr<Amantidis>;
     using index_t       = std::array<int, 2>;
     using delta_t       = std::array<double, 2>;

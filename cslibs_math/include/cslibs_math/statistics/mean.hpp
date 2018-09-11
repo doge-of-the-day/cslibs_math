@@ -6,7 +6,7 @@
 namespace cslibs_math {
 namespace statistics {
 template<std::size_t Dim>
-class Mean
+class EIGEN_ALIGN16 Mean
 {
 public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -39,9 +39,11 @@ private:
 };
 
 template<>
-class Mean<1>
+class EIGEN_ALIGN16 Mean<1>
 {
 public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
   Mean() :
     mean_(0.0),
     n_(1),

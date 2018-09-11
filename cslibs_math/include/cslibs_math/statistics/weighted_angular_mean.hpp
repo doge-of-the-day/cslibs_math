@@ -8,7 +8,7 @@
 
 namespace cslibs_math {
 namespace statistics {
-class WeightedAngularMean {
+class EIGEN_ALIGN16 WeightedAngularMean {
 public:
   using Ptr         = std::shared_ptr<WeightedAngularMean>;
   using complex_t   = Eigen::Vector2d;

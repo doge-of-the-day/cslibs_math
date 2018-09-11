@@ -8,9 +8,12 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
-class Bresenham
+class EIGEN_ALIGN16 Bresenham
 {
 public:
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     using Ptr           = std::shared_ptr<Bresenham>;
     using index_t       = std::array<int, 2>;
     using point_t       = Point2d;

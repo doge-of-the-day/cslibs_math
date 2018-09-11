@@ -9,7 +9,7 @@
 namespace cslibs_math {
 namespace linear {
 template<typename point_t>
-class Pointcloud
+class EIGEN_ALIGN16 Pointcloud
 {
 public:
     using Ptr              = std::shared_ptr<Pointcloud>;

@@ -9,7 +9,7 @@
 namespace cslibs_math {
 namespace sampling {
 template<typename... Types>
-class Uniform {
+class EIGEN_ALIGN16 Uniform {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

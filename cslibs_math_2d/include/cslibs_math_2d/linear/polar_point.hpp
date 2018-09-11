@@ -4,7 +4,7 @@
 #include <cslibs_math_2d/linear/point.hpp>
 
 namespace cslibs_math_2d {
-class PolarPoint2d
+class EIGEN_ALIGN16 PolarPoint2d
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

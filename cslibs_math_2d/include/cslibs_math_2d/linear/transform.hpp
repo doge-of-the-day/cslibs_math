@@ -13,7 +13,7 @@ inline cslibs_math_2d::Vector2d operator * (const cslibs_math_2d::Transform2d &t
                                             const cslibs_math_2d::Vector2d &v);
 
 namespace cslibs_math_2d {
-class Transform2d {
+class EIGEN_ALIGN16 Transform2d {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

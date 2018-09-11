@@ -8,7 +8,7 @@
 namespace cslibs_math_3d {
 namespace algorithms {
 
-class Bresenham
+class EIGEN_ALIGN16 Bresenham
 {
 public:
     using Ptr           = std::shared_ptr<Bresenham>;
@@ -17,6 +17,8 @@ public:
     using point_t       = Point3d;
     using interation_t  = Bresenham& (Bresenham::*)() ; // cslibs_utility::common::delegate<Bresenham &()>;
     using done_t        = bool (Bresenham::*)();        //cslibs_utility::common::delegate<bool()>;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline Bresenham() :
         start_{{0,0,0}},

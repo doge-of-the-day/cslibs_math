@@ -8,7 +8,7 @@
 namespace cslibs_math {
 namespace sampling {
 template<typename... Types>
-class Normal {
+class EIGEN_ALIGN16 Normal {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

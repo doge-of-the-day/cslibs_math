@@ -10,7 +10,7 @@
 namespace cslibs_math {
 namespace utility {
 template<typename T>
-class Stamped
+class EIGEN_ALIGN16 Stamped
 {
 public:
     using Ptr           = std::shared_ptr<Stamped<T>>;

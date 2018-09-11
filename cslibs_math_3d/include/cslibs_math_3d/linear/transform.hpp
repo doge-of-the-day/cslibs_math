@@ -6,9 +6,11 @@
 #include <cslibs_math/common/angle.hpp>
 
 namespace cslibs_math_3d {
-class Transform3d {
+class EIGEN_ALIGN16 Transform3d {
 public:
+
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     using allocator_t       = Eigen::aligned_allocator<Transform3d>;
     using eigen_vector_6d_t = Eigen::Matrix<double, 6, 1>;
 

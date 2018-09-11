@@ -7,9 +7,11 @@
 #include <cslibs_math_3d/linear/vector.hpp>
 
 namespace cslibs_math_3d {
-class Quaternion {
+class EIGEN_ALIGN16 Quaternion {
 public:
     using data_t = double[4];
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     static Quaternion fromAngleAxis(const Vector3d& angle_axis)
     {

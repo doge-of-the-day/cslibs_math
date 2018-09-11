@@ -4,9 +4,11 @@
 #include <memory>
 #include <cslibs_math/common/angle.hpp>
 
+#include <eigen3/Eigen/Core>
+
 namespace cslibs_math {
 namespace statistics {
-class AngularMean {
+class EIGEN_ALIGN16 AngularMean {
 public:
     using Ptr = std::shared_ptr<AngularMean>;
     using complex = std::complex<double>;

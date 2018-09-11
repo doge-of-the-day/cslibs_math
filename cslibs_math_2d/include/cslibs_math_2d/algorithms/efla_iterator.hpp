@@ -7,12 +7,14 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
-class EFLAIterator
+class EIGEN_ALIGN16 EFLAIterator
 {
 public:
     using Ptr           = std::shared_ptr<EFLAIterator>;
     using index_t       = std::array<int, 2>;
     using point_t       = Point2d;
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline explicit EFLAIterator(const index_t &start,
                                  const index_t &end) :
