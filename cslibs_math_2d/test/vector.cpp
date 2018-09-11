@@ -66,12 +66,12 @@ TEST(Test_cslibs_math_2d, testMul)
         cslibs_math_2d::Vector2d v0(x,y);
         cslibs_math_2d::Vector2d v1 = v0 * s;
 
-        EXPECT_EQ(v1(0), s * x);
-        EXPECT_EQ(v1(1), s * y);
+        EXPECT_NEAR(v1(0), s * x, 1e-9);
+        EXPECT_NEAR(v1(1), s * y, 1e-9);
 
         v0 *= s;
-        EXPECT_EQ(v0(0), s * x);
-        EXPECT_EQ(v0(1), s * y);
+        EXPECT_NEAR(v0(0), s * x, 1e-9);
+        EXPECT_NEAR(v0(1), s * y, 1e-9);
     }
 }
 
@@ -89,12 +89,12 @@ TEST(Test_cslibs_math_2d, testDiv)
         cslibs_math_2d::Vector2d v0(x,y);
         cslibs_math_2d::Vector2d v1 = v0 / s;
 
-        EXPECT_EQ(v1(0), x / s);
-        EXPECT_EQ(v1(1), y / s);
+        EXPECT_NEAR(v1(0), x / s, 1e-9);
+        EXPECT_NEAR(v1(1), y / s, 1e-9);
 
         v0 /= s;
-        EXPECT_EQ(v0(0), x / s);
-        EXPECT_EQ(v0(1), y / s);
+        EXPECT_NEAR(v0(0), x / s, 1e-9);
+        EXPECT_NEAR(v0(1), y / s, 1e-9);
     }
 }
 
