@@ -57,6 +57,11 @@ public:
         return Matrix(matrix_t(matrix_t::Identity()));
     }
 
+    inline static Matrix random()
+    {
+        return Matrix(matrix_t(matrix_t::Random()));
+    }
+
     template<typename... args_t, typename = typename std::enable_if<sizeof...(args_t) == N*M>>
     inline explicit Matrix(const args_t ... values) :
         data_(eigen::create<matrix_t>(values...))

@@ -86,6 +86,13 @@ public:
     {
     }
 
+    inline static Transform3d random()
+    {
+        const Eigen::Matrix<double, 6, 1> r = Eigen::Matrix<double, 6, 1>::Random();
+        return Transform3d(r[0],r[1],r[2],
+                           r[3],r[4],r[5]);
+    }
+
     inline Transform3d & operator *= (const Transform3d &other)
     {
         translation_ += rotation_ * other.translation_;

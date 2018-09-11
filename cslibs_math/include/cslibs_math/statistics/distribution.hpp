@@ -162,7 +162,7 @@ public:
   {
     auto update_return_eigen = [this, abs]() {
       if(dirty_) update();
-      return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+      return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_;
     };
     return n_1_ >= Dim + 1  ?  update_return_eigen() : eigen_values_;
   }

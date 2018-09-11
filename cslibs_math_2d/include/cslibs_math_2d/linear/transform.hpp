@@ -100,6 +100,12 @@ public:
     {
     }
 
+    inline static Transform2d random()
+    {
+        const Eigen::Vector3d r = Eigen::Vector3d::Random();
+        return Transform2d(r(0),r(1),r(2));
+    }
+
     inline Transform2d & operator *= (const Transform2d &other)
     {
         if(yaw_ == 0.0) {
@@ -256,7 +262,7 @@ public:
 
         const  double ratio_inverse = 1.0 - ratio;
         const  Vector2d translation = translation_ * ratio_inverse + other.translation_ * ratio;
-        const  double   yaw = cslibs_math::common::angle::normalize(yaw_ + ratio * /*cslibs_math::common::angle::normalize(*/other.yaw_ - yaw_);
+        const double yaw = cslibs_math::common::angle::normalize(yaw_ + ratio * cslibs_math::common::angle::normalize(other.yaw_ - yaw_));
         return Transform2d(translation, yaw);
     }
 

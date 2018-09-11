@@ -3,6 +3,8 @@
 #include <cslibs_math/random/random.hpp>
 #include <cslibs_math/common/array.hpp>
 
+#include <cslibs_math/linear/vector.hpp>
+#include <cslibs_math/linear/matrix.hpp>
 
 using rng_t = cslibs_math::random::Uniform<1>;
 
@@ -309,6 +311,59 @@ TEST(Test_cslibs_math, testArrayMax)
         EXPECT_EQ(d_3_2[1], std:: max(d_3_1[1], d_3_0[1]));
         EXPECT_EQ(d_3_2[2], std:: max(d_3_1[2], d_3_0[2]));
     }
+}
+
+TEST(Test_cslibs_math, testArrayAligned)
+{
+    using vector_t = cslibs_math::linear::Vector<double, 3>;
+    using matrix_t = cslibs_math::linear::Matrix<double, 3, 3>;
+
+    using vector_array_t = std::array<vector_t, 3>;
+    using matrix_array_t = std::array<matrix_t, 3>;
+
+    vector_t v1 = vector_t::random();
+    vector_t v2 = vector_t::random();
+    vector_t v3 = vector_t::random();
+
+    matrix_t m1 = matrix_t::random();
+    matrix_t m2 = matrix_t::random();
+    matrix_t m3 = matrix_t::random();
+
+    /// test init
+    vector_array_t va1 = {{v1, v2, v3}};
+    matrix_array_t ma1 = {{m1, m2, m3}};
+
+    EXPECT_EQ(v1.data(), va1[0].data());
+    EXPECT_EQ(v2.data(), va1[1].data());
+    EXPECT_EQ(v3.data(), va1[2].data());
+
+    EXPECT_EQ(m1.data(), ma1[0].data());
+    EXPECT_EQ(m2.data(), ma1[1].data());
+    EXPECT_EQ(m3.data(), ma1[2].data());
+
+    /// test assign
+    v1 = vector_t::random();
+    v2 = vector_t::random();
+    v3 = vector_t::random();
+
+    m1 = matrix_t::random();
+    m2 = matrix_t::random();
+    m3 = matrix_t::random();
+
+    va1[0]  = v1;
+    va1[1]  = v2;
+    va1[2]  = v3;
+    ma1[0]  = m1;
+    ma1[1]  = m2;
+    ma1[2]  = m3;
+
+    EXPECT_EQ(v1.data(), va1[0].data());
+    EXPECT_EQ(v2.data(), va1[1].data());
+    EXPECT_EQ(v3.data(), va1[2].data());
+
+    EXPECT_EQ(m1.data(), ma1[0].data());
+    EXPECT_EQ(m2.data(), ma1[1].data());
+    EXPECT_EQ(m3.data(), ma1[2].data());
 }
 
 int main(int argc, char *argv[])

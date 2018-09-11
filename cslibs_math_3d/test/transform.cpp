@@ -570,6 +570,44 @@ TEST(Test_cslibs_math_3d, testTransformInverse)
                 cslibs_math::common::eq(std::abs(t_r_tf_yaw) + std::abs(t_r.yaw()), M_PI, 1e-6));
 }
 
+TEST(Test_cslibs_math_3d, testArrayAligned)
+{
+    cslibs_math_3d::Transform3d t1 = cslibs_math_3d::Transform3d::random();
+    cslibs_math_3d::Transform3d t2 = cslibs_math_3d::Transform3d::random();
+    cslibs_math_3d::Transform3d t3 = cslibs_math_3d::Transform3d::random();
+
+    auto test_eq = [](const cslibs_math_3d::Transform3d &ta,
+                      const cslibs_math_3d::Transform3d &tb)
+    {
+        EXPECT_EQ(ta.tx(), tb.tx());
+        EXPECT_EQ(ta.ty(), tb.ty());
+        EXPECT_EQ(ta.tz(), tb.tz());
+        EXPECT_EQ(ta.yaw(), tb.yaw());
+        EXPECT_EQ(ta.pitch(), tb.pitch());
+        EXPECT_EQ(ta.roll(), tb.roll());
+    };
+
+
+    /// test init
+    std::array<cslibs_math_3d::Transform3d, 3> ts = {{t1,t2,t3}};
+    test_eq(ts[0], t1);
+    test_eq(ts[1], t2);
+    test_eq(ts[2], t3);
+
+    /// test assignment
+    t1 = cslibs_math_3d::Transform3d::random();
+    t2 = cslibs_math_3d::Transform3d::random();
+    t3 = cslibs_math_3d::Transform3d::random();
+
+    ts[0] = t1;
+    ts[1] = t2;
+    ts[2] = t3;
+
+    test_eq(ts[0], t1);
+    test_eq(ts[1], t2);
+    test_eq(ts[2], t3);
+}
+
 int main(int argc, char *argv[])
 {
     testing::InitGoogleTest(&argc, argv);

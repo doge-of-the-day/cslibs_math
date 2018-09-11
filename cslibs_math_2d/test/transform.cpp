@@ -424,6 +424,41 @@ TEST(Test_cslibs_math_2d, testTransformInverse)
     }
 }
 
+TEST(Test_cslibs_math_2d, testArrayAligned)
+{
+    cslibs_math_2d::Transform2d t1 = cslibs_math_2d::Transform2d::random();
+    cslibs_math_2d::Transform2d t2 = cslibs_math_2d::Transform2d::random();
+    cslibs_math_2d::Transform2d t3 = cslibs_math_2d::Transform2d::random();
+
+    auto test_eq = [](const cslibs_math_2d::Transform2d &ta,
+                      const cslibs_math_2d::Transform2d &tb)
+    {
+        EXPECT_EQ(ta.tx(), tb.tx());
+        EXPECT_EQ(ta.ty(), tb.ty());
+        EXPECT_EQ(ta.yaw(), tb.yaw());
+    };
+
+
+    /// test init
+    std::array<cslibs_math_2d::Transform2d, 3> ts = {{t1,t2,t3}};
+    test_eq(ts[0], t1);
+    test_eq(ts[1], t2);
+    test_eq(ts[2], t3);
+
+    /// test assignment
+    t1 = cslibs_math_2d::Transform2d::random();
+    t2 = cslibs_math_2d::Transform2d::random();
+    t3 = cslibs_math_2d::Transform2d::random();
+
+    ts[0] = t1;
+    ts[1] = t2;
+    ts[2] = t3;
+
+    test_eq(ts[0], t1);
+    test_eq(ts[1], t2);
+    test_eq(ts[2], t3);
+}
+
 int main(int argc, char *argv[])
 {
     testing::InitGoogleTest(&argc, argv);
