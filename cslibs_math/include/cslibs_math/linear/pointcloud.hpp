@@ -33,6 +33,13 @@ public:
     {
     }
 
+    inline Pointcloud(Pointcloud &&other) :
+        data_(std::move(other.data_)),
+        min_(std::move(other.min())),
+        max_(std::move(other.max()))
+    {
+    }
+
     virtual ~Pointcloud() = default;
 
     inline virtual void insert(const point_t &pt)

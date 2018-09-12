@@ -60,9 +60,67 @@ public:
   {
   }
 
-  inline Distribution(const Distribution &other)            = default;
-  inline Distribution(Distribution &&other)                 = default;
-  inline Distribution& operator=(const Distribution &other) = default;
+  inline Distribution(const Distribution &other) :
+      mean_(other.mean_),
+      correlated_(other.correlated_),
+      n_(other.n_),
+      n_1_(other.n_1_),
+      covariance_(other.covariance_),
+      information_matrix_(other.information_matrix_),
+      eigen_values_(other.eigen_values_),
+      eigen_vectors_(other.eigen_vectors_),
+      determinant_(other.determinant_),
+      dirty_(other.dirty_)
+  {
+  }
+
+  inline Distribution& operator=(const Distribution &other)
+  {
+      mean_                 = other.mean_;
+      correlated_           = other.correlated_;
+      n_                    = other.n_;
+      n_1_                  = other.n_1_;
+
+      covariance_           = other.covariance_;
+      information_matrix_   = other.information_matrix_;
+      eigen_values_         = other.eigen_values_;
+      eigen_vectors_        = other.eigen_vectors_;
+      determinant_          = other.determinant_;
+
+      dirty_                = other.dirty_;
+  }
+
+  inline Distribution(Distribution &&other)
+  {
+      mean_                 = std::move(other.mean_);
+      correlated_           = std::move(other.correlated_);
+      n_                    = other.n_;
+      n_1_                  = other.n_1_;
+
+      covariance_           = std::move(other.covariance_);
+      information_matrix_   = std::move(other.information_matrix_);
+      eigen_values_         = std::move(other.eigen_values_);
+      eigen_vectors_        = std::move(other.eigen_vectors_);
+      determinant_          = other.determinant_;
+
+      dirty_                = other.dirty_;
+  }
+
+  inline Distribution& operator=(Distribution &&other)
+  {
+      mean_                 = std::move(other.mean_);
+      correlated_           = std::move(other.correlated_);
+      n_                    = other.n_;
+      n_1_                  = other.n_1_;
+
+      covariance_           = std::move(other.covariance_);
+      information_matrix_   = std::move(other.information_matrix_);
+      eigen_values_         = std::move(other.eigen_values_);
+      eigen_vectors_        = std::move(other.eigen_vectors_);
+      determinant_          = other.determinant_;
+
+      dirty_                = other.dirty_;
+  }
 
   inline void reset()
   {

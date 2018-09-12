@@ -40,6 +40,18 @@ public:
     {
     }
 
+    inline Box2d(const Box2d &other) :
+        min_(other.min_),
+        max_(other.max_)
+    {
+    }
+
+    inline Box2d(Box2d &&other) :
+        min_(std::move(other.min_)),
+        max_(std::move(other.max_))
+    {
+    }
+
     inline void setMin(const Point2d &min)
     {
         min_ = min;

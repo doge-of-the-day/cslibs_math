@@ -10,7 +10,20 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     WeightedQuaternionMean() :
-        W_(0.0)
+        W_(0.0),
+        mean_(Eigen::Quaternion::Identity())
+    {
+    }
+
+    WeightedQuaternionMean(const WeightedQuaternionMean &other) :
+        W_(other.W_),
+        mean_(other.mean_)
+    {
+    }
+
+    WeightedQuaternionMean(WeightedQuaternionMean &&other) :
+        W_(other.W_),
+        mean_(std::move(other.mean_))
     {
     }
 
@@ -20,13 +33,13 @@ public:
             mean = q * w;
             W_ = w;
         } else {
-            W_1_ = W;
+            const double W_1 = W;
             W_ += w;
 
             if(quaternionsClose(mean, q)) {
-                mean = (mean / W_1_ + q * w) / W_;
+                mean_ = (mean_ / W_1 + q * w) / W_;
             } else {
-                mean = (mean / W_1_ + q.inverse() * w) / W_;
+                mean_ = (mean_ / W_1 + q.inverse() * w) / W_;
             }
         }
     }
@@ -34,7 +47,7 @@ public:
 private:
     double         W_1_;
     double         W_;
-    Eigen::Quaternion mean;
+    Eigen::Quaternion mean_;
 
 
     //Returns true if the two input quaternions are close to each other. This can

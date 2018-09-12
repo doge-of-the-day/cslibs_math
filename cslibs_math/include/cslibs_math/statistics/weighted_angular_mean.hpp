@@ -117,8 +117,8 @@ public:
 private:
   mutable bool    dirty_;
   mutable double  mean_;
-  complex_t complex_mean_;
-  double  W_;
+  complex_t       complex_mean_;
+  double          W_;
 };
 }
 }

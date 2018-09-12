@@ -43,8 +43,66 @@ public:
     {
     }
 
-    WeightedDistribution(const WeightedDistribution &other)             = default;
-    WeightedDistribution& operator=(const WeightedDistribution &other)  = default;
+    WeightedDistribution(const WeightedDistribution &other)  :
+        sample_count_(other.sample_count_),
+        mean_(other.mean_),
+        correlated_(other.correlated_),
+        W_(other.W_),
+        covariance_(other.covariance_),
+        information_matrix_(other.information_matrix_),
+        eigen_values_(other.eigen_values_),
+        eigen_vectors_(other.eigen_vectors_),
+        determinant_(other.determinant_),
+        dirty_(other.dirty_)
+    {
+    }
+
+    WeightedDistribution& operator=(const WeightedDistribution &other)
+    {
+        sample_count_           = other.sample_count_;
+        mean_                   = other.mean_;
+        correlated_             = other.correlated_;
+        W_                      = other.W_;
+
+        covariance_             = other.covariance_;
+        information_matrix_     = other.information_matrix_;
+        eigen_values_           = other.eigen_values_;
+        eigen_vectors_          = other.eigen_vectors_;
+        determinant_            = other.determinant_;
+
+        dirty_                  = other.dirty_;
+    }
+
+
+    WeightedDistribution(WeightedDistribution &&other) :
+        sample_count_(other.sample_count_),
+        mean_(std::move(other.mean_)),
+        correlated_(std::move(other.correlated_)),
+        W_(other.W_),
+        covariance_(std::move(other.covariance_)),
+        information_matrix_(std::move(other.information_matrix_)),
+        eigen_values_(std::move(other.eigen_values_)),
+        eigen_vectors_(std::move(other.eigen_vectors_)),
+        determinant_(other.determinant_),
+        dirty_(other.dirty_)
+    {
+    }
+
+    WeightedDistribution& operator=(WeightedDistribution &&other)
+    {
+        sample_count_           = other.sample_count_;
+        mean_                   = std::move(other.mean_);
+        correlated_             = std::move(other.correlated_);
+        W_                      = other.W_;
+
+        covariance_             = std::move(other.covariance_);
+        information_matrix_     = std::move(other.information_matrix_);
+        eigen_values_           = std::move(other.eigen_values_);
+        eigen_vectors_          = std::move(other.eigen_vectors_);
+        determinant_            = other.determinant_;
+
+        dirty_                  = other.dirty_;
+    }
 
     inline void reset()
     {
@@ -271,7 +329,7 @@ template<std::size_t lamda_ratio_exponent>
 class WeightedDistribution<1, lamda_ratio_exponent>
 {
 public:
-   static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+    static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
 
     inline WeightedDistribution() :
         sample_count_(0),

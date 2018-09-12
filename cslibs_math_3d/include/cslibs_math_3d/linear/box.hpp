@@ -38,6 +38,18 @@ public:
     {
     }
 
+    inline Box3d(const Box3d &other) :
+        min_(other.min_),
+        max_(other.max_)
+    {
+    }
+
+    inline Box3d(Box3d &&other) :
+        min_(std::move(other.min_)),
+        max_(std::move(other.max_))
+    {
+    }
+
     inline void setMin(const Point3d &min)
     {
         min_ = min;
