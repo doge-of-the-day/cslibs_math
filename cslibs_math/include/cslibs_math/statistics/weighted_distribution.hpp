@@ -71,6 +71,7 @@ public:
         determinant_            = other.determinant_;
 
         dirty_                  = other.dirty_;
+        return *this;
     }
 
 
@@ -102,6 +103,7 @@ public:
         determinant_            = other.determinant_;
 
         dirty_                  = other.dirty_;
+        return *this;
     }
 
     inline void reset()
