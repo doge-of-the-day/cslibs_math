@@ -2,6 +2,7 @@
 #define CSLIBS_MATH_MOD_HPP
 
 #include <type_traits>
+#include <assert.h>
 
 namespace cslibs_math {
 namespace common {
