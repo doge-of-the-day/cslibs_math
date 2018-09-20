@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(cslibs_math_2d)
 
+add_definitions(-std=c++11)
+
 find_package(catkin REQUIRED COMPONENTS
     cslibs_math
 )
@@ -37,6 +39,11 @@ if(${tf_FOUND})
         SRCS test/ray_tracing.cpp
     )
 endif()
+
+cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_ellipse
+    SRCS test/ellipse_test.cpp
+)
+
 
 cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_box
     SRCS test/box.cpp
