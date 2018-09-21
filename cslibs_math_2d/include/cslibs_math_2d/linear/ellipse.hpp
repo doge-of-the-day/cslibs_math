@@ -31,7 +31,7 @@ struct EIGEN_ALIGN16 Ellipse
         axis_2 *= axis(1);
     }
 
-    cslibs_math::linear::Vector<T,2> getPoint(T angle)
+    inline cslibs_math::linear::Vector<T,2> getPoint(T angle)
     {
         cslibs_math::linear::Vector<T,2> res;
         T x = axis(0) * std::cos(angle);
@@ -42,7 +42,7 @@ struct EIGEN_ALIGN16 Ellipse
         return res;
     }
 
-    bool equals(const Ellipse<T>& other, double eps = 1e-3)
+    inline bool equals(const Ellipse<T>& other, double eps = 1e-3)
     {
         bool axis_a = (axis_1 - other.axis_1).length() < eps &&
                       (axis_2 - other.axis_2).length() < eps;
@@ -60,7 +60,7 @@ struct EIGEN_ALIGN16 Ellipse
         return pos && (axis_a || axis_b || axis_c || axis_d);
     }
 
-    cslibs_math::linear::Matrix<T,2,2> getRotationMatrix()
+    inline cslibs_math::linear::Matrix<T,2,2> getRotationMatrix()
     {
         cslibs_math::linear::Matrix<T,2,2> r;
         r(0,0) =  std::cos(alpha);
@@ -88,13 +88,13 @@ public:
     using point_t = cslibs_math::linear::Vector<T,2>;
     using points_t = std::vector<point_t, typename point_t::allocator_t>;
 
-    EllipseFit(){}
+    inline  EllipseFit() = default;
 
     T                                   cost;
     Ellipse<T>                          solution;
     cslibs_math::linear::Matrix<T,6,1>  hyper_params;
 
-    bool fit(const points_t& points)
+    inline bool fit(const points_t& points)
     {
         if(points.size() < 6){
             std::cerr << "At least 6 points are required for an ellipse fit. Given are " + std::to_string(points.size()) + " points." << "\n";
@@ -111,7 +111,7 @@ public:
     }
 
 protected:
-    RegressionMatrix getRegressionMatrix(const points_t& points)
+    inline RegressionMatrix getRegressionMatrix(const points_t& points)
     {
         RegressionMatrix result = RegressionMatrix::Zero(points.size(),6);
         std::size_t row = 0;
@@ -127,7 +127,7 @@ protected:
         return result;
     }
 
-    Eigen::Matrix<T,6,6> getMatrixM(const points_t& points)
+    inline Eigen::Matrix<T,6,6> getMatrixM(const points_t& points)
     {
         Eigen::Matrix<T,6,6> res = Eigen::Matrix<T,6,6>::Zero(6,6);
         for(auto p : points){
@@ -145,7 +145,7 @@ protected:
     }
 
 
-    bool ellipseFromHyper()
+    inline bool ellipseFromHyper()
     {
         const T& A = hyper_params(0,0);
         const T& C = hyper_params(1,0);
