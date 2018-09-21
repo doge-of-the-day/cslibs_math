@@ -90,9 +90,9 @@ public:
 
     EllipseFit(){}
 
-    T                                  cost;
-    std::array<Ellipse<T>,4>           solution;
-    cslibs_math::linear::Matrix<T,6,1> hyper_params;
+    T                                   cost;
+    Ellipse<T>                          solution;
+    cslibs_math::linear::Matrix<T,6,1>  hyper_params;
 
     bool fit(const points_t& points)
     {
@@ -196,20 +196,9 @@ protected:
             T cy = (B*D -2*A*E)/(4*A*C -B*B);
             T t = (A-C)/B;
             T alpha = std::atan(1/t);
-
             alpha *= 0.5;
 
-            T alpha2 = alpha + M_PI/2;
-            while(alpha2 > M_PI){
-                alpha2 -= 2*M_PI;
-            }
-            while(alpha2 < -M_PI){
-                alpha2 += 2*M_PI;
-            }
-            solution[0] = Ellipse<T>(a,b,cx,cy,alpha);
-            solution[1] = Ellipse<T>(a,b,cx,cy,alpha2);
-            solution[2] = Ellipse<T>(b,a,cx,cy,alpha);
-            solution[3] = Ellipse<T>(b,a,cx,cy,alpha2);
+            solution = Ellipse<T>(a,b,cx,cy,alpha);
 
         } else {
             std::cerr << "Cannot solve parametrization!" << std::endl;

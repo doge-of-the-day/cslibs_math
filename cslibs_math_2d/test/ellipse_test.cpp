@@ -33,29 +33,9 @@ TEST(Test_cslibs_math_2d, randomFullEllipseFit)
         if(!fit.fit(points))
             EXPECT_TRUE(false);
 
-        EllipseD ef1 = fit.solution[0];
-        EllipseD ef2 = fit.solution[1];
-        EllipseD ef3 = fit.solution[2];
-        EllipseD ef4 = fit.solution[3];
-
-        bool test11 = e.equals(ef1);
-        bool test12 = e.equals(ef2);
-        bool test13 = e.equals(ef3);
-        bool test14 = e.equals(ef4);
-
-        if(/*test11 || test12 || test13 || test14*/ e.equals(ef1)){
+        if( e.equals(fit.solution)){
             ++succ_tests;
         } else {
-            std::cout << e.axis_1 << "\n";
-            std::cout << "--- \n";
-            std::cout << ef1.axis_1 << "\n";
-            std::cout << "--- \n";
-            std::cout << e.axis_2 << "\n";
-            std::cout << "--- \n";
-            std::cout << ef1.axis_2 << "\n";
-            std::cout << std::endl;
-
-
             std::cout<< " failed: "
                      << a  << ", "
                      << b  << ", "
@@ -63,17 +43,11 @@ TEST(Test_cslibs_math_2d, randomFullEllipseFit)
                      << cy << ", "
                      << k  << std::endl;
             std::cout<< " fitted: "
-                     << ef1.axis(0)  << ", "
-                     << ef1.axis(1) << ", "
-                     << ef1.center(0) << ", "
-                     << ef1.center(1) << ", "
-                     << ef1.alpha  << std::endl;
-            std::cout<< " fitted: "
-                     << ef2.axis(0)  << ", "
-                     << ef2.axis(1) << ", "
-                     << ef2.center(0) << ", "
-                     << ef2.center(1) << ", "
-                     << ef2.alpha  << std::endl << std::endl;
+                     << fit.solution.axis(0)  << ", "
+                     << fit.solution.axis(1) << ", "
+                     << fit.solution.center(0) << ", "
+                     << fit.solution.center(1) << ", "
+                     << fit.solution.alpha  << std::endl;
         }
 
     }
@@ -103,7 +77,7 @@ TEST(Test_cslibs_math_2d, fixedEllipseFit)
     } catch(const std::exception& e){
         std::cerr << e.what() << std::endl;
     }
-    EllipseD ef = fit.solution[0];
+    EllipseD ef = fit.solution;
     EXPECT_NEAR(ef.axis(0), a,1e-5);
     EXPECT_NEAR(ef.axis(1), b,1e-5);
     EXPECT_NEAR(ef.center(0), cx,1e-5);
@@ -132,7 +106,7 @@ TEST(Test_cslibs_math_2d, fixedHalfEllipseFit)
     } catch(const std::exception& e){
         std::cerr << e.what() << std::endl;
     }
-    EllipseD ef = fit.solution[0];
+    EllipseD ef = fit.solution;
 
     EXPECT_NEAR(ef.axis(0), a,1e-5);
     EXPECT_NEAR(ef.axis(1), b,1e-5);
@@ -163,7 +137,7 @@ TEST(Test_cslibs_math_2d, fixedthreeEightsEllipseFit)
     } catch(const std::exception& e){
         std::cerr << e.what() << std::endl;
     }
-    EllipseD ef = fit.solution[0];
+    EllipseD ef = fit.solution;
 
     EXPECT_NEAR(ef.axis(0), a,1e-5);
     EXPECT_NEAR(ef.axis(1), b,1e-5);
@@ -200,10 +174,10 @@ TEST(Test_cslibs_math_2d, randomthreeEightsEllipseFit)
         } catch(const std::exception& e){
             std::cerr << e.what() << std::endl;
         }
-        EllipseD ef1 = fit.solution[0];
-        EllipseD ef2 = fit.solution[1];
-        EllipseD ef3 = fit.solution[2];
-        EllipseD ef4 = fit.solution[3];
+        EllipseD ef1 = fit.solution;
+        EllipseD ef2 = fit.solution;
+        EllipseD ef3 = fit.solution;
+        EllipseD ef4 = fit.solution;
 
         bool test11 = e.equals(ef1);
         bool test12 = e.equals(ef2);
