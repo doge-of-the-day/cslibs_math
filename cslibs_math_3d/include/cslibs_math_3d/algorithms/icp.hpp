@@ -10,10 +10,10 @@ class EIGEN_ALIGN16 Result {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    enum Termination {Eps, Iteration};
+    enum Termination {EPS, ITERATIONS};
 
     inline Result(const std::size_t iterations = 100,
-                  const Termination termination = Iteration,
+                  const Termination termination = ITERATIONS,
                   const Eigen::Matrix3d covariance = Eigen::Matrix3d::Zero(),
                   const Transform3d &transform = Transform3d()) :
         iterations_(iterations),
@@ -231,13 +231,13 @@ inline void apply(const Pointcloud3d::ConstPtr &src,
         if(dt.translation().length2() < trans_eps ||
                 sq(q.angle(Quaternion())) < rot_eps) {
             r.iterations()  = i;
-            r.termination() = Result::Eps;
+            r.termination() = Result::EPS;
             return;
         }
     }
 
     r.iterations() = params.maxIterations();
-    r.termination() = Result::Iteration;
+    r.termination() = Result::ITERATIONS;
 }
 }
 }
