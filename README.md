@@ -19,8 +19,9 @@ This project is divided up into the following subpackages:
 ## Usage
 
 ### Dependencies
+This library depends on the following packages of our research group:
 
-This library does not have any internal dependencies.
+* [cslibs\_time](https://github.com/cogsys-tuebingen/cslibs_time)
 
 ### Examples
 Some examples may be found in the test subdirectories and in other packages.

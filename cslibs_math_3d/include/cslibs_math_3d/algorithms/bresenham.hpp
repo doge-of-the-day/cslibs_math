@@ -15,8 +15,8 @@ public:
     using index_t       = std::array<int, 3>;
     using error_t       = std::array<int, 2>;
     using point_t       = Point3d;
-    using interation_t  = Bresenham& (Bresenham::*)() ; // cslibs_utility::common::delegate<Bresenham &()>;
-    using done_t        = bool (Bresenham::*)();        //cslibs_utility::common::delegate<bool()>;
+    using interation_t  = Bresenham& (Bresenham::*)() ;
+    using done_t        = bool (Bresenham::*)();
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

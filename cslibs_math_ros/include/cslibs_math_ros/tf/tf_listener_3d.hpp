@@ -1,7 +1,6 @@
 #ifndef CSLIBS_MATH_ROS_TF_LISTENER_3D_HPP
 #define CSLIBS_MATH_ROS_TF_LISTENER_3D_HPP
 
-#include <cslibs_utility/common/delegate.hpp>
 #include <cslibs_time/stamped.hpp>
 
 #include <cslibs_math_ros/tf/conversion_3d.hpp>

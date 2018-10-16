@@ -5,7 +5,6 @@ find_package(catkin REQUIRED COMPONENTS
     cslibs_math
     cslibs_math_2d
     cslibs_math_3d
-    cslibs_utility
     cslibs_time
     tf
 )
