@@ -29,23 +29,23 @@ cslibs_math_2d_show_headers()
 
 #### test
 if(${tf_FOUND})
-    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_transform
+    cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_transform
         SRCS test/transform.cpp
     )
-    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_vector
+    cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_vector
         SRCS test/vector.cpp
     )
-    cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_ray_tracing
+    cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_ray_tracing
         SRCS test/ray_tracing.cpp
     )
 endif()
 
-cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_ellipse
+cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_ellipse
     SRCS test/ellipse_test.cpp
 )
 
 
-cslibs_math_add_unit_test_gtest(${PROJECT_NAME}_test_box
+cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_box
     SRCS test/box.cpp
 )
 
