@@ -89,12 +89,12 @@ public:
         return data_.size();
     }
 
-    inline point_t& min() const
+    inline const point_t& min() const
     {
         return min_;
     }
 
-    inline point_t& max() const
+    inline const point_t& max() const
     {
         return max_;
     }
