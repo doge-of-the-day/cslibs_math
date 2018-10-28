@@ -3,7 +3,7 @@
 
 #include <cslibs_math_2d/linear/pointcloud.hpp>
 #include <cslibs_math_2d/linear/polar_pointcloud.hpp>
-#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+#include <cslibs_math_ros/tf/tf_listener.hpp>
 #include <cslibs_time/time_frame.hpp>
 
 #include <cmath>
@@ -142,7 +142,7 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
                  const interval_t    &angular_interval,
                  const std::string   &fixed_frame,
                  const ros::Duration &tf_timeout,
-                 cslibs_math_ros::tf::TFListener2d &tfl,
+                 cslibs_math_ros::tf::TFListener &tfl,
                  cslibs_math_2d::PolarPointlcoud2d::Ptr &dst)
 {
     const float range_min  = std::max(src->range_min, linear_interval[0]);
@@ -202,7 +202,7 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
 inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
                  const std::string &fixed_frame,
                  const ros::Duration &tf_timeout,
-                 cslibs_math_ros::tf::TFListener2d &tfl,
+                 cslibs_math_ros::tf::TFListener &tfl,
                  cslibs_math_2d::PolarPointlcoud2d::Ptr &dst)
 {
     from(src,
