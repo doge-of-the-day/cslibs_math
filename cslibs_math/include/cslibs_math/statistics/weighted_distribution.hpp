@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
+#include <cslibs_math/common/sqrt.hpp>
 
 namespace cslibs_math {
 namespace statistics {
@@ -26,7 +27,7 @@ public:
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+    static constexpr double sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
 
     WeightedDistribution() :
@@ -331,7 +332,7 @@ template<std::size_t lamda_ratio_exponent>
 class WeightedDistribution<1, lamda_ratio_exponent>
 {
 public:
-    static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+    static constexpr double sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
     inline WeightedDistribution() :
         sample_count_(0),
