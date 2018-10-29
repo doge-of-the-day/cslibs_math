@@ -283,6 +283,13 @@ inline cslibs_math_3d::Transform3d operator * (const cslibs_math_3d::Transform3d
                                        a.rotation() * b.rotation());
 }
 
+inline cslibs_math::linear::Vector<double, 2>  operator * (const cslibs_math_3d::Transform3d &t,
+                                                           const cslibs_math::linear::Vector<double, 2>     &v)
+{
+    const cslibs_math_3d::Vector3d r = t * cslibs_math_3d::Vector3d(v(0), v(1), v(2));
+    return cslibs_math::linear::Vector<double, 2> (r(0), r(1));
+}
+
 namespace std {
 inline std::string to_string(const cslibs_math_3d::Transform3d &t)
 {

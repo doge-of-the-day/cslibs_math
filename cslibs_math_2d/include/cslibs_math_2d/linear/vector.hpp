@@ -13,6 +13,14 @@ inline double angle(const Vector2d &v)
 }
 }
 
+namespace std {
+inline bool isnormal(const cslibs_math_2d::Vector2d &v)
+{
+    return std::isnormal(v(0)) &&
+           std::isnormal(v(1));
+}
+}
+
 inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Vector2d &v)
 {
     out << "[" << v(0) << "," << v(1) << "]";
