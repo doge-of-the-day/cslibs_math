@@ -7,7 +7,6 @@
 #include <cslibs_math/linear/matrix.hpp>
 
 using rng_t = cslibs_math::random::Uniform<1>;
-
 const std::size_t REPETITIONS = 10000;
 
 #include <eigen3/Eigen/Core>

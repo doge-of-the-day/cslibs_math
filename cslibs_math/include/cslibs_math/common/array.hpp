@@ -15,7 +15,6 @@ std::array<_Tp, _Nm> operator - (const std::array<_Tp, _Nm> &__one,
     return arr;
 }
 
-
 template<typename _Tp, std::size_t _Nm>
 std::array<_Tp, _Nm> operator + (const std::array<_Tp, _Nm> &__one,
                                  const std::array<_Tp, _Nm> &__two)
@@ -23,6 +22,16 @@ std::array<_Tp, _Nm> operator + (const std::array<_Tp, _Nm> &__one,
     std::array<_Tp, _Nm> arr;
     for(std::size_t i = 0 ; i < _Nm ; ++i)
         arr[i] = __one[i] + __two[i];
+    return arr;
+}
+
+template<typename _Tp, std::size_t _Nm>
+std::array<_Tp, _Nm> operator + (const std::array<_Tp, _Nm> &__one,
+                                 const _Tp s)
+{
+    std::array<_Tp, _Nm> arr;
+    for(std::size_t i = 0 ; i < _Nm ; ++i)
+        arr[i] = __one[i] + s;
     return arr;
 }
 
@@ -110,22 +119,40 @@ std::array<_Tp, _Nm> abs(const std::array<_Tp, _Nm> &__one)
     return arr;
 }
 template<typename _Tp, std::size_t _Nm>
-std::array<int, _Nm> compare (const std::array<_Tp, _Nm> &__one,
-                              const std::array<_Tp, _Nm> &__two)
+std::array<int, _Nm> compare(const std::array<_Tp, _Nm> &__one,
+                             const std::array<_Tp, _Nm> &__two)
 {
-    std::array<_Tp, _Nm> arr;
+    std::array<int, _Nm> arr;
     for(std::size_t i = 0 ; i < _Nm ; ++i)
         arr[i] = __one[i] < __two[i] ? 1 : -1;
     return arr;
 }
 
 template<typename _Tp, std::size_t _Nm>
-std::array<int, _Nm> compare (const std::array<_Tp, _Nm> &__one,
-                              const _Tp s)
+std::array<int, _Nm> compare(const std::array<_Tp, _Nm> &__one,
+                             const _Tp s)
+{
+    std::array<int, _Nm> arr;
+    for(std::size_t i = 0 ; i < _Nm ; ++i)
+        arr[i] = __one[i] < s ? 1 : -1;
+    return arr;
+}
+
+template<typename _Tp, std::size_t _Nm>
+std::array<_Tp, _Nm> ceil(const std::array<_Tp, _Nm> &__one)
 {
     std::array<_Tp, _Nm> arr = __one;
     for(std::size_t i = 0 ; i < _Nm ; ++i)
-        arr[i] = __one[i] < s ? 1 : -1;
+        arr[i] = std::ceil(__one[i]);
+    return arr;
+}
+
+template<typename _Tp, std::size_t _Nm>
+std::array<_Tp, _Nm> floor(const std::array<_Tp, _Nm> &__one)
+{
+    std::array<_Tp, _Nm> arr = __one;
+    for(std::size_t i = 0 ; i < _Nm ; ++i)
+        arr[i] = std::floor(__one[i]);
     return arr;
 }
 
@@ -148,5 +175,17 @@ struct hash<array<T, N> >
 };
 }
 
+namespace cslibs_math {
+namespace common {
+template<typename _T, typename _Tp, std::size_t _Nm>
+std::array<_T, _Nm> cast(const std::array<_Tp, _Nm> &__one)
+{
+    std::array<_T, _Nm> arr;
+    for(std::size_t i = 0 ; i < _Nm ; ++i)
+        arr[i] = static_cast<_T>(__one[i]);
+    return arr;
+}
+}
+}
 
 #endif // CSLIBS_MATH_ARRAY_HPP

@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
+#include <cslibs_math/common/sqrt.hpp>
 
 namespace cslibs_math {
 namespace statistics {
@@ -25,7 +26,7 @@ public:
     using eigen_values_t      = Eigen::Matrix<double, Dim, 1>;
     using eigen_vectors_t     = Eigen::Matrix<double, Dim, Dim>;
 
-    static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+    static constexpr double sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
 
 
@@ -372,7 +373,8 @@ public:
 
     using allocator_t     = Eigen::aligned_allocator<Distribution>;
     using Ptr = std::shared_ptr<Distribution<1, lamda_ratio_exponent>>;
-    static constexpr double sqrt_2_M_PI = std::sqrt(2 * M_PI);
+
+    static constexpr double sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
     inline Distribution() :
         mean_(0.0),

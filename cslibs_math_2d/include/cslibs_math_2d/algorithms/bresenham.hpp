@@ -32,8 +32,8 @@ public:
     {
     }
 
-    inline explicit Bresenham(const index_t     &start,
-                              const index_t     &end) :
+    inline explicit Bresenham(const index_t &start,
+                              const index_t &end) :
         start_(start),
         end_(end),
         steep_(std::abs(end[1] - start[1]) > std::abs(end[0] - start[0])),
