@@ -154,6 +154,11 @@ public:
         return translation_(1);
     }
 
+    inline double& tz()
+    {
+        return translation_(2);
+    }
+
     inline double tz() const
     {
         return translation_(2);
