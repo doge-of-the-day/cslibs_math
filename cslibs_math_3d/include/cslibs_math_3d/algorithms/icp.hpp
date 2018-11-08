@@ -140,9 +140,9 @@ public:
 
 private:
     std::size_t max_iterations_;
-    double trans_eps_;
-    double rot_eps_;
-    double max_distance_;
+    double      trans_eps_;
+    double      rot_eps_;
+    double      max_distance_;
     Transform3d transform_;
 };
 

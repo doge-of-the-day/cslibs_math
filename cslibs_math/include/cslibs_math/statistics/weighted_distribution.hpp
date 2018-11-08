@@ -150,6 +150,11 @@ public:
     }
 
     /// Distribution properties
+    inline bool valid() const
+    {
+        return sample_count_ > Dim;
+    }
+
     inline std::size_t getSampleCount() const
     {
         return sample_count_;

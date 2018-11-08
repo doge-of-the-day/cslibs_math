@@ -28,8 +28,6 @@ public:
 
     static constexpr double sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
-
-
     inline Distribution() :
         mean_(sample_t::Zero()),
         correlated_(covariance_t::Zero()),
@@ -168,6 +166,11 @@ public:
         correlated_               = _corr;
         dirty_                    = true;
         return *this;
+    }
+
+    inline bool valid() const
+    {
+        return n_1_ > Dim;
     }
 
     inline std::size_t getN() const
