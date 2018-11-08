@@ -12,6 +12,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using allocator_t       = Eigen::aligned_allocator<Transform3d>;
+    using eigen_vector_3d_t = Eigen::Matrix<double, 3, 1>;
     using eigen_vector_6d_t = Eigen::Matrix<double, 6, 1>;
 
     inline Transform3d()
@@ -219,6 +220,11 @@ public:
         return rotation_;
     }
 
+    inline eigen_vector_3d_t const euler() const
+    {
+        return cslibs_math::linear::eigen::create<eigen_vector_3d_t>(rotation_.roll(), rotation_.pitch(), rotation_.yaw());
+    }
+
     inline eigen_vector_6d_t toEigen() const
     {
         return cslibs_math::linear::eigen::create<eigen_vector_6d_t>(translation_(0), translation_(1), translation_(2),
@@ -279,6 +285,12 @@ inline cslibs_math_3d::Vector3d operator * (const cslibs_math_3d::Transform3d &t
                                             const cslibs_math_3d::Vector3d    &v)
 {
     return t.rotation() * v + t.translation();
+}
+
+inline Eigen::Vector3d operator * (const cslibs_math_3d::Transform3d &t,
+                                   const Eigen::Vector3d             &v)
+{
+    return (t.rotation() * cslibs_math_3d::Vector3d(v) + t.translation()).data();
 }
 
 inline cslibs_math_3d::Transform3d operator * (const cslibs_math_3d::Transform3d &a,
