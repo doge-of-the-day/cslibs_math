@@ -146,15 +146,16 @@ private:
     Transform3d transform_;
 };
 
-inline void apply(const Pointcloud3d::ConstPtr &src,
-                  const Pointcloud3d::ConstPtr &dst,
+template<typename src_iterator_t, typename dst_iterator_t>
+inline void apply(const src_iterator_t &src_begin,
+                  const src_iterator_t &src_end,
+                  const dst_iterator_t &dst_begin,
+                  const dst_iterator_t &dst_end,
                   const Parameters &params,
                   Result &r)
 {
-    const Pointcloud3d::points_t &src_points = src->getPoints();
-    const Pointcloud3d::points_t &dst_points = dst->getPoints();
-    const std::size_t src_size = src_points.size();
-    const std::size_t dst_size = dst_points.size();
+    const std::size_t src_size = std::distance(src_begin, src_end);
+    const std::size_t dst_size = std::distance(dst_begin, dst_end);
 
     auto sq = [](const double x) {return x * x;};
 
@@ -175,8 +176,8 @@ inline void apply(const Pointcloud3d::ConstPtr &src,
     };
 
     Point3d dst_mean;
-    for(const Point3d &p : dst_points) {
-        dst_mean += p;
+    for(auto itr = dst_begin; itr != dst_end; ++itr) {
+        dst_mean += *itr;
     }
     dst_mean /= static_cast<double>(dst_size);
 
@@ -191,13 +192,13 @@ inline void apply(const Pointcloud3d::ConstPtr &src,
         /// associate
         for(std::size_t s = 0 ; s < src_size ; ++s) {
             Point3d &sp = src_points_transformed[s];
-            sp = transform * src_points[s];
+            sp = transform * *std::next(src_begin, s);
             std::size_t &index = indices[s];
             src_mean += sp;
 
             double      min_distance = std::numeric_limits<double>::max();
             for(std::size_t d = 0 ; d < dst_size ; ++d) {
-                const Point3d &dp = dst_points[d];
+                const Point3d &dp = *std::next(dst_begin, d);
                 const double dist = distance2(dp, sp);
                 if(dist < min_distance &&
                         dist < max_distance) {
@@ -208,11 +209,12 @@ inline void apply(const Pointcloud3d::ConstPtr &src,
         }
         src_mean /= static_cast<double>(src_size);
 
+        S = Eigen::Matrix3d::Zero();
         for(std::size_t s = 0 ; s < src_size ; ++s) {
             const Point3d &sp = src_points_transformed[s];
             const std::size_t index = indices[s];
             if(is_assigned(index)) {
-                const Point3d &dp = dst_points[index];
+                const Point3d &dp = *std::next(dst_begin, index);
                 S += (sp - src_mean).data() * (dp - dst_mean).data().transpose();
             }
 
@@ -239,6 +241,15 @@ inline void apply(const Pointcloud3d::ConstPtr &src,
     r.iterations() = params.maxIterations();
     r.termination() = Result::ITERATIONS;
 }
+
+inline void apply(const Pointcloud3d::ConstPtr &src,
+                  const Pointcloud3d::ConstPtr &dst,
+                  const Parameters &params,
+                  Result &r)
+{
+    apply(src->begin(), src->end(), dst->begin(), dst->end(), params, r);
+}
+
 }
 }
 }
