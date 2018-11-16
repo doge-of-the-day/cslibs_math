@@ -126,7 +126,7 @@ public:
             return;
 
         const double _W = W_ + w;
-        mean_ = (mean_ * W_ + w * p) / _W;
+        mean_ = (mean_ * W_ + p * w) / _W;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
                 correlated_(i, j) = (correlated_(i, j) * W_ + w * p(i) * p(j)) / static_cast<double>(_W);
