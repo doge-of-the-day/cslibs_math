@@ -33,6 +33,32 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
         }
     }
 }
+
+inline void from(cslibs_math_3d::Pointcloud3d::Ptr &src,
+                 ::sensor_msgs::PointCloud2 &dst)
+{
+    // metadata
+    dst.width        = src->size();
+    dst.height       = 1;
+    dst.is_dense     = false;
+    dst.is_bigendian = false;
+    dst.point_step   = 3 * sizeof(float);
+    dst.row_step     = static_cast<uint32_t>(dst.point_step * src->size());
+
+    // fields x y z intensity
+    dst.fields.resize(3);
+    dst.fields[0].name = "x";
+    dst.fields[1].name = "y";
+    dst.fields[2].name = "z";
+
+    std::vector<float> tmp;
+    for(const auto &p : *src) {
+      for(std::size_t i = 0 ; i < 3 ; ++i)
+        tmp.emplace_back(static_cast<float>(p(i)));
+    }
+    // data
+    memcpy(&dst.data[0], &tmp[0], dst.row_step);
+}
 }
 }
 }
