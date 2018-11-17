@@ -19,7 +19,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using allocator_t = Eigen::aligned_allocator<Matrix>;
-    using vector_t    = Eigen::Matrix<T, N, 1>;
+    using vector_t    = Eigen::Matrix<T, N, 1ul>;
     using matrix_t    = Eigen::Matrix<T, N, M>;
 
     using type_t                  = T;
