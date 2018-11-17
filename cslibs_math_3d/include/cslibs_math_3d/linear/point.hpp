@@ -52,7 +52,7 @@ public:
         return point_;
     }
 
-    inline float getA() const
+    inline float getAlpha() const
     {
         return a_;
     }
@@ -67,7 +67,7 @@ public:
         point_ = point;
     }
 
-    inline void getA(float a)
+    inline void setAlpha(float a)
     {
         a_ = a;
     }

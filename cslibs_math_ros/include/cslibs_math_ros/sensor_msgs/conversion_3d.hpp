@@ -3,7 +3,6 @@
 
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud2_iterator.h>
-
 #include <cslibs_time/time_frame.hpp>
 #include <cslibs_math_3d/linear/pointcloud.hpp>
 
@@ -34,7 +33,7 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
     }
 }
 
-inline void from(cslibs_math_3d::Pointcloud3d::Ptr &src,
+inline void from(const cslibs_math_3d::Pointcloud3d::Ptr &src,
                  ::sensor_msgs::PointCloud2 &dst)
 {
     // metadata
@@ -59,6 +58,76 @@ inline void from(cslibs_math_3d::Pointcloud3d::Ptr &src,
     // data
     memcpy(&dst.data[0], &tmp[0], dst.row_step);
 }
+
+inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
+                 cslibs_math_3d::PointcloudRGB3d::Ptr &dst)
+{
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_z(*src, "z");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_r(*src, "r");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_g(*src, "g");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_b(*src, "b");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_a(*src, "a");
+
+
+    dst.reset(new cslibs_math_3d::PointcloudRGB3d);
+    for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z, ++iter_r, ++iter_g, ++iter_b, ++iter_a) {
+        if (!std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z)) {
+            cslibs_math_3d::Point3d p(*iter_x, *iter_y, *iter_z);
+            cslibs_math::color::Color c(static_cast<float>(*iter_r)/256.0f,
+                                        static_cast<float>(*iter_g)/256.0f,
+                                        static_cast<float>(*iter_b)/256.0f);
+            cslibs_math_3d::PointRGB3d point(p, static_cast<float>(*iter_a)/256.0, c);
+            if (p.isNormal())
+                dst->insert(point);
+        }
+    }
+}
+
+inline void from(const cslibs_math_3d::PointcloudRGB3d::Ptr &src,
+                 ::sensor_msgs::PointCloud2 &dst)
+{
+    // metadata
+    dst.width        = src->size();
+    dst.height       = 1;
+    dst.is_dense     = false;
+    dst.is_bigendian = false;
+
+
+    ::sensor_msgs::PointCloud2Modifier modifier(dst);
+    modifier.setPointCloud2FieldsByString(2,"xyz","rgba");
+    modifier.resize(src->size());
+
+    ::sensor_msgs::PointCloud2Iterator<float> iter_x(dst, "x");
+    ::sensor_msgs::PointCloud2Iterator<float> iter_y(dst, "y");
+    ::sensor_msgs::PointCloud2Iterator<float> iter_z(dst, "z");
+    ::sensor_msgs::PointCloud2Iterator<u_int8_t> iter_r(dst, "r");
+    ::sensor_msgs::PointCloud2Iterator<u_int8_t> iter_g(dst, "g");
+    ::sensor_msgs::PointCloud2Iterator<u_int8_t> iter_b(dst, "b");
+    ::sensor_msgs::PointCloud2Iterator<u_int8_t> iter_a(dst, "a");
+
+    for (const auto &p : *src) {
+        cslibs_math_3d::Point3d pos = p.getPoint();
+        cslibs_math::color::Color c = p.getColor();
+        float a = p.getAlpha();
+        *iter_x = static_cast<float>(pos(0));
+        *iter_y = static_cast<float>(pos(1));
+        *iter_z = static_cast<float>(pos(2));
+        *iter_r = static_cast<u_int8_t>(c.r*255.0f);
+        *iter_g = static_cast<u_int8_t>(c.g*255.0f);
+        *iter_b = static_cast<u_int8_t>(c.b*255.0f);
+        *iter_a = static_cast<u_int8_t>(a*255.0f);
+        ++iter_x;
+        ++iter_y;
+        ++iter_z;
+        ++iter_r;
+        ++iter_g;
+        ++iter_b;
+        ++iter_a;
+    }
+}
+
 }
 }
 }
