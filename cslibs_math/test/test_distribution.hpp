@@ -7,7 +7,12 @@
 
 namespace muse_mcl {
 template<std::size_t Dim>
-struct TestDistribution {
+struct EIGEN_ALIGN16 TestDistribution {
+
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using StlVectorMatrixD<rows, cols> = std::vector<Eigen::Matrix<double, rows, cols>, Eigen::aligned_allocator<Eigen::Matrix<double, rows, cols>>>;
+    using StlVectorVectorD<Dim> = std::vector<Eigen::Matrix<double, Dim, 1>, Eigen::aligned_allocator<Eigen::Matrix<double, Dim, 1>>>;
+
     void write(const std::string &path)
     {
         std::ofstream out(path);
@@ -26,7 +31,7 @@ struct TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void write(const std::string &name,
-               const std::vector<Eigen::Matrix<double, rows, cols>> &mats,
+               const StlVectorMatrix<rows, cols> &mats,
                YAML::Emitter &yaml)
     {
         yaml << YAML::Key << name << YAML::BeginSeq;
@@ -48,7 +53,7 @@ struct TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void write(const std::string &name,
-               const Eigen::Matrix<double, rows, cols> &mat,
+               const StlVectorMatrixD<rows, cols> &mat,
                YAML::Emitter &yaml)
     {
         yaml << YAML::Key << name << YAML::BeginMap;
@@ -77,7 +82,7 @@ struct TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void read(const YAML::Node  &yaml,
-              Eigen::Matrix<double, rows, cols> &mat)
+              StlVectorMatrixD<rows, cols> &mat)
     {
         YAML::const_iterator it = yaml["data"].begin();
         for(std::size_t i = 0 ; i < rows; ++i) {
@@ -90,7 +95,7 @@ struct TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void read(const YAML::Node &yaml,
-              std::vector<Eigen::Matrix<double, rows, cols>> &mats)
+              StlVectorMatrixD<rows,cols> &mats)
     {
         for(YAML::const_iterator it = yaml.begin() ; it != yaml.end() ; ++it) {
             Eigen::Matrix<double, rows, cols> mat;
@@ -103,7 +108,7 @@ struct TestDistribution {
     Eigen::Matrix<double, Dim,   1>            mean;
     Eigen::Matrix<double, Dim,   1>            eigen_values;
     Eigen::Matrix<double, Dim, Dim>            eigen_vectors;
-    std::vector<Eigen::Matrix<double, Dim, 1>> data;
+    StlVectorVectorD<dim>                      data;
 
 };
 }
