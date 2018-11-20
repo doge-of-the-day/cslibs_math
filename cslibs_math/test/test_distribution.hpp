@@ -8,11 +8,7 @@
 namespace muse_mcl {
 template<std::size_t Dim>
 struct EIGEN_ALIGN16 TestDistribution {
-
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using StlVectorMatrixD<rows, cols> = std::vector<Eigen::Matrix<double, rows, cols>, Eigen::aligned_allocator<Eigen::Matrix<double, rows, cols>>>;
-    using StlVectorVectorD<Dim> = std::vector<Eigen::Matrix<double, Dim, 1>, Eigen::aligned_allocator<Eigen::Matrix<double, Dim, 1>>>;
-
     void write(const std::string &path)
     {
         std::ofstream out(path);
@@ -31,7 +27,7 @@ struct EIGEN_ALIGN16 TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void write(const std::string &name,
-               const StlVectorMatrix<rows, cols> &mats,
+               const std::vector<Eigen::Matrix<double, rows, cols>> &mats,
                YAML::Emitter &yaml)
     {
         yaml << YAML::Key << name << YAML::BeginSeq;
@@ -53,7 +49,7 @@ struct EIGEN_ALIGN16 TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void write(const std::string &name,
-               const StlVectorMatrixD<rows, cols> &mat,
+               const Eigen::Matrix<double, rows, cols> &mat,
                YAML::Emitter &yaml)
     {
         yaml << YAML::Key << name << YAML::BeginMap;
@@ -82,7 +78,7 @@ struct EIGEN_ALIGN16 TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void read(const YAML::Node  &yaml,
-              StlVectorMatrixD<rows, cols> &mat)
+              Eigen::Matrix<double, rows, cols> &mat)
     {
         YAML::const_iterator it = yaml["data"].begin();
         for(std::size_t i = 0 ; i < rows; ++i) {
@@ -95,7 +91,7 @@ struct EIGEN_ALIGN16 TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void read(const YAML::Node &yaml,
-              StlVectorMatrixD<rows,cols> &mats)
+              std::vector<Eigen::Matrix<double, rows, cols>/*, Eigen::aligned_allocator<Eigen::Matrix<double, rows, cols>>*/> &mats)
     {
         for(YAML::const_iterator it = yaml.begin() ; it != yaml.end() ; ++it) {
             Eigen::Matrix<double, rows, cols> mat;
@@ -108,7 +104,7 @@ struct EIGEN_ALIGN16 TestDistribution {
     Eigen::Matrix<double, Dim,   1>            mean;
     Eigen::Matrix<double, Dim,   1>            eigen_values;
     Eigen::Matrix<double, Dim, Dim>            eigen_vectors;
-    StlVectorVectorD<dim>                      data;
+    std::vector<Eigen::Matrix<double, Dim, 1>> data;
 
 };
 }
