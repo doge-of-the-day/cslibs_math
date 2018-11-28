@@ -91,7 +91,7 @@ struct EIGEN_ALIGN16 TestDistribution {
 
     template<std::size_t rows, std::size_t cols>
     void read(const YAML::Node &yaml,
-              std::vector<Eigen::Matrix<double, rows, cols>/*, Eigen::aligned_allocator<Eigen::Matrix<double, rows, cols>>*/> &mats)
+              std::vector<Eigen::Matrix<double, rows, cols>, Eigen::aligned_allocator<Eigen::Matrix<double, rows, cols>>> &mats)
     {
         for(YAML::const_iterator it = yaml.begin() ; it != yaml.end() ; ++it) {
             Eigen::Matrix<double, rows, cols> mat;
@@ -100,11 +100,11 @@ struct EIGEN_ALIGN16 TestDistribution {
         }
     }
 
-    Eigen::Matrix<double, Dim, Dim>            covariance;
-    Eigen::Matrix<double, Dim,   1>            mean;
-    Eigen::Matrix<double, Dim,   1>            eigen_values;
-    Eigen::Matrix<double, Dim, Dim>            eigen_vectors;
-    std::vector<Eigen::Matrix<double, Dim, 1>> data;
+    Eigen::Matrix<double, Dim, Dim>                                                                      covariance;
+    Eigen::Matrix<double, Dim,   1>                                                                      mean;
+    Eigen::Matrix<double, Dim,   1>                                                                      eigen_values;
+    Eigen::Matrix<double, Dim, Dim>                                                                      eigen_vectors;
+    std::vector<Eigen::Matrix<double, Dim, 1>, Eigen::aligned_allocator<Eigen::Matrix<double, Dim, 1>>>  data;
 
 };
 }
