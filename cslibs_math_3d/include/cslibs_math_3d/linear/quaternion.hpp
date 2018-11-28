@@ -60,6 +60,16 @@ public:
         data_[3] = w;
     }
 
+    inline Quaternion(const double angle, const Vector3d& axis)
+    {
+        double sa = std::sin(0.5*angle);
+        double norm = axis.length();
+        data_[0] = sa * axis(0) / norm;
+        data_[1] = sa * axis(1) / norm;
+        data_[2] = sa * axis(2) / norm;
+        data_[3] = std::cos(0.5*angle);
+    }
+
     inline Quaternion(const Quaternion &other)
     {
        assign(other.data_, data_);
