@@ -35,6 +35,7 @@ public:
         mean_(sample_t::Zero()),
         correlated_(covariance_t::Zero()),
         W_(0.0),
+        W_sq_(0.0),
         covariance_(covariance_t::Zero()),
         information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
@@ -49,6 +50,7 @@ public:
         mean_(other.mean_),
         correlated_(other.correlated_),
         W_(other.W_),
+        W_sq_(0.0),
         covariance_(other.covariance_),
         information_matrix_(other.information_matrix_),
         eigen_values_(other.eigen_values_),
@@ -64,6 +66,7 @@ public:
         mean_                   = other.mean_;
         correlated_             = other.correlated_;
         W_                      = other.W_;
+        W_sq_                   = other.W_sq_;
 
         covariance_             = other.covariance_;
         information_matrix_     = other.information_matrix_;
@@ -81,6 +84,7 @@ public:
         mean_(std::move(other.mean_)),
         correlated_(std::move(other.correlated_)),
         W_(other.W_),
+        W_sq_(other.W_sq_),
         covariance_(std::move(other.covariance_)),
         information_matrix_(std::move(other.information_matrix_)),
         eigen_values_(std::move(other.eigen_values_)),
@@ -96,6 +100,7 @@ public:
         mean_                   = std::move(other.mean_);
         correlated_             = std::move(other.correlated_);
         W_                      = other.W_;
+        W_sq_                   = other.W_sq_;
 
         covariance_             = std::move(other.covariance_);
         information_matrix_     = std::move(other.information_matrix_);
@@ -115,6 +120,7 @@ public:
         eigen_vectors_ = eigen_vectors_t::Zero();
         eigen_values_  = eigen_values_t::Zero();
         W_ = 0.0;
+        W_sq_ = 0.0;
         sample_count_ = 0;
         dirty_ = true;
     }
@@ -122,7 +128,7 @@ public:
     /// Modification
     inline void add(const sample_t &p, const double w)
     {
-        if(w == 0.0)
+        if(w <= 0.0)
             return;
 
         const double _W = W_ + w;
@@ -133,8 +139,9 @@ public:
             }
         }
         ++sample_count_;
-        W_ = _W;
-        dirty_ = true;
+        W_     = _W;
+        W_sq_ +=  w*w;
+        dirty_ =  true;
     }
 
 
@@ -144,6 +151,7 @@ public:
         mean_ = (mean_ * W_ + other.mean_ * other.W_) / _W;
         correlated_ = (correlated_ * W_ +  other.correlated_ * other.W_) / _W;
         W_ = _W;
+        W_sq_ += other.W_sq_;
         sample_count_ += other.sample_count_;
         dirty_ = true;
         return *this;
@@ -163,6 +171,11 @@ public:
     inline double getWeight() const
     {
         return W_;
+    }
+
+    inline double getWeightSQ() const
+    {
+        return W_sq_;
     }
 
     inline sample_t getMean() const
@@ -299,6 +312,7 @@ private:
     sample_t                  mean_;
     covariance_t              correlated_;
     double                    W_;
+    double                    W_sq_;
 
     mutable covariance_t      covariance_;
     mutable covariance_t      information_matrix_;
@@ -310,7 +324,9 @@ private:
 
     inline void update() const
     {
-        const double scale = W_ / (W_ - (W_ / static_cast<double>(sample_count_)));
+        const double scale = W_ / (W_ - W_sq_ / W_);
+//        const double scale = W_ / (W_ - (W_ / static_cast<double>(sample_count_)));
+        
 
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
