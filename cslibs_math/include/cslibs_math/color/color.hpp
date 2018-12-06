@@ -105,7 +105,7 @@ inline double interpolateValue(const Color& c, double vmin, double vmax)
     } else if (c.r > 0 && c.r <1.0 && c.g == 1.0 && c.b == 0){
         value = 0.25 * dv * c.r + 0.5 * dv + vmin;
     } else if (c.r == 1.0){
-        value = 0.25 * dv * (4 - g) + vmin;
+        value = 0.25 * dv * (4 - c.g) + vmin;
     }
     return value;
 }
