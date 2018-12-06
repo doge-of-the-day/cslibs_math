@@ -53,8 +53,14 @@ struct Color {
     float g;
     float b;
 };
-
-inline Color interpolateColor(double v,double vmin,double vmax)
+/**
+ * @brief interpolateColor interpolates a color for a value v in [vmin, vmax]
+ * @param v curremt value
+ * @param vmin intervall minimum value (inclusive)
+ * @param vmax invervall maximum value (inclusive)
+ * @return the interpolated color (part of colormap)
+ */
+inline Color interpolateColor(double v, double vmin, double vmax)
 {
     Color c(1.0,1.0,1.0); // white
     double dv;
@@ -81,6 +87,29 @@ inline Color interpolateColor(double v,double vmin,double vmax)
 
     return(c);
 }
+/**
+ * @brief interpolateValue inverse of interpolateColor
+ * @param c the color
+ * @param vmin minmum value
+ * @param vmax maximum value
+ * @return the value v leading to interpolateColor(v, vmin, vmax)
+ */
+inline double interpolateValue(const Color& c, double vmin, double vmax)
+{
+    double dv = vmax - vmin;
+    double value = vmin;
+    if (c.r == 0 && c.b < 1 && c.g < 1){
+        value = 0.25 * dv * c.g + vmin;
+    } else if (c.r == 0 && c.g == 1 && c.b < 1){
+        value = 0.25 * dv * (2.0 - c.b) + vmin;
+    } else if (c.r > 0 && c.r <1.0 && c.g == 1.0 && c.b == 0){
+        value = 0.25 * dv * c.r + 0.5 * dv + vmin;
+    } else if (c.r == 1.0){
+        value = 0.25 * dv * (4 - g) + vmin;
+    }
+    return value;
+}
+
 }
 }
 #endif // COLOR_HPP
