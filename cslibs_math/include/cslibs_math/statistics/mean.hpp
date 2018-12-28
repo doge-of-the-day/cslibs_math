@@ -43,7 +43,7 @@ public:
         ++n_1;
     }
 
-    inline double get() const
+    inline sample_t get() const
     {
         return mean_;
     }
