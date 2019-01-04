@@ -31,6 +31,21 @@ inline double seconds(const time_t &time)
     return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count() * 1e-9;
 }
 
+inline double milliseconds(const time_t &time)
+{
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count() * 1e-6;
+}
+
+inline double microseconds(const time_t &time)
+{
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count() * 1e-3;
+}
+
+inline double nanoseconds(const time_t &time)
+{
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count();
+}
+
 inline double seconds(const duration_t &duration)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() * 1e-9;
