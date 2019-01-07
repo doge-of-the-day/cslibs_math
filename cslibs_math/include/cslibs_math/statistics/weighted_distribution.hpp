@@ -45,6 +45,25 @@ public:
     {
     }
 
+    inline WeightedDistribution(std::size_t  sample_count,
+                                double       w,
+                                double       w_sq,
+                                sample_t     mean,
+                                covariance_t correlated) :
+        sample_count_(sample_count),
+        mean_(mean),
+        correlated_(correlated),
+        W_(w),
+        W_sq_(w_sq),
+        covariance_(covariance_t::Zero()),
+        information_matrix_(covariance_t::Zero()),
+        eigen_values_(eigen_values_t::Zero()),
+        eigen_vectors_(eigen_vectors_t::Zero()),
+        determinant_(0.0),
+        dirty_(true)
+    {
+    }
+
     WeightedDistribution(const WeightedDistribution &other)  :
         sample_count_(other.sample_count_),
         mean_(other.mean_),
@@ -77,7 +96,6 @@ public:
         dirty_                  = other.dirty_;
         return *this;
     }
-
 
     WeightedDistribution(WeightedDistribution &&other) :
         sample_count_(other.sample_count_),
@@ -186,6 +204,11 @@ public:
     inline void getMean(sample_t &mean) const
     {
         mean = mean_;
+    }
+
+    inline covariance_t getCorrelated() const
+    {
+        return correlated_;
     }
 
     inline covariance_t getCovariance() const
@@ -362,7 +385,24 @@ public:
         standard_deviation_(0.0),
         squared_(0.0),
         dirty_(false),
-        W_(0.0)
+        W_(0.0),
+        W_sq_(0.0)
+    {
+    }
+
+    inline WeightedDistribution(std::size_t  sample_count,
+                                double       w,
+                                double       w_sq,
+                                double       mean,
+                                double       squared) :
+        sample_count_(sample_count),
+        mean_(mean),
+        squared_(squared),
+        variance_(0.0),
+        standard_deviation_(0.0),
+        W_(w),
+        W_sq_(w_sq),
+        dirty_(true)
     {
     }
 
@@ -372,13 +412,14 @@ public:
 
     inline void reset()
     {
-        mean_           = 0.0;
-        squared_        = 0.0;
-        variance_       = 0.0;
+        mean_               = 0.0;
+        squared_            = 0.0;
+        variance_           = 0.0;
         standard_deviation_ = 0.0;
-        dirty_          = false;
-        W_              = 0.0;
-        sample_count_   = 0;
+        dirty_              = false;
+        W_                  = 0.0;
+        W_sq_               = 0.0;
+        sample_count_       = 0;
     }
 
     inline void add(const double s, const double w)
@@ -386,7 +427,8 @@ public:
         const double _W = W_ + w;
         mean_    = (mean_ * W_ + s * w) / _W;
         squared_ = (squared_ * W_ + s*s * w) / _W;
-        W_ = _W;
+        W_       = _W;
+        W_sq_   += w*w;
         ++sample_count_;
         dirty_ = true;
     }
@@ -396,7 +438,8 @@ public:
         const double _W = W_ + other.W_;
         mean_    = (mean_ * W_ + other.mean_ * other.W_) / _W;
         squared_ = (squared_ * W_ +  other.squared_ * other.W_) / _W;
-        W_ = _W;
+        W_       = _W;
+        W_sq_   += other.W_sq_;
         sample_count_ += other.sample_count_;
         dirty_ = true;
         return *this;
@@ -407,6 +450,16 @@ public:
         return sample_count_;
     }
 
+    inline double getWeight() const
+    {
+        return W_;
+    }
+
+    inline double getWeightSQ() const
+    {
+        return W_sq_;
+    }
+
     inline double getMean() const
     {
         return mean_;
@@ -414,24 +467,28 @@ public:
 
     inline double getVariance() const
     {
-        return dirty_ ? updateReturnVariance() : variance_;
+        if (dirty_) update();
+        return variance_;
     }
 
     inline double getStandardDeviation() const
     {
-        return dirty_ ? updateReturnStandardDeviation() : standard_deviation_;
+        if (dirty_) update();
+        return standard_deviation_;
     }
 
     inline double sample(const double s) const
     {
-        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        if (dirty_) update();
+        const double d = 2 * variance_;
         const double x = (s - mean_);
         return std::exp(-0.5 * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
     }
 
     inline double sampleNonNormalized(const double s) const
     {
-        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        if (dirty_) update();
+        const double d = 2 * variance_;
         const double x = (s - mean_);
         return std::exp(-0.5 * x * x / d);
     }
@@ -444,23 +501,37 @@ private:
     double          squared_;
     bool            dirty_;
     double          W_;
+    double          W_sq_;
 
-    inline double updateReturnVariance() const
+    inline void update() const
     {
-        variance_ = squared_ - mean_ * mean_;
+        const double scale = W_ / (W_ - W_sq_ / W_);
+        variance_ = (squared_ - mean_ * mean_) * scale;
         standard_deviation_ = std::sqrt(variance_);
-        return variance_;
+        dirty_ = false;
     }
 
-    inline double updateReturnStandardDeviation() const
-    {
-        variance_ = squared_ - mean_ * mean_;
-        standard_deviation_ = std::sqrt(variance_);
-        return standard_deviation_;
-    }
 }__attribute__ ((aligned (16)));
 
 }
+}
+
+template<std::size_t D, std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::WeightedDistribution<D,L> &d)
+{
+    out << d.getMean() << "\n";
+    out << d.getCovariance() << "\n";
+    out << d.getWeight() << "\n";
+    return out;
+}
+
+template<std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::WeightedDistribution<1,L> &d)
+{
+    out << d.getMean() << "\n";
+    out << d.getVariance() << "\n";
+    out << d.getWeight() << "\n";
+    return out;
 }
 
 #endif // CSLIBS_MATH_WEIGHTED_DISTRIBUTION_HPP
