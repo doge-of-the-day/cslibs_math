@@ -69,7 +69,7 @@ public:
         mean_(other.mean_),
         correlated_(other.correlated_),
         W_(other.W_),
-        W_sq_(0.0),
+        W_sq_(other.W_sq_),
         covariance_(other.covariance_),
         information_matrix_(other.information_matrix_),
         eigen_values_(other.eigen_values_),
