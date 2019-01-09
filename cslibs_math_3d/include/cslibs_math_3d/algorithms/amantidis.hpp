@@ -33,12 +33,12 @@ public:
     inline explicit Amantidis(const point_t     &start,
                               const point_t     &end,
                               const double      resolution) :
-        start_{{static_cast<int>(start(0) / resolution),
-                static_cast<int>(start(1) / resolution),
-                static_cast<int>(start(2) / resolution)}},
-        end_{{static_cast<int>(end(0) / resolution),
-              static_cast<int>(end(1) / resolution),
-              static_cast<int>(end(2) / resolution)}},
+        start_{{static_cast<int>(std::floor(start(0) / resolution)),
+                static_cast<int>(std::floor(start(1) / resolution)),
+                static_cast<int>(std::floor(start(2) / resolution))}},
+        end_{{static_cast<int>(std::floor(end(0) / resolution)),
+              static_cast<int>(std::floor(end(1) / resolution)),
+              static_cast<int>(std::floor(end(2) / resolution))}},
         index_(start_),
         delta_{{0.0, 0.0, 0.0}},
         max_{{0.0, 0.0, 0.0}}

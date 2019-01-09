@@ -32,8 +32,12 @@ public:
     inline explicit Bresenham(const point_t &p0,
                               const point_t &p1,
                               const double resolution):
-        Bresenham({{static_cast<int>(p0(0) / resolution), static_cast<int>(p0(1) / resolution), static_cast<int>(p0(2) / resolution)}},
-                  {{static_cast<int>(p1(0) / resolution), static_cast<int>(p1(1) / resolution), static_cast<int>(p1(2) / resolution)}})
+        Bresenham({{static_cast<int>(std::floor(p0(0) / resolution)),
+                    static_cast<int>(std::floor(p0(1) / resolution)),
+                    static_cast<int>(std::floor(p0(2) / resolution))}},
+                  {{static_cast<int>(std::floor(p1(0) / resolution)),
+                    static_cast<int>(std::floor(p1(1) / resolution)),
+                    static_cast<int>(std::floor(p1(2) / resolution))}})
     {
     }
 
