@@ -331,6 +331,10 @@ public:
         return sampleNonNormalized(getMean());
     }
 
+    inline void merge(const Distribution&)
+    {
+    }
+
 private:
     sample_t                     mean_;
     covariance_t                 correlated_;
@@ -487,6 +491,10 @@ public:
         const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
         const double x = (s - mean_);
         return std::exp(-0.5 * x * x / d);
+    }
+
+    inline void merge(const Distribution&)
+    {
     }
 
 private:
