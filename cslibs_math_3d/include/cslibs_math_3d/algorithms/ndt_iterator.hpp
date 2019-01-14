@@ -54,9 +54,13 @@ public:
         delta_abs_times_2_ = delta_abs_ * 2;
         step_              = std::compare(start_, end_);
 
-        index_last_[0] = static_cast<int>(0.5 * static_cast<double>(index_[0]));
-        index_last_[1] = static_cast<int>(0.5 * static_cast<double>(index_[1]));
-        index_last_[2] = static_cast<int>(0.5 * static_cast<double>(index_[2]));
+        index_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[0])));
+        index_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[1])));
+        index_last_[2] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[2])));
+
+        end_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<double>(end_[0])));
+        end_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<double>(end_[1])));
+        end_last_[2] = static_cast<int>(std::floor(0.5 * static_cast<double>(end_[2])));
 
         if(delta_abs_[0] >= delta_abs_[1] && delta_abs_[0] >= delta_abs_[2]) {
             iterate_ = &NDTIterator::iterateDx;
@@ -125,23 +129,24 @@ private:
         if (error_[0] > 0) {
             index_[1] += step_[1];
             error_[0] -= delta_abs_times_2_[0];
-            index_last_[1] = static_cast<int>(0.5 * static_cast<double>(index_[1]));
+            index_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[1])));
         }
         if (error_[1] > 0) {
             index_[2] += step_[2];
             error_[1] -= delta_abs_times_2_[0];
-            index_last_[2] = static_cast<int>(0.5 * static_cast<double>(index_[2]));
+            index_last_[2] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[2])));
         }
         error_[0] += delta_abs_times_2_[1];
         error_[1] += delta_abs_times_2_[2];
         index_[0] += step_[0];
-        index_last_[0] = static_cast<int>(0.5 * static_cast<double>(index_[0]));
+        index_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[0])));
         ++iteration_;
         return *this;
     }
     inline bool doneDx() const
     {
-        return iteration_ >= delta_abs_[0];
+        return iteration_ >= delta_abs_[0] ||
+                (index_last_[0] == end_last_[0] && index_last_[1] == end_last_[1] && index_last_[2] == end_last_[2]);
     }
 
     inline NDTIterator &iterateDy()
@@ -149,23 +154,24 @@ private:
         if (error_[0] > 0) {
             index_[0] += step_[0];
             error_[0] -= delta_abs_times_2_[1];
-            index_last_[0] = static_cast<int>(0.5 * static_cast<double>(index_[0]));
+            index_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[0])));
         }
         if (error_[1] > 0) {
             index_[2] += step_[2];
             error_[1] -= delta_abs_times_2_[1];
-            index_last_[2] = static_cast<int>(0.5 * static_cast<double>(index_[2]));
+            index_last_[2] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[2])));
         }
         error_[0] += delta_abs_times_2_[0];
         error_[1] += delta_abs_times_2_[2];
         index_[1] += step_[1];
-        index_last_[1] = static_cast<int>(0.5 * static_cast<double>(index_[1]));
+        index_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[1])));
         ++iteration_;
         return *this;
     }
     inline bool doneDy() const
     {
-        return iteration_ >= delta_abs_[1];
+        return iteration_ >= delta_abs_[1] ||
+                (index_last_[0] == end_last_[0] && index_last_[1] == end_last_[1] && index_last_[2] == end_last_[2]);
     }
 
     inline NDTIterator &iterateDz()
@@ -173,23 +179,24 @@ private:
         if (error_[0] > 0) {
             index_[1] += step_[1];
             error_[0] -= delta_abs_times_2_[2];
-            index_last_[1] = static_cast<int>(0.5 * static_cast<double>(index_[1]));
+            index_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[1])));
         }
         if (error_[1] > 0) {
             index_[0] += step_[0];
             error_[1] -= delta_abs_times_2_[2];
-            index_last_[0] = static_cast<int>(0.5 * static_cast<double>(index_[0]));
+            index_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[0])));
         }
         error_[0] += delta_abs_times_2_[1];
         error_[1] += delta_abs_times_2_[0];
         index_[2] += step_[2];
-        index_last_[2] = static_cast<int>(0.5 * static_cast<double>(index_[2]));
+        index_last_[2] = static_cast<int>(std::floor(0.5 * static_cast<double>(index_[2])));
         ++iteration_;
         return *this;
     }
     inline bool doneDz() const
     {
-        return iteration_ >= delta_abs_[2];
+        return iteration_ >= delta_abs_[2] ||
+                (index_last_[0] == end_last_[0] && index_last_[1] == end_last_[1] && index_last_[2] == end_last_[2]);
     }
 
     index_t         start_;
@@ -200,7 +207,9 @@ private:
     index_t         delta_abs_;
     index_t         delta_abs_times_2_;
     index_t         index_last_;
+    index_t         end_last_;
     error_t         error_;
+
     NDTIterator&    (NDTIterator::*iterate_)() ;
     bool            (NDTIterator::*done_)() const;
     int             iteration_;

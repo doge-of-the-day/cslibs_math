@@ -45,18 +45,19 @@ public:
             std::swap(start_[0], start_[1]);
             std::swap(end_[0], end_[1]);
         }
+        index_ = start_;
 
-        delta_[0]    = std::abs(end_[0] - start_[0]);
-        delta_[1]    = std::abs(end_[1] - start_[1]);
+        delta_[0] = std::abs(end_[0] - start_[0]);
+        delta_[1] = std::abs(end_[1] - start_[1]);
 
-        delta_error_ = delta_[1];
-        index_       = start_;
+        step_[0]  = start_[0] < end_[0] ? 1 : -1;
+        step_[1]  = start_[1] < end_[1] ? 1 : -1;
 
-        index_last_[0] = static_cast<int>(0.5 * static_cast<double>(index_[0]));
-        index_last_[1] = static_cast<int>(0.5 * static_cast<double>(index_[1]));
+        index_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<float>(index_[0])));
+        index_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<float>(index_[1])));
 
-        step_[0] = start_[0] < end_[0] ? 1 : -1;
-        step_[1] = start_[1] < end_[1] ? 1 : -1;
+        end_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<float>(end_[0] - 2.0*step_[0])));
+        end_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<float>(end_[1] - 2.0*step_[1])));
     }
 
     inline virtual ~NDTIterator()
@@ -92,7 +93,8 @@ public:
 
     inline bool done() const
     {
-        return index_[0] == end_[0] && index_[1] == end_[1];
+        return (index_last_[0] == end_last_[0] || index_last_[1] == end_last_[1]) ||
+               (index_[0] == end_[0] && index_[1] == end_[1]);
     }
 
 private:
@@ -101,12 +103,13 @@ private:
         index_t li = index_last_;
         do {
             index_[0] += step_[0];
-            error_    += delta_error_;
-            index_last_[0] = static_cast<int>(0.5 * static_cast<double>(index_[0]));
+            error_    += delta_[1];
+            index_last_[0] = static_cast<int>(std::floor(0.5 * static_cast<float>(index_[0])));
+
             if (2 * error_ >= delta_[0]) {
                 index_[1] += step_[1];
                 error_    -= delta_[0];
-                index_last_[1] = static_cast<int>(0.5 * static_cast<double>(index_[1]));
+                index_last_[1] = static_cast<int>(std::floor(0.5 * static_cast<float>(index_[1])));
             }
         } while (!done() && index_last_ == li);
         return *this;
@@ -118,10 +121,10 @@ private:
     index_t step_;
     index_t delta_;
     index_t index_last_;
+    index_t end_last_;
 
     bool    steep_;
     int     error_;
-    int     delta_error_;
 };
 }
 }
