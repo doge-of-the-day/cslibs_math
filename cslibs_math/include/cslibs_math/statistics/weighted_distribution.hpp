@@ -330,6 +330,10 @@ public:
         return sample_count_ >= Dim + 1  ? update_sample() : 0.0;
     }
 
+    inline void merge(const WeightedDistribution&)
+    {
+    }
+
 private:
     std::size_t               sample_count_;
     sample_t                  mean_;
@@ -491,6 +495,10 @@ public:
         const double d = 2 * variance_;
         const double x = (s - mean_);
         return std::exp(-0.5 * x * x / d);
+    }
+
+    inline void merge(const WeightedDistribution&)
+    {
     }
 
 private:

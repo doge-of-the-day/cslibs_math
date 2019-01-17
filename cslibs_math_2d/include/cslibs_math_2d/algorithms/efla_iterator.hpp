@@ -14,31 +14,7 @@ public:
     using index_t       = std::array<int, 2>;
     using point_t       = Point2d;
 
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    inline explicit EFLAIterator(const index_t &start,
-                                 const index_t &end) :
-        start_(start),
-        end_(end),
-        index_(start_),
-        j_(0.0)
-    {
-        int short_len = end_[1] - start_[1];
-        int long_len  = end_[0] - start_[0];
-
-        bool y_longer = false;
-        if (std::fabs(short_len) > std::fabs(long_len)) {
-            std::swap(short_len, long_len);
-            y_longer = true;
-        }
-
-        increment_val_ = std::copysign(1.0, long_len);
-        dec_inc_ = (long_len == 0) ?
-                    static_cast<double>(short_len) :
-                    (static_cast<double>(short_len) / static_cast<double>(std::fabs(long_len)));
-
-        iterate_ = y_longer ? &EFLAIterator::iterateY : &EFLAIterator::iterateX;
-    }
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW    
 
     inline explicit EFLAIterator(const point_t &p0,
                                  const point_t &p1,
@@ -50,19 +26,40 @@ public:
     {
     }
 
+    inline explicit EFLAIterator(const index_t &start,
+                                 const index_t &end) :
+        start_(start),
+        end_(end),
+        steep_(std::abs(end[1] - start[1]) > std::abs(end[0] - start[0]))
+    {
+        if (steep_) {
+            std::swap(start_[0], start_[1]);
+            std::swap(end_[0], end_[1]);
+        }
+        index_ = start_;
+        x_     = 0;
+        y_     = start_[1];
+
+        delta_[0] = std::abs(end_[0] - start_[0]);
+        delta_[1] = std::abs(end_[1] - start_[1]);
+
+        step_ = start_[0] < end_[0] ? 1 : -1;   // step always in x, inc in y
+        inc_  = delta_[0] == 0 ? delta_[1] : (static_cast<float>(delta_[1])/static_cast<float>(delta_[0]));
+    }
+
     inline int x() const
     {
-        return index_[0];
+        return (steep_ ? index_[1] : index_[0]);
     }
 
     inline int y() const
     {
-        return index_[1];
+        return (steep_ ? index_[0] : index_[1]);
     }
 
     inline EFLAIterator& operator++()
     {
-        return done() ? *this : (this->*iterate_)();
+        return done() ? *this : iterate();
     }
 
     inline int length2() const
@@ -82,29 +79,21 @@ private:
     index_t         start_;
     index_t         end_;
     index_t         index_;
-    int             increment_val_;
-    double          j_;
-    double          dec_inc_;
+    index_t         delta_;
 
-    EFLAIterator&   (EFLAIterator::*iterate_)();
+    bool            steep_;
+    int             step_;
+    float           inc_;
+    int             x_;
+    float           y_;
 
-    inline EFLAIterator &iterateX()
+    inline EFLAIterator &iterate()
     {
-        j_ += dec_inc_;
+        x_ += step_;
+        y_ += inc_;
 
-        index_[0] += increment_val_;
-        index_[1]  = start_[1] + static_cast<int>(std::round(j_));
-
-        return *this;
-    }
-
-    inline EFLAIterator &iterateY()
-    {
-        j_ += dec_inc_;
-
-        index_[0]  = start_[0] + static_cast<int>(std::round(j_));
-        index_[1] += increment_val_;
-
+        index_[0] = start_[0] + x_;
+        index_[1] = start_[1] + static_cast<int>(std::round(y_));
         return *this;
     }
 };

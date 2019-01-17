@@ -230,7 +230,6 @@ public:
         return Vector(std::numeric_limits<T>::infinity());
     }
 
-
     inline static Vector min()
     {
         return Vector(std::numeric_limits<T>::lowest());
