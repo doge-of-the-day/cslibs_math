@@ -196,7 +196,7 @@ public:
     inline covariance_t getCovariance() const
     {
         auto update_return_covariance = [this](){update(); return covariance_;};
-        return (n_1_ >= Dim + 1  && dirty_) ? update_return_covariance() : covariance_;
+        return (valid() && dirty_) ? update_return_covariance() : covariance_;
     }
 
     inline void getCorrelated(covariance_t &correlated) const
@@ -207,19 +207,19 @@ public:
     inline void getCovariance(covariance_t &covariance) const
     {
         auto update_return_covariance = [this](){update(); return covariance_;};
-        covariance = n_1_ >= Dim + 1  ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
+        covariance = valid() ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
     }
 
     inline covariance_t getInformationMatrix() const
     {
         auto update_return_information = [this](){update(); return information_matrix_;};
-        return (n_1_ >= Dim + 1  && dirty_) ? update_return_information() : information_matrix_;
+        return (valid() && dirty_) ? update_return_information() : information_matrix_;
     }
 
     inline void getInformationMatrix(covariance_t &information_matrix) const
     {
         auto update_return_information = [this](){update(); return information_matrix_;};
-        information_matrix = n_1_ >= Dim + 1  ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
+        information_matrix = valid() ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
     }
 
     inline eigen_values_t getEigenValues(const bool abs = false) const
@@ -228,7 +228,7 @@ public:
             if(dirty_) update();
             return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_;
         };
-        return n_1_ >= Dim + 1  ?  update_return_eigen() : eigen_values_;
+        return valid() ?  update_return_eigen() : eigen_values_;
     }
 
     inline void getEigenValues(eigen_values_t &eigen_values,
@@ -238,7 +238,7 @@ public:
             if(dirty_) update();
             return abs ? eigen_values_.cwiseAbs() : eigen_values_;
         };
-        eigen_values = n_1_ >= Dim + 1  ?  update_return_eigen() : eigen_values_t::Zero();
+        eigen_values = valid() ?  update_return_eigen() : eigen_values_t::Zero();
     }
 
     inline eigen_vectors_t getEigenVectors() const
@@ -247,7 +247,7 @@ public:
             if(dirty_) update();
             return eigen_vectors_;
         };
-        return n_1_ >= Dim + 1  ? update_return_eigen() : eigen_vectors_;
+        return valid() ? update_return_eigen() : eigen_vectors_;
     }
 
     inline void getEigenVectors(eigen_vectors_t &eigen_vectors) const
@@ -256,7 +256,7 @@ public:
             if(dirty_) update();
             return eigen_vectors_;
         };
-        eigen_vectors = n_1_ >= Dim + 1  ? update_return_eigen() : eigen_vectors_t::Zero();
+        eigen_vectors = valid() ? update_return_eigen() : eigen_vectors_t::Zero();
     }
 
     /// Evaluation
@@ -266,7 +266,7 @@ public:
             if(dirty_) update();
             return 1.0 / (determinant_ * sqrt_2_M_PI);
         };
-        return n_1_ >= Dim + 1  ? update_return() : 0.0;
+        return valid() ? update_return() : 0.0;
     }
 
     inline double sample(const sample_t &p) const
@@ -279,7 +279,7 @@ public:
             const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
-        return n_1_ >= Dim + 1  ? update_sample() : 0.0;
+        return valid() ? update_sample() : 0.0;
     }
 
     inline double sample(const sample_t &p,
@@ -293,7 +293,7 @@ public:
             const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
-        return n_1_ >= Dim + 1  ? update_sample() : 0.0;
+        return valid() ? update_sample() : 0.0;
     }
 
     inline double sampleMean() const
@@ -310,7 +310,7 @@ public:
                                                                   information_matrix_ * q);
             return std::exp(exponent);
         };
-        return n_1_ >= Dim + 1  ? update_sample() : 0.0;
+        return valid() ? update_sample() : 0.0;
     }
 
     inline double sampleNonNormalized(const sample_t &p,
@@ -323,7 +323,7 @@ public:
                                                                   information_matrix_ * q);
             return std::exp(exponent);
         };
-        return n_1_ >= Dim + 1  ? update_sample() : 0.0;
+        return valid() ? update_sample() : 0.0;
     }
 
     inline double sampleNonNormalizedMean() const
