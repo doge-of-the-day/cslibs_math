@@ -116,6 +116,10 @@ inline double interpolateValue(const Color& c, double vmin, double vmax)
     return value;
 }
 
+inline Color random()
+{
+    return Color(drand48(), drand48(), drand48());
+}
 }
 }
 #endif // COLOR_HPP

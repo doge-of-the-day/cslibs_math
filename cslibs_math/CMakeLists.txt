@@ -42,6 +42,10 @@ cslibs_math_add_unit_test_gtest(array
     SRCS test/array.cpp
 )
 
+cslibs_math_add_unit_test_gtest(random
+    SRCS test/random.cpp
+)
+
 cslibs_math_add_unit_test_gtest(sqrt
     SRCS test/sqrt.cpp
 )
