@@ -87,6 +87,12 @@ inline Color interpolateColor(double v, double vmin, double vmax)
 
     return(c);
 }
+
+inline Color random()
+{
+    return Color(drand48(), drand48(), drand48());
+}
+
 /**
  * @brief interpolateValue inverse of interpolateColor
  * @param c the color
