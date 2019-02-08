@@ -60,6 +60,8 @@ class EIGEN_ALIGN16 Mean<1>
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+    using allocator_t = Eigen::aligned_allocator<Mean>;
+
     Mean() :
         mean_(0.0),
         n_(1),
