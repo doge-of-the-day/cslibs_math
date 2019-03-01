@@ -5,7 +5,7 @@
 
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, typename T = double>
+template<std::size_t Dim, typename T>
 class EIGEN_ALIGN16 Mean
 {
 public:

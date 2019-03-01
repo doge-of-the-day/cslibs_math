@@ -8,7 +8,7 @@
 
 namespace cslibs_math {
 namespace statistics {
-template <typename T = double>
+template <typename T>
 class EIGEN_ALIGN16 AngularMean {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

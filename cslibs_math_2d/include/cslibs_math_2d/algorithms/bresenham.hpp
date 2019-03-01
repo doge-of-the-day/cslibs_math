@@ -8,15 +8,15 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
+template <typename T>
 class EIGEN_ALIGN16 Bresenham
 {
 public:
-
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using Ptr           = std::shared_ptr<Bresenham<T>>;
 
-    using Ptr           = std::shared_ptr<Bresenham>;
     using index_t       = std::array<int, 2>;
-    using point_t       = Point2d;
+    using point_t       = Point2d<T>;
 
     inline Bresenham() :
         start_{{0,0}},
@@ -26,7 +26,7 @@ public:
 
     inline explicit Bresenham(const point_t &p0,
                               const point_t &p1,
-                              const double resolution):
+                              const T resolution):
     Bresenham({{static_cast<int>(std::floor(p0(0) / resolution)),
                 static_cast<int>(std::floor(p0(1) / resolution))}},
               {{static_cast<int>(std::floor(p1(0) / resolution)),

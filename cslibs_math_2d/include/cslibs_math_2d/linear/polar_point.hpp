@@ -4,7 +4,7 @@
 #include <cslibs_math_2d/linear/point.hpp>
 
 namespace cslibs_math_2d {
-template <typename T = double>
+template <typename T>
 class EIGEN_ALIGN16 PolarPoint2d
 {
 public:

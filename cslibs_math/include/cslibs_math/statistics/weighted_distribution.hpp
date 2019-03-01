@@ -13,7 +13,7 @@
 
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, typename T = double, std::size_t lambda_ratio_exponent = 0>
+template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent = 0>
 class EIGEN_ALIGN16 WeightedDistribution {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

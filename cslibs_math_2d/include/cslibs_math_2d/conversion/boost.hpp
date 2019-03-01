@@ -8,65 +8,79 @@
 
 namespace cslibs_math_2d {
 namespace conversion {
-inline Point2d from(const cslibs_boost_geometry::types::Point2d &p)
+template <typename T>
+using boost_point_t = boost::geometry::model::d2::point_xy<T>;
+template <typename T>
+using boost_line_t = typename cslibs_boost_geometry::types::Line<boost_point_t<T>>::type;
+template <typename T>
+using boost_pointset_t = typename cslibs_boost_geometry::types::PointSet<boost_point_t<T>>::type;
+template <typename T>
+using boost_lineset_t = typename cslibs_boost_geometry::types::LineSet<boost_point_t<T>>::type;
+
+template <typename T>
+inline Point2d<T> from(const boost_point_t<T> &p)
 {
-    return Point2d(p.x(), p.y());
+    return Point2d<T>(p.x(), p.y());
 }
 
-inline Line2d from(const cslibs_boost_geometry::types::Line2d &l)
+template <typename T>
+inline Line2d<T> from(const boost_line_t<T> &l)
 {
     return {{from(l.first), from(l.second)}};
 }
 
-
-inline cslibs_boost_geometry::types::Point2d from(const Point2d &p)
+template <typename T>
+inline boost_point_t from(const Point2d<T> &p)
 {
-    return cslibs_boost_geometry::types::Point2d(p.x(), p.y());
+    return boost_point_t(p.x(), p.y());
 }
 
-inline cslibs_boost_geometry::types::Line2d from(const Line2d &l)
+template <typename T>
+inline boost_line_t from(const Line2d<T> &l)
 {
     return {from(l[0]), from(l[1])};
 }
 
-inline void from(const cslibs_boost_geometry::types::PointSet2d &src,
-                 std::vector<Point2d> &dst)
+template <typename T>
+inline void from(const boost_pointset_t<T> &src,
+                 std::vector<Point2d<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const cslibs_boost_geometry::types::Point2d &p){return from(p);});
+                   [](const boost_point_t<T> &p){return from(p);});
 }
 
-inline void from(const cslibs_boost_geometry::types::Line2dSet &src,
-                 std::vector<Line2d> &dst)
+template <typename T>
+inline void from(const boost_lineset_t<T> &src,
+                 std::vector<Line2d<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const cslibs_boost_geometry::types::Line2d &l){return from(l);});
+                   [](const boost_line_t<T> &l){return from(l);});
 }
 
-inline void from(const std::vector<Point2d> &src,
-                 cslibs_boost_geometry::types::PointSet2d &dst)
+template <typename T>
+inline void from(const std::vector<Point2d<T>> &src,
+                 boost_pointset_t<T> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const Point2d &p){return from(p);});
+                   [](const Point2d<T> &p){return from(p);});
 }
 
-inline void from(const std::vector<Line2d> &src,
-                 cslibs_boost_geometry::types::Line2dSet &dst)
+template <typename T>
+inline void from(const std::vector<Line2d<T>> &src,
+                 boost_lineset_t<T> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const Line2d &l){return from(l);});
+                   [](const Line2d<T> &l){return from(l);});
 }
 }
 }
-
-
 
 #endif // CSLIBS_MATH_2D_BOOST_HPP

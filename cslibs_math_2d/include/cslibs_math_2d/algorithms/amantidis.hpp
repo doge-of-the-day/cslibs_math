@@ -10,17 +10,17 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
+template <typename T>
 class EIGEN_ALIGN16 Amantidis
 {
 public:
-
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using Ptr           = std::shared_ptr<Amantidis<T>>;
 
-    using Ptr           = std::shared_ptr<Amantidis>;
     using index_t       = std::array<int, 2>;
-    using delta_t       = std::array<double, 2>;
+    using delta_t       = std::array<T, 2>;
     using delta_mask_t  = std::array<bool, 2>;
-    using point_t       = Point2d;
+    using point_t       = Point2d<T>;
 
     inline Amantidis() :
         start_{{0,0}},
@@ -31,9 +31,9 @@ public:
     {
     }
 
-    inline explicit Amantidis(const point_t     &start,
-                              const point_t     &end,
-                              const double      resolution) :
+    inline explicit Amantidis(const point_t &start,
+                              const point_t &end,
+                              const T       resolution) :
         start_{{static_cast<int>(std::floor(start(0) / resolution)),
                 static_cast<int>(std::floor(start(1) / resolution))}},
         end_{{static_cast<int>(std::floor(end(0) / resolution)),
@@ -43,7 +43,7 @@ public:
         max_{{0.0, 0.0}}
     {
         const point_t d = end - start;
-        const static double dmax =  std::numeric_limits<double>::max();
+        const static T dmax =  std::numeric_limits<T>::max();
         const bool dx = cslibs_math::common::neq(d(0), 0.0);
         const bool dy = cslibs_math::common::neq(d(1), 0.0);
         step_[0]       = d(0) >= 0.0 ? 1 : -1;
