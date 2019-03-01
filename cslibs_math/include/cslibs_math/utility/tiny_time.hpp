@@ -26,37 +26,44 @@ inline time_t fromNanoseconds(const int64_t n)
     return time_t(std::chrono::nanoseconds(n));
 }
 
-inline double seconds(const time_t &time)
+template <typename T = double>
+inline T seconds(const time_t &time)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count() * 1e-9;
 }
 
-inline double milliseconds(const time_t &time)
+template <typename T = double>
+inline T milliseconds(const time_t &time)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count() * 1e-6;
 }
 
-inline double microseconds(const time_t &time)
+template <typename T = double>
+inline T microseconds(const time_t &time)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count() * 1e-3;
 }
 
-inline double nanoseconds(const time_t &time)
+template <typename T = double>
+inline T nanoseconds(const time_t &time)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(time.time_since_epoch()).count();
 }
 
-inline double seconds(const duration_t &duration)
+template <typename T = double>
+inline T seconds(const duration_t &duration)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() * 1e-9;
 }
 
-inline double milliseconds(const duration_t &duration)
+template <typename T = double>
+inline T milliseconds(const duration_t &duration)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() * 1e-6;
 }
 
-inline double microseconds(const duration_t &duration)
+template <typename T = double>
+inline T microseconds(const duration_t &duration)
 {
     return std::chrono::duration_cast<std::chrono::nanoseconds>(duration).count() * 1e-3;
 }

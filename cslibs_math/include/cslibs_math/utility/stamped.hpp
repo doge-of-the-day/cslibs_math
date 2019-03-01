@@ -13,12 +13,12 @@ template<typename T>
 class EIGEN_ALIGN16 Stamped
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t   = Eigen::aligned_allocator<Stamped<T>>;
+
     using Ptr           = std::shared_ptr<Stamped<T>>;
     using ConstPtr      = std::shared_ptr<const Stamped<T>>;
     using time_t        = tiny_time::time_t;
-    using allocator_t   = Eigen::aligned_allocator<Stamped<T>>;
-
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     explicit inline Stamped(const time_t &time) :
         time_(time)

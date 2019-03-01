@@ -11,13 +11,13 @@
 namespace cslibs_math {
 namespace serialization {
 namespace distribution {
-template <std::size_t Dim, std::size_t lambda_ratio_exponent>
+template <std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
 struct binary {
-    using distribution_t    = cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>;
+    using distribution_t    = cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>;
     using sample_t          = typename distribution_t::sample_t;
     using correlated_t      = typename distribution_t::covariance_t;
 
-    static const std::size_t size = sizeof(std::size_t) + Dim * sizeof(double) + Dim * Dim * sizeof(double);
+    static const std::size_t size = sizeof(std::size_t) + Dim * sizeof(T) + Dim * Dim * sizeof(T);
 
     inline static std::size_t read(std::ifstream  &in,
                                    distribution_t &distribution)
@@ -28,11 +28,11 @@ struct binary {
         std::size_t  n = io<std::size_t>::read(in);
 
         for(std::size_t i = 0 ; i < Dim ; ++i)
-            mean(i) = io<double>::read(in);
+            mean(i) = io<T>::read(in);
 
         for(std::size_t i = 0 ; i < Dim; ++i) {
             for(std::size_t j = 0 ; j < Dim ; ++j) {
-                corr(i,j) = io<double>::read(in);
+                corr(i,j) = io<T>::read(in);
             }
         }
         distribution = distribution_t(n, mean, corr);
@@ -45,11 +45,11 @@ struct binary {
         io<std::size_t>::write(0, out);
 
         for(std::size_t i = 0 ; i < Dim ; ++i)
-            io<double>::write(0.0, out);
+            io<T>::write(0.0, out);
 
         for(std::size_t i = 0 ; i < Dim; ++i) {
             for(std::size_t j = 0 ; j < Dim ; ++j) {
-                io<double>::write(0.0, out);
+                io<T>::write(0.0, out);
             }
         }
     }
@@ -64,11 +64,11 @@ struct binary {
         io<std::size_t>::write(n, out);
 
         for(std::size_t i = 0 ; i < Dim ; ++i)
-            io<double>::write(mean(i), out);
+            io<T>::write(mean(i), out);
 
         for(std::size_t i = 0 ; i < Dim; ++i) {
             for(std::size_t j = 0 ; j < Dim ; ++j) {
-                io<double>::write(corr(i,j), out);
+                io<T>::write(corr(i,j), out);
             }
         }
     }
@@ -78,11 +78,11 @@ struct binary {
 }
 
 namespace YAML {
-template<std::size_t Dim, std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>>
+template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
+struct convert<cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>>
 {
-    using sample_t     = typename cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>::sample_t;
-    using covariance_t = typename cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>::covariance_t;
+    using sample_t     = typename cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>::sample_t;
+    using covariance_t = typename cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>::covariance_t;
 
     static Node encode(const cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent> &rhs)
     {
@@ -101,7 +101,7 @@ struct convert<cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent> &rhs)
     {
         if (!n.IsSequence() || n.size() != (1 + Dim + Dim * Dim))
             return false;
@@ -111,22 +111,22 @@ struct convert<cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>
 
         sample_t mean(sample_t::Zero());
         for (std::size_t i = 0 ; i < Dim ; ++ i)
-            mean(i) = n[p++].as<double>();
+            mean(i) = n[p++].as<T>();
 
         covariance_t correlated(covariance_t::Zero());
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             for (std::size_t j = 0 ; j < Dim ; ++ j)
-                correlated(i, j) = n[p++].as<double>();
+                correlated(i, j) = n[p++].as<T>();
 
-        rhs = cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent>(num, mean, correlated);
+        rhs = cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>(num, mean, correlated);
         return true;
     }
 };
 
-template<std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::Distribution<1, lambda_ratio_exponent>>
+template<typename T, std::size_t lambda_ratio_exponent>
+struct convert<cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent>>
 {
-    static Node encode(const cslibs_math::statistics::Distribution<1, lambda_ratio_exponent> &rhs)
+    static Node encode(const cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent> &rhs)
     {
         Node n;
         n.push_back(rhs.getN());
@@ -136,13 +136,13 @@ struct convert<cslibs_math::statistics::Distribution<1, lambda_ratio_exponent>>
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::Distribution<1, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent> &rhs)
     {
         if(!n.IsSequence() || n.size() != 3)
             return false;
 
-        rhs = cslibs_math::statistics::Distribution<1, lambda_ratio_exponent>(
-                    n[0].as<std::size_t>(), n[1].as<double>(), n[2].as<double>());
+        rhs = cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent>(
+                    n[0].as<std::size_t>(), n[1].as<T>(), n[2].as<T>());
         return true;
     }
 };
