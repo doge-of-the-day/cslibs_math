@@ -14,7 +14,7 @@ public:
 
     WeightedQuaternionMean() :
         W_(0.0),
-        mean_(Eigen::Quaternion::Identity())
+        mean_(Eigen::Quaternion<T>::Identity())
     {
     }
 
@@ -30,7 +30,7 @@ public:
     {
     }
 
-    WeightedQuaternionMean & operator += (const Eigen::Quaternion &q, const T w)
+    WeightedQuaternionMean & operator += (const Eigen::Quaternion<T> &q, const T w)
     {
         if(W_ == 0.0) {
             mean = q * w;
@@ -48,17 +48,17 @@ public:
     }
 
 private:
-    T                   W_1_;
-    T                   W_;
-    Eigen::Quaternion   mean_;
+    T                    W_1_;
+    T                    W_;
+    Eigen::Quaternion<T> mean_;
 
 
     //Returns true if the two input quaternions are close to each other. This can
     //be used to check whether or not one of two quaternions which are supposed to
     //be very similar but has its component signs reversed (q has the same rotation as
     //-q)
-    inline bool quaternionsClose(const Eigen::Quaternion &q_a,
-                                 const Eigen::Quaternion &q_b)
+    inline bool quaternionsClose(const Eigen::Quaternion<T> &q_a,
+                                 const Eigen::Quaternion<T> &q_b)
     {
         T dot = q_a.dot(q_b);
         return dot < 0.0;

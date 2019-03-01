@@ -9,30 +9,33 @@
 #include <set>
 
 namespace cslibs_math_3d {
+template <typename T>
 class EIGEN_ALIGN16 Box3d
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     using allocator_t = Eigen::aligned_allocator<Box3d>;
 
-    using point_set_t    = std::set<Point3d, Point3d::allocator_t>;
-    using coefficients_t = std::array<double, 3>;
+    using point_t        = Point3d<T>;
+    using line_t         = Line3d<T>;
+    using point_set_t    = std::set<point_t, typename point_t::allocator_t>;
+    using coefficients_t = std::array<T, 3>;
 
     inline Box3d() :
-        min_(std::numeric_limits<double>::lowest()),
-        max_(std::numeric_limits<double>::max())
+        min_(std::numeric_limits<T>::lowest()),
+        max_(std::numeric_limits<T>::max())
     {
     }
 
-    inline Box3d(const double min_x, const double min_y, const double min_z,
-                 const double max_x, const double max_y, const double max_z) :
+    inline Box3d(const T min_x, const T min_y, const T min_z,
+                 const T max_x, const T max_y, const T max_z) :
         min_(min_x, min_y, min_z),
         max_(max_x, max_y, max_z)
     {
     }
 
-    inline Box3d(const Point3d &min,
-                 const Point3d &max) :
+    inline Box3d(const point_t &min,
+                 const point_t &max) :
         min_(min),
         max_(max)
     {
@@ -50,54 +53,53 @@ public:
     {
     }
 
-    inline void setMin(const Point3d &min)
+    inline void setMin(const point_t &min)
     {
         min_ = min;
     }
 
-    inline void setMax(const Point3d &max)
+    inline void setMax(const point_t &max)
     {
         max_ = max;
     }
 
-    inline Point3d const & getMin() const
+    inline point_t const & getMin() const
     {
         return min_;
     }
 
-    inline Point3d const & getMax() const
+    inline point_t const & getMax() const
     {
         return max_;
     }
 
-
-    inline Point3d ll() const
+    inline point_t ll() const
     {
         return min_;
     }
 
-    inline Point3d ru() const
+    inline point_t ru() const
     {
         return max_;
     }
 
-    inline bool intersects(const Line3d &line) const
+    inline bool intersects(const line_t &line) const
     {
         //// LIANG BARSKY
         const auto p0 = line[0];
         const auto p1 = line[1];
         const auto d = p1 - p0;
 
-        double t0 = 0.0;
-        double t1 = 1.0;
+        T t0 = 0.0;
+        T t1 = 1.0;
 
-        auto clip = [] (const double p, const double q,
-                        double &t0, double &t1)
+        auto clip = [] (const T p, const T q,
+                        T &t0, T &t1)
         {
             if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
                 return false;
 
-            const double r = q / p;
+            const T r = q / p;
             if(p < 0) {
                 if(r > t1)
                     return false;
@@ -125,23 +127,23 @@ public:
         return true;
     }
 
-    inline bool intersection(const Line3d &line,
-                             Line3d &clipped)
+    inline bool intersection(const line_t &line,
+                             line_t &clipped)
     {
         const auto p0 = line[0];
         const auto p1 = line[1];
         const auto d = p1 - p0;
 
-        double t0 = 0.0;
-        double t1 = 1.0;
+        T t0 = 0.0;
+        T t1 = 1.0;
 
-        auto clip = [] (const double p, const double q,
-                        double &t0, double &t1)
+        auto clip = [] (const T p, const T q,
+                        T &t0, T &t1)
         {
             if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
                 return false;
 
-            const double r = q / p;
+            const T r = q / p;
             if(p < 0) {
                 if(r > t1)
                     return false;
@@ -176,13 +178,13 @@ public:
     }
 
 private:
-    Point3d min_;
-    Point3d max_;
-
+    point_t min_;
+    point_t max_;
 };
 }
 
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Box3d &b)
+template <typename T>
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Box3d<T> &b)
 {
     out << "[" << b.getMin() << "," << b.getMax() << "]";
     return out;

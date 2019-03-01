@@ -6,14 +6,16 @@
 #include <cslibs_math/common/angle.hpp>
 
 namespace cslibs_math_3d {
+template <typename T>
 class EIGEN_ALIGN16 Transform3d {
 public:
-
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t       = Eigen::aligned_allocator<Transform3d<T>>;
 
-    using allocator_t       = Eigen::aligned_allocator<Transform3d>;
-    using eigen_vector_3d_t = Eigen::Matrix<double, 3, 1>;
-    using eigen_vector_6d_t = Eigen::Matrix<double, 6, 1>;
+    using eigen_vector_3d_t = Eigen::Matrix<T, 3, 1>;
+    using eigen_vector_6d_t = Eigen::Matrix<T, 6, 1>;
+    using translation_t     = Vector3d<T>;
+    using rotation_t        = Quaternion<T>;
 
     inline Transform3d()
     {
@@ -24,52 +26,52 @@ public:
         return Transform3d();
     }
 
-    inline Transform3d(const double x,
-                       const double y,
-                       const double z) :
+    inline Transform3d(const T x,
+                       const T y,
+                       const T z) :
         translation_(x, y, z)
     {
     }
 
-    inline Transform3d(const Vector3d &translation) :
+    inline Transform3d(const translation_t &translation) :
         translation_(translation)
     {
     }
 
-    inline Transform3d(const double yaw) :
+    inline Transform3d(const T yaw) :
         rotation_(yaw)
     {
     }
 
-    inline Transform3d(const double x,
-                       const double y,
-                       const double z,
-                       const double yaw) :
+    inline Transform3d(const T x,
+                       const T y,
+                       const T z,
+                       const T yaw) :
         translation_(x, y, z),
         rotation_(yaw)
     {
     }
 
-    inline Transform3d(const Vector3d &translation,
-                       const double yaw) :
+    inline Transform3d(const translation_t &translation,
+                       const T yaw) :
         translation_(translation),
         rotation_(yaw)
     {
     }
 
-    inline Transform3d(const Vector3d &translation,
-                       const Quaternion &rotation) :
+    inline Transform3d(const translation_t &translation,
+                       const rotation_t &rotation) :
         translation_(translation),
         rotation_(rotation)
     {
     }
 
-    inline Transform3d(const double x,
-                       const double y,
-                       const double z,
-                       const double roll,
-                       const double pitch,
-                       const double yaw) :
+    inline Transform3d(const T x,
+                       const T y,
+                       const T z,
+                       const T roll,
+                       const T pitch,
+                       const T yaw) :
         translation_(x, y, z),
         rotation_(roll, pitch, yaw)
     {
@@ -89,7 +91,7 @@ public:
 
     inline static Transform3d random()
     {
-        const Eigen::Matrix<double, 6, 1> r = Eigen::Matrix<double, 6, 1>::Random();
+        const Eigen::Matrix<T, 6, 1> r = Eigen::Matrix<T, 6, 1>::Random();
         return Transform3d(r[0],r[1],r[2],
                            r[3],r[4],r[5]);
     }
@@ -109,10 +111,10 @@ public:
     }
 
 
-    inline Transform3d& operator = (const Eigen::Matrix<double, 6, 1> &eigen)
+    inline Transform3d& operator = (const Eigen::Matrix<T, 6, 1> &eigen)
     {
-        translation_ = Vector3d(eigen(0), eigen(1), eigen(2));
-        rotation_    = Quaternion(eigen(3), eigen(4), eigen(5));
+        translation_ = translation_t(eigen(0), eigen(1), eigen(2));
+        rotation_    = rotation_t(eigen(3), eigen(4), eigen(5));
         return *this;
     }
 
@@ -125,7 +127,7 @@ public:
 
     inline Transform3d inverse() const
     {
-        Quaternion rotation_inverse = rotation_.invert();
+        rotation_t rotation_inverse = rotation_.invert();
         return Transform3d(rotation_inverse * -translation_,
                            rotation_inverse);
     }
@@ -135,87 +137,87 @@ public:
         return inverse();
     }
 
-    inline double & tx()
+    inline T & tx()
     {
         return translation_(0);
     }
 
-    inline double tx() const
+    inline T tx() const
     {
         return translation_(0);
     }
 
-    inline double & ty()
+    inline T & ty()
     {
         return translation_(1);
     }
 
-    inline double ty() const
+    inline T ty() const
     {
         return translation_(1);
     }
 
-    inline double& tz()
+    inline T& tz()
     {
         return translation_(2);
     }
 
-    inline double tz() const
+    inline T tz() const
     {
         return translation_(2);
     }
 
-    inline double roll() const
+    inline T roll() const
     {
         return rotation_.roll();
     }
 
-    inline double pitch() const
+    inline T pitch() const
     {
         return rotation_.pitch();
     }
 
-    inline double yaw() const
+    inline T yaw() const
     {
         return rotation_.yaw();
     }
 
-    inline void setRoll(const double roll)
+    inline void setRoll(const T roll)
     {
         rotation_.setRoll(roll);
     }
 
-    inline void setPitch(const double pitch)
+    inline void setPitch(const T pitch)
     {
         rotation_.setPitch(pitch);
     }
 
-    inline void setYaw(const double yaw)
+    inline void setYaw(const T yaw)
     {
         rotation_.setYaw(yaw);
     }
 
-    inline void setRPY(const double roll, const double pitch, const double yaw)
+    inline void setRPY(const T roll, const T pitch, const T yaw)
     {
         rotation_.setRPY(roll, pitch, yaw);
     }
 
-    inline Vector3d & translation()
+    inline translation_t& translation()
     {
         return translation_;
     }
 
-    inline Vector3d const & translation() const
+    inline translation_t const& translation() const
     {
         return translation_;
     }
 
-    inline Quaternion & rotation()
+    inline rotation_t& rotation()
     {
         return rotation_;
     }
 
-    inline Quaternion const & rotation() const
+    inline rotation_t const& rotation() const
     {
         return rotation_;
     }
@@ -231,7 +233,7 @@ public:
                                                                      rotation_.roll(), rotation_.pitch(), rotation_.yaw());
     }
 
-    inline Vector3d apply(const Vector3d &v) const
+    inline translation_t apply(const translation_t &v) const
     {
         return rotation_ * v + translation_;
     }
@@ -244,12 +246,12 @@ public:
         rotation_.setRPY(eigen(3),eigen(4),eigen(5));
     }
 
-    inline void setFrom(const double x,
-                        const double y,
-                        const double z,
-                        const double roll,
-                        const double pitch,
-                        const double yaw)
+    inline void setFrom(const T x,
+                        const T y,
+                        const T z,
+                        const T roll,
+                        const T pitch,
+                        const T yaw)
     {
         translation_(0) = x;
         translation_(1) = y;
@@ -258,7 +260,7 @@ public:
     }
 
     inline Transform3d interpolate(const Transform3d &other,
-                                   const double ratio) const
+                                   const T ratio) const
     {
         assert(ratio  >= 0.0);
         assert(ratio <= 1.0);
@@ -269,46 +271,51 @@ public:
             return other;
         }
 
-        const  double ratio_inverse = 1.0 - ratio;
-        const  Vector3d translation = translation_ * ratio_inverse + other.translation_ * ratio;
-        const  Quaternion  rotation = rotation_.interpolate(other.rotation_, ratio);
+        const  T ratio_inverse = 1.0 - ratio;
+        const  translation_t translation = translation_ * ratio_inverse + other.translation_ * ratio;
+        const  quaternion_t  rotation = rotation_.interpolate(other.rotation_, ratio);
         return Transform3d(translation, rotation);
     }
 
 private:
-    Vector3d    translation_;
-    Quaternion  rotation_;
+    translation_t translation_;
+    rotation_t    rotation_;
 };
 }
 
-inline cslibs_math_3d::Vector3d operator * (const cslibs_math_3d::Transform3d &t,
-                                            const cslibs_math_3d::Vector3d    &v)
+template <typename T>
+inline cslibs_math_3d::Vector3d<T> operator * (const cslibs_math_3d::Transform3d<T> &t,
+                                               const cslibs_math_3d::Vector3d<T>    &v)
 {
     return t.rotation() * v + t.translation();
 }
 
-inline Eigen::Vector3d operator * (const cslibs_math_3d::Transform3d &t,
-                                   const Eigen::Vector3d             &v)
+template <typename T>
+inline Eigen::Vector3d<T> operator * (const cslibs_math_3d::Transform3d<T> &t,
+                                      const Eigen::Vector3d<T>             &v)
 {
-    return (t.rotation() * cslibs_math_3d::Vector3d(v) + t.translation()).data();
+    return (t.rotation() * cslibs_math_3d::Vector3d<T>(v) + t.translation()).data();
 }
 
-inline cslibs_math_3d::Transform3d operator * (const cslibs_math_3d::Transform3d &a,
-                                               const cslibs_math_3d::Transform3d &b)
+template <typename T>
+inline cslibs_math_3d::Transform3d<T> operator * (const cslibs_math_3d::Transform3d<T> &a,
+                                                  const cslibs_math_3d::Transform3d<T> &b)
 {
-    return cslibs_math_3d::Transform3d(a.translation() + a.rotation() * b.translation(),
+    return cslibs_math_3d::Transform3d<T>(a.translation() + a.rotation() * b.translation(),
                                        a.rotation() * b.rotation());
 }
 
-inline cslibs_math::linear::Vector<double, 2>  operator * (const cslibs_math_3d::Transform3d &t,
-                                                           const cslibs_math::linear::Vector<double, 2>     &v)
+template <typename T>
+inline cslibs_math::linear::Vector<T, 2>  operator * (const cslibs_math_3d::Transform3d<T> &t,
+                                                      const cslibs_math::linear::Vector<T, 2>     &v)
 {
-    const cslibs_math_3d::Vector3d r = t * cslibs_math_3d::Vector3d(v(0), v(1), v(2));
-    return cslibs_math::linear::Vector<double, 2> (r(0), r(1));
+    const cslibs_math_3d::Vector3d<T> r = t * cslibs_math_3d::Vector3d<T>(v(0), v(1), v(2));
+    return cslibs_math::linear::Vector<T, 2> (r(0), r(1));
 }
 
 namespace std {
-inline std::string to_string(const cslibs_math_3d::Transform3d &t)
+template <typename T>
+inline std::string to_string(const cslibs_math_3d::Transform3d<T> &t)
 {
 
     return "[" + std::to_string(t.tx())   + " " + std::to_string(t.ty()) + " " + std::to_string(t.tz()) +
@@ -317,7 +324,8 @@ inline std::string to_string(const cslibs_math_3d::Transform3d &t)
 }
 }
 
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Transform3d &t)
+template <typename T>
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Transform3d<T> &t)
 {
     out << "[" << t.tx() << ", " << t.ty() << ", " << t.tz() << ", "
         << t.roll() << ", " << t.pitch() << ", " << t.yaw() << "]";

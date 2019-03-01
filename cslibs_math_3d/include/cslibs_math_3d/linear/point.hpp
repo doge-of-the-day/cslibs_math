@@ -5,13 +5,18 @@
 #include <cslibs_math_3d/linear/vector.hpp>
 
 namespace cslibs_math_3d {
-using Point3d = Vector3d;
+template <typename T>
+using Point3d = Vector3d<T>;
 
+template <typename T>
 class EIGEN_ALIGN16 PointRGB3d //: public Point3d
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     using allocator_t = Eigen::aligned_allocator<PointRGB3d>;
+
+    using point_t = Point3d<T>;
+    using color_t = cslibs_math::color::Color<T>;
 
     inline PointRGB3d():
         a_(1.0)
@@ -32,13 +37,13 @@ public:
     {
     }
 
-    inline PointRGB3d(const Point3d &pos) :
+    inline PointRGB3d(const point_t &pos) :
         point_(pos),
         a_(1.0)
     {
     }
 
-    inline PointRGB3d(const Point3d &pos, float a, cslibs_math::color::Color& c) :
+    inline PointRGB3d(const point_t &pos, T a, color_t& c) :
         point_(pos),
         a_(a),
         color_(c)
@@ -47,7 +52,7 @@ public:
 
     virtual ~PointRGB3d() = default;
 
-    inline Point3d getPoint() const
+    inline point_t getPoint() const
     {
         return point_;
     }
@@ -57,22 +62,22 @@ public:
         return a_;
     }
 
-    inline cslibs_math::color::Color getColor() const
+    inline color_t getColor() const
     {
         return color_;
     }
 
-    inline void setPoint(const Point3d& point)
+    inline void setPoint(const point_t& point)
     {
         point_ = point;
     }
 
-    inline void setAlpha(float a)
+    inline void setAlpha(T a)
     {
         a_ = a;
     }
 
-    inline void getColor(const cslibs_math::color::Color& c )
+    inline void getColor(const color_t& c)
     {
         color_ = c;
     }
@@ -89,25 +94,23 @@ public:
 
     inline static PointRGB3d inf()
     {
-        return PointRGB3d(Point3d::inf());
+        return PointRGB3d(point_t::inf());
     }
 
     inline static PointRGB3d max()
     {
-        return PointRGB3d(Point3d::max());
+        return PointRGB3d(point_t::max());
     }
 
     inline static PointRGB3d min()
     {
-        return PointRGB3d(Point3d::min());
+        return PointRGB3d(point_t::min());
     }
 
-
-
 private:
-    Point3d point_;
-    float a_;
-    cslibs_math::color::Color color_;
+    point_t point_;
+    T       a_;
+    color_t color_;
 };
 }
 

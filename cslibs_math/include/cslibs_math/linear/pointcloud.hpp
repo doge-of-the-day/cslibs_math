@@ -11,14 +11,14 @@ namespace linear {
 template<typename point_t>
 class EIGEN_ALIGN16 Pointcloud
 {
-public:
-    using Ptr              = std::shared_ptr<Pointcloud>;
-    using ConstPtr         = std::shared_ptr<const Pointcloud>;
+public:    
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+    using Ptr              = std::shared_ptr<Pointcloud<point_t>>;
+    using ConstPtr         = std::shared_ptr<const Pointcloud<point_t>>;
 
     using points_t         = std::vector<point_t, typename point_t::allocator_t>;
     using const_iterator_t = typename points_t::const_iterator;
-
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     inline Pointcloud() :
           min_(point_t::max()),

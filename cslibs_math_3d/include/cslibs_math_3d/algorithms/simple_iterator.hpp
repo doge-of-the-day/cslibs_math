@@ -7,14 +7,15 @@
 
 namespace cslibs_math_3d {
 namespace algorithms {
+template <typename T>
 class EIGEN_ALIGN16 SimpleIterator
 {
-public:
-    using Ptr           = std::shared_ptr<SimpleIterator>;
-    using index_t       = std::array<int, 3>;
-    using point_t       = Point3d;
-
+public:    
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using Ptr           = std::shared_ptr<SimpleIterator<T>>;
+
+    using index_t       = std::array<int, 3>;
+    using point_t       = Point3d<T>;
 
     inline explicit SimpleIterator(const index_t &start,
                                    const index_t &end) :
@@ -24,7 +25,7 @@ public:
 
     inline explicit SimpleIterator(const point_t &p0,
                                    const point_t &p1,
-                                   const double  &resolution) :
+                                   const T       &resolution) :
         start_({{static_cast<int>(std::floor(p0(0) / resolution)),
                  static_cast<int>(std::floor(p0(1) / resolution)),
                  static_cast<int>(std::floor(p0(2) / resolution))}}),
@@ -90,7 +91,7 @@ public:
 private:
     index_t         start_;
     index_t         end_;
-    double          resolution_;
+    T               resolution_;
     point_t         diff_;
     point_t         point_;
     index_t         index_;

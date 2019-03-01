@@ -7,14 +7,15 @@
 
 namespace cslibs_math_3d {
 namespace algorithms {
+template <typename T>
 class EIGEN_ALIGN16 EFLAIterator
 {
 public:
-    using Ptr           = std::shared_ptr<EFLAIterator>;
-    using index_t       = std::array<int, 3>;
-    using point_t       = Point3d;
-
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using Ptr           = std::shared_ptr<EFLAIterator<T>>;
+
+    using index_t       = std::array<int, 3>;
+    using point_t       = Point3d<T>;
 
     inline explicit EFLAIterator(const index_t &start,
                                  const index_t &end) :
@@ -43,11 +44,11 @@ public:
 
         increment_val_ = std::copysign(1.0, long_len);
         dec_inc0_ = (long_len == 0) ?
-                    static_cast<double>(middle_len) :
-                    (static_cast<double>(middle_len) / static_cast<double>(std::fabs(long_len)));
+                    static_cast<T>(middle_len) :
+                    (static_cast<T>(middle_len) / static_cast<T>(std::fabs(long_len)));
         dec_inc1_ = (long_len == 0) ?
-                    static_cast<double>(short_len) :
-                    (static_cast<double>(short_len) / static_cast<double>(std::fabs(long_len)));
+                    static_cast<T>(short_len) :
+                    (static_cast<T>(short_len) / static_cast<T>(std::fabs(long_len)));
 
         if (z_longer && !y_longer)
             std::swap(dec_inc0_, dec_inc1_);
@@ -56,7 +57,7 @@ public:
 
     inline explicit EFLAIterator(const point_t &p0,
                                  const point_t &p1,
-                                 const double  &resolution) :
+                                 const T       &resolution) :
         EFLAIterator({{static_cast<int>(std::floor(p0(0) / resolution)),
                        static_cast<int>(std::floor(p0(1) / resolution)),
                        static_cast<int>(std::floor(p0(2) / resolution))}},
@@ -102,14 +103,14 @@ public:
     }
 
 private:
-    index_t         start_;
-    index_t         end_;
-    index_t         index_;
-    int             increment_val_;
-    double          j0_;
-    double          j1_;
-    double          dec_inc0_;
-    double          dec_inc1_;
+    index_t    start_;
+    index_t    end_;
+    index_t    index_;
+    int        increment_val_;
+    T          j0_;
+    T          j1_;
+    T          dec_inc0_;
+    T          dec_inc1_;
 
     EFLAIterator&   (EFLAIterator::*iterate_)();
 

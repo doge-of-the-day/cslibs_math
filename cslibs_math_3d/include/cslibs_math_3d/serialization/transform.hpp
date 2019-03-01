@@ -8,22 +8,22 @@
 #include <yaml-cpp/yaml.h>
 
 namespace YAML {
-template<>
-struct convert<cslibs_math_3d::Transform3d>
+template<typename T>
+struct convert<cslibs_math_3d::Transform3d<T>>
 {
-    static Node encode(const cslibs_math_3d::Transform3d &rhs)
+    static Node encode(const cslibs_math_3d::Transform3d<T> &rhs)
     {
         Node n;
         n["t"] = rhs.translation();
         n["r"] = rhs.rotation();
         return n;
     }
-    static bool decode(const Node& n, cslibs_math_3d::Transform3d &rhs)
+    static bool decode(const Node& n, cslibs_math_3d::Transform3d<T> &rhs)
     {
         if(!n.IsMap())
             return false;
-        rhs.translation() = n["t"].as<cslibs_math_3d::Vector3d>();
-        rhs.rotation()    = n["r"].as<cslibs_math_3d::Quaternion>();
+        rhs.translation() = n["t"].as<cslibs_math_3d::Vector3d<T>>();
+        rhs.rotation()    = n["r"].as<cslibs_math_3d::Quaternion<T>>();
         return true;
     }
 };

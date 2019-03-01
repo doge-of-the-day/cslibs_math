@@ -6,16 +6,20 @@
 namespace cslibs_math_3d {
 namespace algorithms {
 namespace icp {
+template <typename T>
 class EIGEN_ALIGN16 Result {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     enum Termination {EPS, ITERATIONS};
 
+    using covariance_t = Eigen::Matrix<T,3,3>;
+    using transform_t  = Transform3d<T>;
+
     inline Result(const std::size_t iterations = 100,
                   const Termination termination = ITERATIONS,
-                  const Eigen::Matrix3d covariance = Eigen::Matrix3d::Zero(),
-                  const Transform3d &transform = Transform3d()) :
+                  const covariance_t covariance = covariance_t::Zero(),
+                  const transform_t &transform = transform_t()) :
         iterations_(iterations),
         termination_(termination),
         covariance_(covariance),
@@ -43,22 +47,22 @@ public:
         return termination_;
     }
 
-    inline const Eigen::Matrix3d& covariance() const
+    inline const covariance_t& covariance() const
     {
         return covariance_;
     }
 
-    inline Eigen::Matrix3d& covariance()
+    inline covariance_t& covariance()
     {
         return covariance_;
     }
 
-    inline const Transform3d &transform() const
+    inline const transform_t &transform() const
     {
         return transform_;
     }
 
-    inline Transform3d &transform()
+    inline transform_t &transform()
     {
         return transform_;
     }
@@ -66,20 +70,22 @@ public:
 private:
     std::size_t iterations_;
     Termination termination_;
-    Eigen::Matrix3d covariance_;
-    Transform3d transform_;
+    covariance_t covariance_;
+    transform_t transform_;
 };
 
-
+template <typename T>
 class EIGEN_ALIGN16 Parameters {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+    using transform_t = Transform3d<T>;
+
     inline Parameters(const std::size_t max_iterations = 100,
-                      const double trans_eps = 1e-4,
-                      const double rot_eps = 1e-4,
-                      const double max_distance = 0.5,
-                      const Transform3d &transform = Transform3d()) :
+                      const T trans_eps = 1e-4,
+                      const T rot_eps = 1e-4,
+                      const T max_distance = 0.5,
+                      const transform_t &transform = transform_t()) :
         max_iterations_(max_iterations),
         trans_eps_(trans_eps),
         rot_eps_(rot_eps),
@@ -88,32 +94,32 @@ public:
     {
     }
 
-    inline double transEps() const
+    inline T transEps() const
     {
         return trans_eps_;
     }
 
-    inline double &transEps()
+    inline T &transEps()
     {
         return trans_eps_;
     }
 
-    inline double rotEps() const
+    inline T rotEps() const
     {
         return rot_eps_;
     }
 
-    inline double &rotEps()
+    inline T &rotEps()
     {
         return rot_eps_;
     }
 
-    inline double maxDistance() const
+    inline T maxDistance() const
     {
         return max_distance_;
     }
 
-    inline double &maxDistance()
+    inline T &maxDistance()
     {
         return max_distance_;
     }
@@ -128,40 +134,40 @@ public:
         return max_iterations_;
     }
 
-    inline const Transform3d &transform() const
+    inline const transform_t &transform() const
     {
         return transform_;
     }
 
-    inline Transform3d &transform()
+    inline transform_t &transform()
     {
         return transform_;
     }
 
 private:
     std::size_t max_iterations_;
-    double      trans_eps_;
-    double      rot_eps_;
-    double      max_distance_;
-    Transform3d transform_;
+    T           trans_eps_;
+    T           rot_eps_;
+    T           max_distance_;
+    transform_t transform_;
 };
 
-template<typename src_iterator_t, typename dst_iterator_t>
+template<typename T, typename src_iterator_t, typename dst_iterator_t>
 inline void apply(const src_iterator_t &src_begin,
                   const src_iterator_t &src_end,
                   const dst_iterator_t &dst_begin,
                   const dst_iterator_t &dst_end,
-                  const Parameters &params,
-                  Result &r)
+                  const Parameters<T> &params,
+                  Result<T> &r)
 {
     const std::size_t src_size = std::distance(src_begin, src_end);
     const std::size_t dst_size = std::distance(dst_begin, dst_end);
 
-    auto sq = [](const double x) {return x * x;};
+    auto sq = [](const T x) {return x * x;};
 
-    const double trans_eps = sq(params.transEps());
-    const double rot_eps = sq(params.rotEps());
-    const double max_distance = sq(params.maxDistance());
+    const T trans_eps = sq(params.transEps());
+    const T rot_eps = sq(params.rotEps());
+    const T max_distance = sq(params.maxDistance());
     const std::size_t max_iterations = params.maxIterations();
 
     Transform3d &transform = r.transform();
@@ -179,7 +185,7 @@ inline void apply(const src_iterator_t &src_begin,
     for(auto itr = dst_begin; itr != dst_end; ++itr) {
         dst_mean += *itr;
     }
-    dst_mean /= static_cast<double>(dst_size);
+    dst_mean /= static_cast<T>(dst_size);
 
 
     Eigen::Matrix3d &S = r.covariance();
@@ -196,10 +202,10 @@ inline void apply(const src_iterator_t &src_begin,
             std::size_t &index = indices[s];
             src_mean += sp;
 
-            double      min_distance = std::numeric_limits<double>::max();
+            T min_distance = std::numeric_limits<T>::max();
             for(std::size_t d = 0 ; d < dst_size ; ++d) {
                 const Point3d &dp = *std::next(dst_begin, d);
-                const double dist = distance2(dp, sp);
+                const T dist = distance2(dp, sp);
                 if(dist < min_distance &&
                         dist < max_distance) {
                     index = d;
@@ -207,7 +213,7 @@ inline void apply(const src_iterator_t &src_begin,
                 }
             }
         }
-        src_mean /= static_cast<double>(src_size);
+        src_mean /= static_cast<T>(src_size);
 
         S = Eigen::Matrix3d::Zero();
         for(std::size_t s = 0 ; s < src_size ; ++s) {
@@ -220,10 +226,10 @@ inline void apply(const src_iterator_t &src_begin,
 
         }
 
-        Eigen::JacobiSVD<Eigen::Matrix<double, 3, 3> > svd (S, Eigen::ComputeFullU | Eigen::ComputeFullV);
+        Eigen::JacobiSVD<Eigen::Matrix<T, 3, 3> > svd (S, Eigen::ComputeFullU | Eigen::ComputeFullV);
         Eigen::Matrix3d R =(svd.matrixU() * svd.matrixV().transpose()).transpose();
-        // Eigen::Matrix<double, 3, 1> T = dst_mean.data() - R * src_mean.data();
-        Eigen::Quaterniond qe(R);
+        // Eigen::Matrix<T, 3, 1> T = dst_mean.data() - R * src_mean.data();
+        Eigen::Quaternion<T> qe(R);
 
         Quaternion   q(qe.x(), qe.y(), qe.z(), qe.w());
         Transform3d  dt(dst_mean - q * src_mean,
@@ -242,12 +248,13 @@ inline void apply(const src_iterator_t &src_begin,
     r.termination() = Result::ITERATIONS;
 }
 
-inline void apply(const Pointcloud3d::ConstPtr &src,
-                  const Pointcloud3d::ConstPtr &dst,
-                  const Parameters &params,
-                  Result &r)
+template <typename T>
+inline void apply(const Pointcloud3d<T>::ConstPtr &src,
+                  const Pointcloud3d<T>::ConstPtr &dst,
+                  const Parameters<T> &params,
+                  Result<T> &r)
 {
-    apply(src->begin(), src->end(), dst->begin(), dst->end(), params, r);
+    apply<T>(src->begin(), src->end(), dst->begin(), dst->end(), params, r);
 }
 
 }

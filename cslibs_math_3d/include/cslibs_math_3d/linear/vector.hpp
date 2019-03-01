@@ -5,11 +5,13 @@
 #include <ostream>
 
 namespace cslibs_math_3d {
-using Vector3d = cslibs_math::linear::Vector<double,3>;
+template <typename T>
+using Vector3d = cslibs_math::linear::Vector<T,3>;
 }
 
 namespace std {
-inline bool isnormal(const cslibs_math_3d::Vector3d &v)
+template <typename T>
+inline bool isnormal(const cslibs_math_3d::Vector3d<T> &v)
 {
     return std::isnormal(v(0)) &&
            std::isnormal(v(1)) &&
@@ -17,7 +19,8 @@ inline bool isnormal(const cslibs_math_3d::Vector3d &v)
 }
 }
 
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Vector3d &v)
+template <typename T>
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Vector3d<T> &v)
 {
     out << "[" << v(0) << "," << v(1) << "," << v(2) << "]";
     return out;
