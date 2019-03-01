@@ -431,6 +431,7 @@ inline cslibs_math_3d::Quaternion<T> operator - (const cslibs_math_3d::Quaternio
     return q;
 }
 
+template <typename T>
 inline cslibs_math_3d::Quaternion<T> operator * (const cslibs_math_3d::Quaternion<T> &a,
                                                  const cslibs_math_3d::Quaternion<T> &b)
 {
@@ -442,6 +443,7 @@ inline cslibs_math_3d::Quaternion<T> operator * (const cslibs_math_3d::Quaternio
     return q;
 }
 
+template <typename T>
 inline cslibs_math_3d::Vector3d<T> operator * (const cslibs_math_3d::Quaternion<T> &q,
                                                const cslibs_math_3d::Vector3d<T> &v)
 {
