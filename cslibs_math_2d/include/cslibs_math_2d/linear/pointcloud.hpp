@@ -7,7 +7,7 @@
 
 namespace cslibs_math_2d {
 template <typename T>
-using Pointcloud2d = cslibs_math::linear::Pointcloud<Point2d<T>>;
+using Pointcloud2d = typename cslibs_math::linear::Pointcloud<Point2d<T>>;
 }
 
 #endif // CSLIBS_MATH_2D_POINTCLOUD2D_HPP

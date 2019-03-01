@@ -13,7 +13,6 @@
 
 namespace cslibs_math_ros {
 namespace tf {
-
 class TFListener : public TFProvider
 {
 public:
@@ -25,10 +24,11 @@ public:
     using TFProvider::lookupTransform;
 
     // 2d
+    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_2d_t& transform,
+                         stamped_2d_t<T>& transform,
                          const ros::Duration& timeout) override
     {
         ::tf::Transform tf_transform;
@@ -41,10 +41,11 @@ public:
     }
 
     // 3d
+    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_3d_t& transform,
+                         stamped_3d_t<T>& transform,
                          const ros::Duration& timeout) override
     {
         ::tf::Transform tf_transform;
@@ -123,6 +124,5 @@ protected:
     std::mutex              mutex_;
     ::tf::TransformListener tf_;
 };
-
 }
 }

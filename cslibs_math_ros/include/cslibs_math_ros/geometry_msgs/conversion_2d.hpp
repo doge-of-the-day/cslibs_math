@@ -11,18 +11,21 @@
 namespace cslibs_math_ros {
 namespace geometry_msgs {
 namespace conversion_2d {
-inline cslibs_math_2d::Vector2d from(const ::geometry_msgs::Point &p)
+template <typename T>
+inline cslibs_math_2d::Vector2d<T> from(const ::geometry_msgs::Point &p)
 {
-    return cslibs_math_2d::Vector2d(p.x, p.y);
+    return cslibs_math_2d::Vector2d<T>(p.x, p.y);
 }
 
-inline cslibs_math_2d::Transform2d from(const ::geometry_msgs::Pose &p)
+template <typename T>
+inline cslibs_math_2d::Transform2d<T> from(const ::geometry_msgs::Pose &p)
 {
-    return cslibs_math_2d::Transform2d(from(p.position),
-                                        ::tf::getYaw(p.orientation));
+    return cslibs_math_2d::Transform2d<T>(from(p.position),
+                                          ::tf::getYaw(p.orientation));
 }
 
-inline ::geometry_msgs::Point from(const cslibs_math_2d::Vector2d &v)
+template <typename T>
+inline ::geometry_msgs::Point from(const cslibs_math_2d::Vector2d<T> &v)
 {
     ::geometry_msgs::Point p;
     p.x = v(0);
@@ -31,7 +34,8 @@ inline ::geometry_msgs::Point from(const cslibs_math_2d::Vector2d &v)
     return p;
 }
 
-inline ::geometry_msgs::Pose from(const cslibs_math_2d::Transform2d &t)
+template <typename T>
+inline ::geometry_msgs::Pose from(const cslibs_math_2d::Transform2d<T> &t)
 {
     ::geometry_msgs::Pose p;
     p.orientation = ::tf::createQuaternionMsgFromYaw(t.yaw());
@@ -39,8 +43,9 @@ inline ::geometry_msgs::Pose from(const cslibs_math_2d::Transform2d &t)
     return p;
 }
 
+template <typename T>
 inline void from(const std::vector<::geometry_msgs::Pose> &src,
-                 std::vector<cslibs_math_2d::Transform2d> &dst)
+                 std::vector<cslibs_math_2d::Transform2d<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -48,8 +53,9 @@ inline void from(const std::vector<::geometry_msgs::Pose> &src,
                   [](const ::geometry_msgs::Pose &p){return from(p);});
 }
 
+template <typename T>
 inline void from(const std::vector<::geometry_msgs::Point> &src,
-                 std::vector<cslibs_math_2d::Vector2d> &dst)
+                 std::vector<cslibs_math_2d::Vector2d<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -57,22 +63,24 @@ inline void from(const std::vector<::geometry_msgs::Point> &src,
                    [](const ::geometry_msgs::Point &p){return from(p);});
 }
 
-inline void from(const std::vector<cslibs_math_2d::Transform2d> &src,
+template <typename T>
+inline void from(const std::vector<cslibs_math_2d::Transform2d<T>> &src,
                  std::vector<::geometry_msgs::Pose> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_2d::Transform2d &t){return from(t);});
+                  [](const cslibs_math_2d::Transform2d<T> &t){return from(t);});
 }
 
-inline void from(const std::vector<cslibs_math_2d::Vector2d> &src,
+template <typename T>
+inline void from(const std::vector<cslibs_math_2d::Vector2d<T>> &src,
                  std::vector<::geometry_msgs::Point> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_2d::Vector2d &v){return from(v);});
+                  [](const cslibs_math_2d::Vector2d<T> &v){return from(v);});
 }
 }
 }

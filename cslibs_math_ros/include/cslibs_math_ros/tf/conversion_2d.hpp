@@ -8,30 +8,35 @@
 namespace cslibs_math_ros {
 namespace tf {
 namespace conversion_2d {
-inline cslibs_math_2d::Vector2d from(const ::tf::Vector3 &v)
+template <typename T>
+inline cslibs_math_2d::Vector2d<T> from(const ::tf::Vector3 &v)
 {
-    return cslibs_math_2d::Vector2d(v.x(), v.y());
+    return cslibs_math_2d::Vector2d<T>(v.x(), v.y());
 }
 
-inline cslibs_math_2d::Transform2d from(const ::tf::Transform &t)
+template <typename T>
+inline cslibs_math_2d::Transform2d<T> from(const ::tf::Transform &t)
 {
-    return cslibs_math_2d::Transform2d(from(t.getOrigin()),
-                          ::tf::getYaw(t.getRotation()));
+    return cslibs_math_2d::Transform2d<T>(from(t.getOrigin()),
+                                          ::tf::getYaw(t.getRotation()));
 }
 
-inline ::tf::Vector3 from(const cslibs_math_2d::Vector2d &v)
+template <typename T>
+inline ::tf::Vector3 from(const cslibs_math_2d::Vector2d<T> &v)
 {
     return ::tf::Vector3(v(0), v(1), 0.0);
 }
 
-inline ::tf::Transform from(const cslibs_math_2d::Transform2d &t)
+template <typename T>
+inline ::tf::Transform from(const cslibs_math_2d::Transform2d<T> &t)
 {
     return ::tf::Transform(::tf::createQuaternionFromYaw(t.yaw()),
                           from(t.translation()));
 }
 
+template <typename T>
 inline void from(const std::vector<::tf::Transform> &src,
-                 std::vector<cslibs_math_2d::Transform2d> &dst)
+                 std::vector<cslibs_math_2d::Transform2d<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -39,8 +44,9 @@ inline void from(const std::vector<::tf::Transform> &src,
                   [](const ::tf::Transform &t){return from(t);});
 }
 
+template <typename T>
 inline void from(const std::vector<::tf::Vector3> &src,
-                 std::vector<cslibs_math_2d::Vector2d> &dst)
+                 std::vector<cslibs_math_2d::Vector2d<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -48,22 +54,24 @@ inline void from(const std::vector<::tf::Vector3> &src,
                    [](const ::tf::Vector3 &v){return from(v);});
 }
 
-inline void from(const std::vector<cslibs_math_2d::Transform2d> &src,
+template <typename T>
+inline void from(const std::vector<cslibs_math_2d::Transform2d<T>> &src,
                  std::vector<::tf::Transform> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_2d::Transform2d &t){return from(t);});
+                  [](const cslibs_math_2d::Transform2d<T> &t){return from(t);});
 }
 
-inline void from(const std::vector<cslibs_math_2d::Vector2d> &src,
+template <typename T>
+inline void from(const std::vector<cslibs_math_2d::Vector2d<T>> &src,
                  std::vector<::tf::Vector3> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_2d::Vector2d &v){return from(v);});
+                  [](const cslibs_math_2d::Vector2d<T> &v){return from(v);});
 }
 }
 }
