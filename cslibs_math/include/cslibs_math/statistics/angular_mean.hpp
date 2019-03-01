@@ -8,10 +8,14 @@
 
 namespace cslibs_math {
 namespace statistics {
+template <typename T = double>
 class EIGEN_ALIGN16 AngularMean {
 public:
-    using Ptr = std::shared_ptr<AngularMean>;
-    using complex = std::complex<double>;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<AngularMean<T>>;
+
+    using Ptr     = std::shared_ptr<AngularMean<T>>;
+    using complex = std::complex<T>;
 
     AngularMean() :
         dirty_(true),
@@ -69,10 +73,10 @@ public:
         n_1_ = 0ul;
     }
 
-    inline void add(const double rad)
+    inline void add(const T rad)
     {
-        complex_mean_ = (complex_mean_ * static_cast<double>(n_1_) + common::angle::toComplex(rad)) /
-                         static_cast<double>(n_);
+        complex_mean_ = (complex_mean_ * static_cast<T>(n_1_) + common::angle::toComplex(rad)) /
+                         static_cast<T>(n_);
         ++n_;
         ++n_1_;
         dirty_ = true;
@@ -82,8 +86,8 @@ public:
     {
         dirty_ = true;
         std::size_t _n = n_1_ + other.n_1_;
-        complex   _mean = (complex_mean_ * static_cast<double>(n_1_) + other.complex_mean_ * static_cast<double>(other.n_1_)) /
-                           static_cast<double>(_n);
+        complex   _mean = (complex_mean_ * static_cast<T>(n_1_) + other.complex_mean_ * static_cast<T>(other.n_1_)) /
+                           static_cast<T>(_n);
         complex_mean_ = _mean;
         n_   = _n + 1;
         n_1_ = _n;
@@ -91,12 +95,12 @@ public:
         return *this;
     }
 
-    inline double getN() const
+    inline T getN() const
     {
         return n_1_;
     }
 
-    inline double getMean() const
+    inline T getMean() const
     {
         if(dirty_) {
             mean_ = common::angle::fromComplex(complex_mean_);
@@ -105,7 +109,7 @@ public:
         return mean_;
     }
 
-    inline void getMean(double &mean) {
+    inline void getMean(T &mean) {
         if(dirty_) {
             mean_ = common::angle::fromComplex(complex_mean_);
             dirty_ = false;
@@ -113,24 +117,25 @@ public:
         mean = mean_;
     }
 
-    inline double getVariance() const
+    inline T getVariance() const
     {
         return -std::log(complex_mean_.real() * complex_mean_.real() +
                          complex_mean_.imag() * complex_mean_.imag());
     }
 
-    inline double getStandardDeviation() const
+    inline T getStandardDeviation() const
     {
         return std::sqrt(getVariance());
     }
 
 private:
     mutable bool    dirty_;
-    mutable double  mean_;
-    complex complex_mean_;
-    std::size_t n_;
-    std::size_t n_1_;
-} ;
+    mutable T       mean_;
+    complex         complex_mean_;
+    std::size_t     n_;
+    std::size_t     n_1_;
+};
 }
 }
+
 #endif // ANGULAR_MEAN_HPP

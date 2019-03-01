@@ -7,30 +7,30 @@
 
 namespace cslibs_math {
 namespace linear {
-template<typename point_t>
-inline double hausdorff(const point_t &point,
+template<typename T, typename point_t>
+inline T hausdorff(const point_t &point,
                         const typename cslibs_math::linear::Pointcloud<point_t> &points)
 {
-    double h = std::numeric_limits<double>::infinity();
+    double h = std::numeric_limits<T>::infinity();
     for(auto &compare : points) {
         if(compare.isNormal()) {
-            const double d = cslibs_math::linear::distance(point, compare);
+            const T d = cslibs_math::linear::distance(point, compare);
             h = std::min(d,h);
         }
     }
     return h;
 }
 
-template<typename point_t>
+template<typename T, typename point_t>
 inline std::size_t nearestNeighbour(const point_t &point,
                                     const typename cslibs_math::linear::Pointcloud<point_t> &points)
 {
-    double min = std::numeric_limits<double>::infinity();
+    T min = std::numeric_limits<T>::infinity();
     std::size_t min_id = std::numeric_limits<std::size_t>::infinity();
     for(std::size_t i = 0 ; i < points.size() ; ++i) {
         const point_t &compare = points.at(i);
         if(compare.isNormal()) {
-            const double d = cslibs_math::linear::distance(point, compare);
+            const T d = cslibs_math::linear::distance(point, compare);
             if(d < min) {
                 min_id = i;
                 min = d;
@@ -40,24 +40,24 @@ inline std::size_t nearestNeighbour(const point_t &point,
     return min_id;
 }
 
-template<typename point_t>
-inline double hausdorff(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
-                        const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
+template<typename T, typename point_t>
+inline T hausdorff(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
+                   const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
 {
-    double h = -1.0;
+    T h = -1.0;
     for(const point_t &p : points_src) {
         if(p.isNormal()) {
-            const double d = hausdorff(p, points_dst);
+            const T d = hausdorff(p, points_dst);
             h = std::max(h, d);
         }
     }
-    return h < 0 ? std::numeric_limits<double>::infinity() : h;
+    return h < 0 ? std::numeric_limits<T>::infinity() : h;
 }
 
-template<typename point_t>
-inline double hausdorffFraction(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
-                                const typename cslibs_math::linear::Pointcloud<point_t> &points_dst,
-                                const double max_dist)
+template<typename T, typename point_t>
+inline T hausdorffFraction(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
+                           const typename cslibs_math::linear::Pointcloud<point_t> &points_dst,
+                           const T max_dist)
 {
     if(points_src.size() == 0)
         return 0.0;
@@ -66,24 +66,24 @@ inline double hausdorffFraction(const typename cslibs_math::linear::Pointcloud<p
     std::size_t valid = 0;
     for(const point_t &point_src : points_src) {
         if(point_src.isNormal()) {
-            double h = hausdorff(point_src, points_dst);
+            T h = hausdorff(point_src, points_dst);
             if(h < max_dist)
                 ++accepted;
             ++valid;
         }
     }
 
-    return valid != 0 ? accepted / static_cast<double>(valid) : 0.0;
+    return valid != 0 ? accepted / static_cast<T>(valid) : 0.0;
 }
 
-template<typename point_t>
-inline double hausdorffAvg(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
-                           const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
+template<typename T, typename point_t>
+inline T hausdorffAvg(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
+                      const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
 {
     if(points_src.size() == 0)
-        return std::numeric_limits<double>::infinity();
+        return std::numeric_limits<T>::infinity();
 
-    double h = 0;
+    T h = 0;
     std::size_t valid = 0;
     for(const point_t &point_src : points_src) {
         if(point_src.isNormal()) {
@@ -91,12 +91,12 @@ inline double hausdorffAvg(const typename cslibs_math::linear::Pointcloud<point_
             ++valid;
         }
     }
-    return valid != 0 ? h / valid : std::numeric_limits<double>::infinity();
+    return valid != 0 ? h / valid : std::numeric_limits<T>::infinity();
 }
 
-template<typename point_t>
-inline double hausdorffMPE(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
-                           const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
+template<typename T, typename point_t>
+inline T hausdorffMPE(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
+                      const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
 {
     /// normally a product of different probabilities
     /// this yields almost always 0 ... try this little workaround
@@ -104,7 +104,7 @@ inline double hausdorffMPE(const typename cslibs_math::linear::Pointcloud<point_
     if(points_src.size() == 0)
         return 0.0;
 
-    double p_src = 0.0;
+    T p_src = 0.0;
     std::size_t valid = 0;
     for(const point_t &point_src : points_src) {
         if(point_src.isNormal()) {
@@ -112,18 +112,18 @@ inline double hausdorffMPE(const typename cslibs_math::linear::Pointcloud<point_
             ++valid;
         }
     }
-    return valid != 0 ? p_src / static_cast<double>(valid) : 0.0;
+    return valid != 0 ? p_src / static_cast<T>(valid) : 0.0;
 }
-template<typename point_t>
-inline Matrix<double, point_t::Dimension, point_t::Dimension>
+template<typename T, typename point_t>
+inline Matrix<T, point_t::Dimension, point_t::Dimension>
     hausdorffCovariance(const typename cslibs_math::linear::Pointcloud<point_t> &points_src,
                         const typename cslibs_math::linear::Pointcloud<point_t> &points_dst)
 {
     if(points_src.size() == 0)
-        return Matrix<double, point_t::Dimension, point_t::Dimension>(std::numeric_limits<double>::infinity());
+        return Matrix<T, point_t::Dimension, point_t::Dimension>(std::numeric_limits<T>::infinity());
 
 
-    statistics::Distribution<point_t::Dimension> distribution;
+    statistics::Distribution<point_t::Dimension, T> distribution;
     for(const point_t &point_src : points_src) {
         if(point_src.isNormal()) {
             std::size_t nn = nearestNeighbour(point_src, points_dst);
@@ -136,11 +136,9 @@ inline Matrix<double, point_t::Dimension, point_t::Dimension>
     }
 
     if(distribution.getN() < 3)
-        return  Matrix<double, point_t::Dimension, point_t::Dimension>(std::numeric_limits<double>::infinity()) ;
+        return  Matrix<T, point_t::Dimension, point_t::Dimension>(std::numeric_limits<T>::infinity()) ;
 
     return distribution.getCovariance();
-
-
 }
 }
 }

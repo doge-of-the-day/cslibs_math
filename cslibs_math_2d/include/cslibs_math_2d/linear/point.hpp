@@ -4,7 +4,8 @@
 #include <cslibs_math_2d/linear/vector.hpp>
 
 namespace cslibs_math_2d {
-using Point2d = Vector2d;
+template <typename T = double>
+using Point2d = Vector2d<T>;
 }
 
 #endif // CSLIBS_MATH_2D_POINT_2D_HPP

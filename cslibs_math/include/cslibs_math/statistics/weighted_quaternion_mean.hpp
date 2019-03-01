@@ -5,9 +5,12 @@
 
 namespace cslibs_math {
 namespace statistics {
+template <typename T = double>
 class EIGEN_ALIGN16 WeightedQuaternionMean {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t         = Eigen::aligned_allocator<WeightedQuaternionMean<T>>;
+    using Ptr                 = std::shared_ptr<WeightedQuaternionMean<T>> ;
 
     WeightedQuaternionMean() :
         W_(0.0),
@@ -27,13 +30,13 @@ public:
     {
     }
 
-    WeightedQuaternionMean & operator += (const Eigen::Quaternion &q, const double w)
+    WeightedQuaternionMean & operator += (const Eigen::Quaternion &q, const T w)
     {
         if(W_ == 0.0) {
             mean = q * w;
             W_ = w;
         } else {
-            const double W_1 = W;
+            const T W_1 = W;
             W_ += w;
 
             if(quaternionsClose(mean, q)) {
@@ -45,9 +48,9 @@ public:
     }
 
 private:
-    double         W_1_;
-    double         W_;
-    Eigen::Quaternion mean_;
+    T                   W_1_;
+    T                   W_;
+    Eigen::Quaternion   mean_;
 
 
     //Returns true if the two input quaternions are close to each other. This can
@@ -57,11 +60,11 @@ private:
     inline bool quaternionsClose(const Eigen::Quaternion &q_a,
                                  const Eigen::Quaternion &q_b)
     {
-        double dot = q_a.dot(q_b);
+        T dot = q_a.dot(q_b);
         return dot < 0.0;
     }
-
 };
 }
 }
+
 #endif // CSLIBS_MATH_WEIGHTED_QUATERNION_MEAN_HPP

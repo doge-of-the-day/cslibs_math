@@ -6,7 +6,8 @@
 #include <cslibs_math/linear/pointcloud.hpp>
 
 namespace cslibs_math_2d {
-using Pointcloud2d = cslibs_math::linear::Pointcloud<Point2d>;
+template <typename T = double>
+using Pointcloud2d = cslibs_math::linear::Pointcloud<Point2d<T>>;
 }
 
 #endif // CSLIBS_MATH_2D_POINTCLOUD2D_HPP

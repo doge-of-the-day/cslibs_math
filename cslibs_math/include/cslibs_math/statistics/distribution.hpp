@@ -13,20 +13,20 @@
 
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, std::size_t lamda_ratio_exponent = 0>
+template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent = 0>
 class EIGEN_ALIGN16 Distribution {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t         = Eigen::aligned_allocator<Distribution<Dim, T, lambda_ratio_exponent>>;
 
-    using allocator_t         = Eigen::aligned_allocator<Distribution>;
-    using Ptr                 = std::shared_ptr<Distribution<Dim, lamda_ratio_exponent>>;
-    using sample_t            = Eigen::Matrix<double, Dim, 1>;
-    using sample_transposed_t = Eigen::Matrix<double, 1, Dim>;
-    using covariance_t        = Eigen::Matrix<double, Dim, Dim>;
-    using eigen_values_t      = Eigen::Matrix<double, Dim, 1>;
-    using eigen_vectors_t     = Eigen::Matrix<double, Dim, Dim>;
+    using Ptr                 = std::shared_ptr<Distribution<Dim, T, lambda_ratio_exponent>>;
+    using sample_t            = Eigen::Matrix<T, Dim, 1>;
+    using sample_transposed_t = Eigen::Matrix<T, 1, Dim>;
+    using covariance_t        = Eigen::Matrix<T, Dim, Dim>;
+    using eigen_values_t      = Eigen::Matrix<T, Dim, 1>;
+    using eigen_vectors_t     = Eigen::Matrix<T, Dim, Dim>;
 
-    static constexpr double sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
+    static constexpr T sqrt_2_M_PI = static_cast<T>(cslibs_math::common::sqrt(2.0 * M_PI));
 
     inline Distribution() :
         mean_(sample_t::Zero()),
@@ -141,7 +141,7 @@ public:
         mean_ = (mean_ * n_1_ + p) / n_;
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
-                correlated_(i, j) = (correlated_(i, j) * n_1_ + p(i) * p(j)) / static_cast<double>(n_);
+                correlated_(i, j) = (correlated_(i, j) * n_1_ + p(i) * p(j)) / static_cast<T>(n_);
             }
         }
         ++n_;
@@ -158,8 +158,8 @@ public:
     inline Distribution& operator+=(const Distribution &other)
     {
         const std::size_t   _n    = n_1_ + other.n_1_;
-        const sample_t      _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
-        const covariance_t  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<double>(_n);
+        const sample_t      _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<T>(_n);
+        const covariance_t  _corr = (correlated_ * n_1_ + other.correlated_ * other.n_1_) / static_cast<T>(_n);
         n_                        = _n + 1;
         n_1_                      = _n;
         mean_                     = _mean;
@@ -260,7 +260,7 @@ public:
     }
 
     /// Evaluation
-    inline double denominator() const
+    inline T denominator() const
     {
         auto update_return = [this](){
             if(dirty_) update();
@@ -269,64 +269,64 @@ public:
         return valid() ? update_return() : 0.0;
     }
 
-    inline double sample(const sample_t &p) const
+    inline T sample(const sample_t &p) const
     {
         auto update_sample = [this, &p]() {
             if(dirty_) update();
             const sample_t  q        = p - mean_;
-            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
-                                                                  information_matrix_ * q);
-            const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
+            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                        information_matrix_ * q);
+            const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
         return valid() ? update_sample() : 0.0;
     }
 
-    inline double sample(const sample_t &p,
+    inline T sample(const sample_t &p,
                          sample_t &q) const
     {
         auto update_sample = [this, &p, &q]() {
             if(dirty_) update();
             q = p - mean_;
-            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
-                                                                  information_matrix_ * q);
-            const double denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
+            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                        information_matrix_ * q);
+            const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
         return valid() ? update_sample() : 0.0;
     }
 
-    inline double sampleMean() const
+    inline T sampleMean() const
     {
         return sample(getMean());
     }
 
-    inline double sampleNonNormalized(const sample_t &p) const
+    inline T sampleNonNormalized(const sample_t &p) const
     {
         auto update_sample = [this, &p]() {
             if(dirty_) update();
             const sample_t  q        = p - mean_;
-            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
-                                                                  information_matrix_ * q);
+            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                        information_matrix_ * q);
             return std::exp(exponent);
         };
         return valid() ? update_sample() : 0.0;
     }
 
-    inline double sampleNonNormalized(const sample_t &p,
-                                      sample_t &q) const
+    inline T sampleNonNormalized(const sample_t &p,
+                                 sample_t &q) const
     {
         auto update_sample = [this, &p, &q]() {
             if(dirty_) update();
             q = p - mean_;
-            const double exponent    = -0.5 * static_cast<double>(static_cast<sample_transposed_t>(q.transpose()) *
-                                                                  information_matrix_ * q);
+            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) *
+                                                        information_matrix_ * q);
             return std::exp(exponent);
         };
         return valid() ? update_sample() : 0.0;
     }
 
-    inline double sampleNonNormalizedMean() const
+    inline T sampleNonNormalizedMean() const
     {
         return sampleNonNormalized(getMean());
     }
@@ -345,13 +345,13 @@ private:
     mutable covariance_t         information_matrix_;
     mutable eigen_values_t       eigen_values_;
     mutable eigen_vectors_t      eigen_vectors_;
-    mutable double               determinant_;
+    mutable T                    determinant_;
 
     mutable bool                 dirty_;
 
     inline void update() const
     {
-        const double scale = n_1_ / static_cast<double>(n_1_ - 1);
+        const T scale = n_1_ / static_cast<T>(n_1_ - 1);
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
                 covariance_(i, j) = (correlated_(i, j) - (mean_(i) * mean_(j))) * scale;
@@ -359,7 +359,7 @@ private:
             }
         }
 
-        LimitEigenValues<Dim, lamda_ratio_exponent>::apply(covariance_);
+        LimitEigenValues<Dim, T, lambda_ratio_exponent>::apply(covariance_);
 
         Eigen::EigenSolver<covariance_t> solver;
         solver.compute(covariance_);
@@ -372,16 +372,15 @@ private:
     }
 };
 
-template<std::size_t lamda_ratio_exponent>
-class Distribution<1, lamda_ratio_exponent>
+template<typename T, std::size_t lambda_ratio_exponent>
+class Distribution<1, T, lambda_ratio_exponent>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<Distribution<1, T, lambda_ratio_exponent>>;
+    using Ptr         = std::shared_ptr<Distribution<1, T, lambda_ratio_exponent>>;
 
-    using allocator_t     = Eigen::aligned_allocator<Distribution>;
-    using Ptr = std::shared_ptr<Distribution<1, lamda_ratio_exponent>>;
-
-    static constexpr double sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
+    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
     inline Distribution() :
         mean_(0.0),
@@ -396,8 +395,8 @@ public:
 
     inline Distribution(
             std::size_t n,
-            double      mean,
-            double      squared) :
+            T           mean,
+            T           squared) :
         mean_(mean),
         variance_(0.0),
         standard_deviation_(0.0),
@@ -423,7 +422,7 @@ public:
         n_1_        = 0;
     }
 
-    inline void add(const double s)
+    inline void add(const T s)
     {
         mean_    = (mean_ * n_1_ + s) / n_;
         squared_ = (squared_ * n_1_ + s*s) / n_;
@@ -432,7 +431,7 @@ public:
         dirty_ = true;
     }
 
-    inline Distribution & operator += (const double s)
+    inline Distribution & operator += (const T s)
     {
         mean_    = (mean_ * n_1_ + s) / n_;
         squared_ = (squared_ * n_1_ + s*s) / n_;
@@ -445,8 +444,8 @@ public:
     inline Distribution & operator += (const Distribution &other)
     {
         std::size_t _n = n_1_ + other.n_1_;
-        double  _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<double>(_n);
-        double  _squared = (_squared * n_1_ + other.squared_ * other.n_1_) / static_cast<double>(_n);
+        T  _mean = (mean_ * n_1_ + other.mean_ * other.n_1_) / static_cast<T>(_n);
+        T  _squared = (_squared * n_1_ + other.squared_ * other.n_1_) / static_cast<T>(_n);
         n_   = _n + 1;
         n_1_ = _n;
         mean_ = _mean;
@@ -459,37 +458,37 @@ public:
         return n_1_;
     }
 
-    inline double getMean() const
+    inline T getMean() const
     {
         return mean_;
     }
 
-    inline double getSquared() const
+    inline T getSquared() const
     {
         return squared_;
     }
 
-    inline double getVariance() const
+    inline T getVariance() const
     {
         return dirty_ ? updateReturnVariance() : variance_;
     }
 
-    inline double getStandardDeviation() const
+    inline T getStandardDeviation() const
     {
         return dirty_ ? updateReturnStandardDeviation() : standard_deviation_;
     }
 
-    inline double sample(const double s) const
+    inline T sample(const T s) const
     {
-        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
-        const double x = (s - mean_);
+        const T d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        const T x = (s - mean_);
         return std::exp(-0.5 * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
     }
 
-    inline double sampleNonNormalized(const double s) const
+    inline T sampleNonNormalized(const T s) const
     {
-        const double d = 2 * (dirty_ ? updateReturnVariance() : variance_);
-        const double x = (s - mean_);
+        const T d = 2 * (dirty_ ? updateReturnVariance() : variance_);
+        const T x = (s - mean_);
         return std::exp(-0.5 * x * x / d);
     }
 
@@ -498,22 +497,22 @@ public:
     }
 
 private:
-    double          mean_;
-    mutable double  variance_;
-    mutable double  standard_deviation_;
-    double          squared_;
+    T               mean_;
+    mutable T       variance_;
+    mutable T       standard_deviation_;
+    T               squared_;
     bool            dirty_;
     std::size_t     n_;
     std::size_t     n_1_;
 
-    inline double updateReturnVariance() const
+    inline T updateReturnVariance() const
     {
         variance_ = squared_ - mean_ * mean_;
         standard_deviation_ = std::sqrt(variance_);
         return variance_;
     }
 
-    inline double updateReturnStandardDeviation() const
+    inline T updateReturnStandardDeviation() const
     {
         variance_ = squared_ - mean_ * mean_;
         standard_deviation_ = std::sqrt(variance_);
@@ -523,8 +522,8 @@ private:
 }
 }
 
-template<std::size_t D, std::size_t L>
-std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<D,L> &d)
+template<std::size_t D, typename T, std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<D,T,L> &d)
 {
     out << d.getMean() << "\n";
     out << d.getCovariance() << "\n";
@@ -532,8 +531,8 @@ std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Di
     return out;
 }
 
-template<std::size_t L>
-std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<1,L> &d)
+template<typename T, std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<1,T,L> &d)
 {
     out << d.getMean() << "\n";
     out << d.getVariance() << "\n";

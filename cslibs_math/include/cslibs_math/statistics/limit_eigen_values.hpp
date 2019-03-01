@@ -7,18 +7,18 @@
 namespace cslibs_math {
 namespace statistics {
 
-template<std::size_t exp>
+template<typename T, std::size_t exp>
 struct LambdaRatio
 {
-    constexpr const static double value = 0.1 * LambdaRatio<exp - 1ul>::value;
+    constexpr const static T value = 0.1 * LambdaRatio<T, exp - 1ul>::value;
 };
-template<>
-struct LambdaRatio<0ul>
+template<typename T>
+struct LambdaRatio<T, 0ul>
 {
-    constexpr const static double value = 1.0;
+    constexpr const static T value = 1.0;
 };
 
-template<std::size_t Dim, std::size_t lambda_ratio_exponent>
+template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
 /**
  * @brief The LimitCovariance struct is used to assure, that eigen values are not too small.
  *        This will probihit the distribution to collapse in one dimension, since eigen values
@@ -26,11 +26,11 @@ template<std::size_t Dim, std::size_t lambda_ratio_exponent>
  */
 struct LimitEigenValues
 {
-    const static constexpr double lambda_ratio = LambdaRatio<lambda_ratio_exponent>::value;
+    const static constexpr T lambda_ratio = LambdaRatio<T, lambda_ratio_exponent>::value;
 
-    using matrix_t        = Eigen::Matrix<double, Dim, Dim>;
-    using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
-    using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
+    using matrix_t        = Eigen::Matrix<T, Dim, Dim>;
+    using eigen_values_t  = Eigen::Matrix<T, Dim, 1>;
+    using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
     static inline void apply(matrix_t &matrix_io)
     {
@@ -39,7 +39,7 @@ struct LimitEigenValues
         const auto eigen_values  = solver.eigenvalues().real();
         const auto eigen_vectors = solver.eigenvectors().real();
 
-        const double lambda = lambda_ratio * eigen_values.maxCoeff();
+        const T lambda = lambda_ratio * eigen_values.maxCoeff();
         matrix_t Lambda = matrix_t::Zero();
         for(std::size_t i = 0 ; i < Dim; ++i) {
             Lambda(i,i) = std::abs(eigen_values(i)) < std::abs(lambda) ? lambda : eigen_values(i);
@@ -48,23 +48,23 @@ struct LimitEigenValues
     }
 };
 
-template<std::size_t Dim>
-struct LimitEigenValues<Dim, 0ul>
+template<typename T, std::size_t Dim>
+struct LimitEigenValues<Dim, T, 0ul>
 {
-    using matrix_t    = Eigen::Matrix<double, Dim, Dim>;
-    using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
-    using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
+    using matrix_t        = Eigen::Matrix<T, Dim, Dim>;
+    using eigen_values_t  = Eigen::Matrix<T, Dim, 1>;
+    using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
     static inline void apply(matrix_t &)
     {
     }
 };
 
-template<std::size_t Dim>
+template<typename T, std::size_t Dim>
 struct LimitEigenValuesByZero {
-    using matrix_t        = Eigen::Matrix<double, Dim, Dim>;
-    using eigen_values_t  = Eigen::Matrix<double, Dim, 1>;
-    using eigen_vectors_t = Eigen::Matrix<double, Dim, Dim>;
+    using matrix_t        = Eigen::Matrix<T, Dim, Dim>;
+    using eigen_values_t  = Eigen::Matrix<T, Dim, 1>;
+    using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
     static inline void apply(matrix_t &matrix_io)
     {
