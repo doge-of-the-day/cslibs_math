@@ -9,32 +9,35 @@
 #include <set>
 
 namespace cslibs_math_2d {
+template <typename T>
 class EIGEN_ALIGN16 Box2d
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
     using allocator_t     = Eigen::aligned_allocator<Box2d>;
-    using point_set_t    = std::set<Point2d, Point2d::allocator_t>;
-    using coefficients_t = std::array<double, 2>;
+
+    using point_t        = Point2d<T>;
+    using line_t         = Line2d<T>;
+    using point_set_t    = std::set<point_t, typename point_t::allocator_t>;
+    using coefficients_t = std::array<T, 2>;
 
     inline Box2d() :
-        min_(std::numeric_limits<double>::lowest(),
-             std::numeric_limits<double>::lowest()),
-        max_(std::numeric_limits<double>::max(),
-             std::numeric_limits<double>::max())
+        min_(std::numeric_limits<T>::lowest(),
+             std::numeric_limits<T>::lowest()),
+        max_(std::numeric_limits<T>::max(),
+             std::numeric_limits<T>::max())
     {
     }
 
-    inline Box2d(const double min_x, const double min_y,
-                 const double max_x, const double max_y) :
+    inline Box2d(const T min_x, const T min_y,
+                 const T max_x, const T max_y) :
         min_(min_x, min_y),
         max_(max_x, max_y)
     {
     }
 
-    inline Box2d(const Point2d &min,
-                 const Point2d &max) :
+    inline Box2d(const point_t &min,
+                 const point_t &max) :
         min_(min),
         max_(max)
     {
@@ -52,63 +55,63 @@ public:
     {
     }
 
-    inline void setMin(const Point2d &min)
+    inline void setMin(const point_t &min)
     {
         min_ = min;
     }
 
-    inline void setMax(const Point2d &max)
+    inline void setMax(const point_t &max)
     {
         max_ = max;
     }
 
-    inline Point2d const & getMin() const
+    inline point_t const & getMin() const
     {
         return min_;
     }
 
-    inline Point2d const & getMax() const
+    inline point_t const & getMax() const
     {
         return max_;
     }
 
-    inline Point2d lu() const
+    inline point_t lu() const
     {
-        return Point2d(min_(0), max_(1));
+        return point_t(min_(0), max_(1));
     }
 
-    inline Point2d ll() const
+    inline point_t ll() const
     {
         return min_;
     }
 
-    inline Point2d ru() const
+    inline point_t ru() const
     {
         return max_;
     }
 
-    inline Point2d rl() const
+    inline point_t rl() const
     {
-        return Point2d(max_(0), min_(1));
+        return point_t(max_(0), min_(1));
     }
 
-    inline bool intersects(const Line2d &line) const
+    inline bool intersects(const line_t &line) const
     {
         //// LIANG BARSKY
         const auto p0 = line[0];
         const auto p1 = line[1];
         const auto d = p1 - p0;
 
-        double t0 = 0.0;
-        double t1 = 1.0;
+        T t0 = 0.0;
+        T t1 = 1.0;
 
-        auto clip = [] (const double p, const double q,
-                        double &t0, double &t1)
+        auto clip = [] (const T p, const T q,
+                        T &t0, T &t1)
         {
             if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
                 return false;
 
-            const double r = q / p;
+            const T r = q / p;
             if(p < 0) {
                 if(r > t1)
                     return false;
@@ -136,23 +139,23 @@ public:
         return true;
     }
 
-    inline bool intersection(const Line2d &line,
-                             Line2d &clipped)
+    inline bool intersection(const line_t &line,
+                             line_t &clipped)
     {
         const auto p0 = line[0];
         const auto p1 = line[1];
         const auto d = p1 - p0;
 
-        double t0 = 0.0;
-        double t1 = 1.0;
+        T t0 = 0.0;
+        T t1 = 1.0;
 
-        auto clip = [] (const double p, const double q,
-                        double &t0, double &t1)
+        auto clip = [] (const T p, const T q,
+                        T &t0, T &t1)
         {
             if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
                 return false;
 
-            const double r = q / p;
+            const T r = q / p;
             if(p < 0) {
                 if(r > t1)
                     return false;
@@ -187,12 +190,13 @@ public:
     }
 
 private:
-    Point2d min_;
-    Point2d max_;
+    point_t min_;
+    point_t max_;
 };
 }
 
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Box2d &b)
+template <typename T>
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Box2d<T> &b)
 {
     out << "[" << b.getMin() << "," << b.getMax() << "]";
     return out;

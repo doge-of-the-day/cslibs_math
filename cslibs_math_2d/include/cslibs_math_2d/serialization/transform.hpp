@@ -6,22 +6,22 @@
 #include <yaml-cpp/yaml.h>
 
 namespace YAML {
-template<>
-struct convert<cslibs_math_2d::Transform2d>
+template<typename T>
+struct convert<cslibs_math_2d::Transform2d<T>>
 {
-    static Node encode(const cslibs_math_2d::Transform2d &rhs)
+    static Node encode(const cslibs_math_2d::Transform2d<T> &rhs)
     {
         Node n;
         n["t"] = rhs.translation();
         n["r"] = rhs.yaw();
         return n;
     }
-    static bool decode(const Node& n, cslibs_math_2d::Transform2d &rhs)
+    static bool decode(const Node& n, cslibs_math_2d::Transform2d<T> &rhs)
     {
         if(!n.IsMap())
             return false;
-        rhs.translation() = n["t"].as<cslibs_math_2d::Vector2d>();
-        rhs.setYaw(n["r"].as<double>());
+        rhs.translation() = n["t"].as<cslibs_math_2d::Vector2d<T>>();
+        rhs.setYaw(n["r"].as<T>());
         return true;
     }
 };

@@ -42,7 +42,7 @@ struct EIGEN_ALIGN16 Ellipse
         return res;
     }
 
-    inline bool equals(const Ellipse<T>& other, double eps = 1e-3)
+    inline bool equals(const Ellipse<T>& other, T eps = 1e-3)
     {
         bool axis_a = (axis_1 - other.axis_1).length() < eps &&
                       (axis_2 - other.axis_2).length() < eps;
