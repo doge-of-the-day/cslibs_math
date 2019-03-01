@@ -7,15 +7,27 @@
 
 namespace cslibs_math_3d {
 namespace algorithms {
-template <typename T>
+template <typename Tp = float>
 class EIGEN_ALIGN16 EFLAIterator
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using Ptr           = std::shared_ptr<EFLAIterator<T>>;
+    using Ptr           = std::shared_ptr<EFLAIterator<Tp>>;
 
     using index_t       = std::array<int, 3>;
-    using point_t       = Point3d<T>;
+
+    template <typename T>
+    inline explicit EFLAIterator(const Point3d<T> &p0,
+                                 const Point3d<T> &p1,
+                                 const T          &resolution) :
+        EFLAIterator({{static_cast<int>(std::floor(p0(0) / resolution)),
+                       static_cast<int>(std::floor(p0(1) / resolution)),
+                       static_cast<int>(std::floor(p0(2) / resolution))}},
+                     {{static_cast<int>(std::floor(p1(0) / resolution)),
+                       static_cast<int>(std::floor(p1(1) / resolution)),
+                       static_cast<int>(std::floor(p1(2) / resolution))}})
+    {
+    }
 
     inline explicit EFLAIterator(const index_t &start,
                                  const index_t &end) :
@@ -53,18 +65,6 @@ public:
         if (z_longer && !y_longer)
             std::swap(dec_inc0_, dec_inc1_);
         iterate_ = z_longer ? &EFLAIterator::iterateZ : (y_longer ? &EFLAIterator::iterateY : &EFLAIterator::iterateX);
-    }
-
-    inline explicit EFLAIterator(const point_t &p0,
-                                 const point_t &p1,
-                                 const T       &resolution) :
-        EFLAIterator({{static_cast<int>(std::floor(p0(0) / resolution)),
-                       static_cast<int>(std::floor(p0(1) / resolution)),
-                       static_cast<int>(std::floor(p0(2) / resolution))}},
-                     {{static_cast<int>(std::floor(p1(0) / resolution)),
-                       static_cast<int>(std::floor(p1(1) / resolution)),
-                       static_cast<int>(std::floor(p1(2) / resolution))}})
-    {
     }
 
     inline int x() const
@@ -107,10 +107,10 @@ private:
     index_t    end_;
     index_t    index_;
     int        increment_val_;
-    T          j0_;
-    T          j1_;
-    T          dec_inc0_;
-    T          dec_inc1_;
+    Tp         j0_;
+    Tp         j1_;
+    Tp         dec_inc0_;
+    Tp         dec_inc1_;
 
     EFLAIterator&   (EFLAIterator::*iterate_)();
 

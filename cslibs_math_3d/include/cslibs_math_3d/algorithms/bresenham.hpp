@@ -7,16 +7,14 @@
 
 namespace cslibs_math_3d {
 namespace algorithms {
-template <typename T>
 class EIGEN_ALIGN16 Bresenham
 {
 public:    
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using Ptr           = std::shared_ptr<Bresenham<T>>;
+    using Ptr           = std::shared_ptr<Bresenham>;
 
     using index_t       = std::array<int, 3>;
     using error_t       = std::array<int, 2>;
-    using point_t       = Point3d;
     using interation_t  = Bresenham& (Bresenham::*)() ;
     using done_t        = bool (Bresenham::*)();
 
@@ -29,8 +27,9 @@ public:
     {
     }
 
-    inline explicit Bresenham(const point_t &p0,
-                              const point_t &p1,
+    template <typename T>
+    inline explicit Bresenham(const Point3d<T> &p0,
+                              const Point3d<T> &p1,
                               const T resolution):
         Bresenham({{static_cast<int>(std::floor(p0(0) / resolution)),
                     static_cast<int>(std::floor(p0(1) / resolution)),

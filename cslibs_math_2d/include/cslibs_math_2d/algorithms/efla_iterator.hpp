@@ -7,19 +7,19 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
-template <typename T>
+template <typename Tp = float>
 class EIGEN_ALIGN16 EFLAIterator
 {
 public:    
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using Ptr           = std::shared_ptr<EFLAIterator<T>>;
+    using Ptr           = std::shared_ptr<EFLAIterator<Tp>>;
 
     using index_t       = std::array<int, 2>;
-    using point_t       = Point2d<T>;
 
-    inline explicit EFLAIterator(const point_t &p0,
-                                 const point_t &p1,
-                                 const T  &resolution) :
+    template <typename T>
+    inline explicit EFLAIterator(const Point2d<T> &p0,
+                                 const Point2d<T> &p1,
+                                 const T          &resolution) :
         EFLAIterator({{static_cast<int>(std::floor(p0(0) / resolution)),
                        static_cast<int>(std::floor(p0(1) / resolution))}},
                      {{static_cast<int>(std::floor(p1(0) / resolution)),
@@ -45,7 +45,7 @@ public:
         delta_[1] = std::abs(end_[1] - start_[1]);
 
         step_ = start_[0] < end_[0] ? 1 : -1;   // step always in x, inc in y
-        inc_  = delta_[0] == 0 ? delta_[1] : (static_cast<T>(delta_[1])/static_cast<T>(delta_[0]));
+        inc_  = delta_[0] == 0 ? delta_[1] : (static_cast<Tp>(delta_[1])/static_cast<Tp>(delta_[0]));
     }
 
     inline int x() const
@@ -84,9 +84,9 @@ private:
 
     bool        steep_;
     int         tep_;
-    T           inc_;
+    Tp          inc_;
     int         x_;
-    T           y_;
+    Tp          y_;
 
     inline EFLAIterator &iterate()
     {

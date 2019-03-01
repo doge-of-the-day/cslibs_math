@@ -50,5 +50,5 @@ cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_box
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 

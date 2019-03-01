@@ -28,4 +28,4 @@ include_directories(
 cslibs_math_ros_show_headers()
 
 install(DIRECTORY include/${PROJECT_NAME}/
-    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

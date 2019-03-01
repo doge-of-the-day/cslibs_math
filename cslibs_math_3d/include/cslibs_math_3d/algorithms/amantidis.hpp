@@ -10,18 +10,16 @@
 
 namespace cslibs_math_3d {
 namespace algorithms {
-template <typename T>
+template <typename Tp = float>
 class EIGEN_ALIGN16 Amantidis
 {
 public:
-
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using Ptr           = std::shared_ptr<Amantidis<T>>;
+    using Ptr           = std::shared_ptr<Amantidis<Tp>>;
 
     using index_t       = std::array<int, 3>;
-    using delta_t       = std::array<T, 3>;
+    using delta_t       = std::array<Tp, 3>;
     using delta_mask_t  = std::array<bool, 3>;
-    using point_t       = Point3d<T>;
 
     inline Amantidis() :
         start_{{0, 0, 0}},
@@ -32,9 +30,10 @@ public:
     {
     }
 
-    inline explicit Amantidis(const point_t     &start,
-                              const point_t     &end,
-                              const T      resolution) :
+    template <typename T>
+    inline explicit Amantidis(const Point3d<T> &start,
+                              const Point3d<T> &end,
+                              const T           resolution) :
         start_{{static_cast<int>(std::floor(start(0) / resolution)),
                 static_cast<int>(std::floor(start(1) / resolution)),
                 static_cast<int>(std::floor(start(2) / resolution))}},
@@ -45,7 +44,7 @@ public:
         delta_{{0.0, 0.0, 0.0}},
         max_{{0.0, 0.0, 0.0}}
     {
-        const point_t d = end - start;
+        const Point3d<T> d = end - start;
         const static T dmax =  std::numeric_limits<T>::max();
         const bool dx = cslibs_math::common::neq(d(0), 0.0);
         const bool dy = cslibs_math::common::neq(d(1), 0.0);
