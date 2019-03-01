@@ -42,7 +42,7 @@ protected:
 /**
  * @brief The multi-dimensional uniform random generator class.
  */
-template<std::size_t Dim, typename Generator = std::mt19937_64>
+template<std::size_t Dim, typename T, typename Generator = std::mt19937_64>
 class EIGEN_ALIGN16 Uniform : public RandomGenerator<Generator>
 {
 public:
@@ -50,8 +50,8 @@ public:
 
     using allocator_t    = Eigen::aligned_allocator<Uniform>;
     using Ptr            = std::shared_ptr<Uniform>;
-    using distribution_t = std::uniform_real_distribution<double>;
-    using sample_t       = Eigen::Matrix<double, Dim, 1>;
+    using distribution_t = std::uniform_real_distribution<T>;
+    using sample_t       = Eigen::Matrix<T, Dim, 1>;
     using base_t         = RandomGenerator<Generator>;
 
     Uniform() = delete;
@@ -101,27 +101,27 @@ private:
 /**
  * @brief The one-dimensional uniform random generator class.
  */
-template<typename Generator>
-class EIGEN_ALIGN16 Uniform<1, Generator> : public RandomGenerator<Generator>
+template<typename T, typename Generator>
+class EIGEN_ALIGN16 Uniform<1, T, Generator> : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using allocator_t    = Eigen::aligned_allocator<Uniform>;
     using Ptr            = std::shared_ptr<Uniform>;
-    using distribution_t = std::uniform_real_distribution<double>;
+    using distribution_t = std::uniform_real_distribution<T>;
     using base_t         = RandomGenerator<Generator>;
 
     Uniform() = delete;
 
-    Uniform(const double min,
-            const double max)
+    Uniform(const T min,
+            const T max)
     {
         set(min, max);
     }
 
-    Uniform(const double min,
-            const double max,
+    Uniform(const T min,
+            const T max,
             const unsigned int seed) :
         RandomGenerator<Generator>(seed)
     {
@@ -129,27 +129,27 @@ public:
     }
 
 
-    inline void set(const double min,
-                    const double max)
+    inline void set(const T min,
+                    const T max)
     {
         distribution_ = distribution_t(min, max);
     }
 
-    inline double get()
+    inline T get()
     {
         return distribution_(base_t::random_engine_);
     }
 
-    inline double getNEQ(const double neq)
+    inline T getNEQ(const T neq)
     {
-        double r = get();
+        T r = get();
         while(cslibs_math::common::eq(r,neq)) {
             r = get();
         }
         return r;
     }
 
-    inline void get(double &sample)
+    inline void get(T &sample)
     {
         sample = distribution_(base_t::random_engine_);
     }
@@ -161,7 +161,7 @@ private:
 /**
  * @brief The multi-dimensional normally distributed random generator class.
  */
-template<std::size_t Dim, typename Generator = std::mt19937_64>
+template<std::size_t Dim, typename T, typename Generator = std::mt19937_64>
 class EIGEN_ALIGN16 Normal : public RandomGenerator<Generator>
 {
 public:
@@ -169,9 +169,9 @@ public:
 
     using allocator_t    = Eigen::aligned_allocator<Normal>;
     using Ptr            = std::shared_ptr<Normal>;
-    using sample_t       = Eigen::Matrix<double, Dim, 1>;
-    using matrix_t       = Eigen::Matrix<double, Dim, Dim>;
-    using distribution_t = std::normal_distribution<double>;
+    using sample_t       = Eigen::Matrix<T, Dim, 1>;
+    using matrix_t       = Eigen::Matrix<T, Dim, Dim>;
+    using distribution_t = std::normal_distribution<T>;
     using solver_t       = Eigen::EigenSolver<matrix_t>;
     using base_t         = RandomGenerator<Generator>;
 
@@ -219,54 +219,54 @@ public:
 
 private:
     distribution_t                  distribution_;
-    Eigen::Matrix<double, Dim, 1>   mean_;
+    Eigen::Matrix<T, Dim, 1>        mean_;
     matrix_t                        covariance_;
-    Eigen::Matrix<double, Dim, Dim> rotation_;
-    Eigen::Matrix<double, Dim, 1>   scale_;
+    Eigen::Matrix<T, Dim, Dim>      rotation_;
+    Eigen::Matrix<T, Dim, 1>        scale_;
 };
 
 /**
  * @brief The one-dimensional normally distributed  random generator class.
  */
-template<typename Generator>
-class EIGEN_ALIGN16 Normal<1, Generator> : public RandomGenerator<Generator>
+template<typename T, typename Generator>
+class EIGEN_ALIGN16 Normal<1, T, Generator> : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using allocator_t    = Eigen::aligned_allocator<Normal>;
     using Ptr            = std::shared_ptr<Normal>;
-    using distribution_t = std::normal_distribution<double> ;
+    using distribution_t = std::normal_distribution<T> ;
     using base_t         = RandomGenerator<Generator>;
 
     Normal() = delete;
 
-    Normal(const double mean,
-           const double _sigma)
+    Normal(const T mean,
+           const T _sigma)
     {
         set(mean, _sigma);
     }
 
-    Normal(const double mean,
-           const double _sigma,
+    Normal(const T mean,
+           const T _sigma,
            const unsigned int seed) :
         RandomGenerator<Generator>(seed)
     {
         set(mean, _sigma);
     }
 
-    inline void set(const double mean,
-                    const double _sigma)
+    inline void set(const T mean,
+                    const T _sigma)
     {
         distribution_ = distribution_t(mean, _sigma);
     }
 
-    inline double get()
+    inline T get()
     {
         return distribution_(base_t::random_engine_);
     }
 
-    inline void get(double &sample)
+    inline void get(T &sample)
     {
         sample = distribution_(base_t::random_engine_);
     }

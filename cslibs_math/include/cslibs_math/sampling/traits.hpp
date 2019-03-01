@@ -17,7 +17,7 @@ struct Radian {
      * @brief Check if this semantic type needs normalization.
      * @return
      */
-    static inline bool requiresNoramlization()
+    static inline bool requiresNormalization()
     {
         return true;
     }
@@ -26,11 +26,10 @@ struct Radian {
      * @brief Apply semantic specific normalization.
      * @param rad - radian value
      */
-    static inline void normalize(double &rad)
+    static inline void normalize(T &rad)
     {
         rad = cslibs_math::common::angle::normalize(rad);
     }
-
 };
 
 /**
@@ -42,7 +41,7 @@ struct Metric {
      * @brief Check if this semantic type needs normalization.
      * @return
      */
-    static inline bool requiresNoramlization()
+    static inline bool requiresNormalization()
     {
         return false;
     }
@@ -50,7 +49,7 @@ struct Metric {
     /**
      * @brief The normalization in this case is the identity.
      */
-    static inline void normalize(double &)
+    static inline void normalize(T &)
     {
     }
 };
@@ -72,7 +71,7 @@ struct Arguments<1, Array, T, Ts...>
     typedef T Type;
     inline static void normalize(Array &arr)
     {
-        if(T::requiresNoramlization()) {
+        if(T::requiresNormalization()) {
             T::normalize(arr[Array::RowsAtCompileTime - 1]);
         }
     }
@@ -89,7 +88,7 @@ struct Arguments<N, Array, T, Ts...>
 
     inline static void normalize(Array &arr)
     {
-        if(T::requiresNoramlization()) {
+        if(T::requiresNormalization()) {
             T::normalize(arr[Array::RowsAtCompileTime - N]);
         }
         Arguments<N-1, Array, Ts...>::normalize(arr);

@@ -3,6 +3,7 @@
 #include <utility>
 namespace cslibs_math {
 namespace color{
+template <typename T>
 struct Color {
     inline Color():
         r(0),
@@ -11,7 +12,7 @@ struct Color {
     {
     }
 
-    inline Color(float _r, float _g, float _b):
+    inline Color(T _r, T _g, T _b):
         r(_r),
         g(_g),
         b(_b)
@@ -48,10 +49,9 @@ struct Color {
         return *this;
     }
 
-
-    float r;
-    float g;
-    float b;
+    T r;
+    T g;
+    T b;
 };
 /**
  * @brief interpolateColor interpolates a color for a value v in [vmin, vmax]
@@ -60,10 +60,11 @@ struct Color {
  * @param vmax invervall maximum value (inclusive)
  * @return the interpolated color (part of colormap)
  */
-inline Color interpolateColor(double v, double vmin, double vmax)
+template <typename T>
+inline Color<T> interpolateColor(T v, T vmin, T vmax)
 {
-    Color c(1.0,1.0,1.0); // white
-    double dv;
+    Color<T> c(1.0,1.0,1.0); // white
+    T dv;
 
     if (v < vmin)
         v = vmin;
@@ -73,24 +74,25 @@ inline Color interpolateColor(double v, double vmin, double vmax)
 
     if (v < (vmin + 0.25 * dv)) {
         c.r = 0;
-        c.g = static_cast<float>(4 * (v - vmin) / dv);
+        c.g = static_cast<T>(4.0 * (v - vmin) / dv);
     } else if (v < (vmin + 0.5 * dv)) {
         c.r = 0;
-        c.b = static_cast<float>(1 + 4 * (vmin + 0.25 * dv - v) / dv);
+        c.b = static_cast<T>(1.0 + 4.0 * (vmin + 0.25 * dv - v) / dv);
     } else if (v < (vmin + 0.75 * dv)) {
-        c.r = static_cast<float>(4 * (v - vmin - 0.5 * dv) / dv);
+        c.r = static_cast<T>(4.0 * (v - vmin - 0.5 * dv) / dv);
         c.b = 0;
     } else {
-        c.g = static_cast<float>(1 + 4 * (vmin + 0.75 * dv - v) / dv);
+        c.g = static_cast<T>(1.0 + 4.0 * (vmin + 0.75 * dv - v) / dv);
         c.b = 0;
     }
 
     return(c);
 }
 
-inline Color random()
+template <typename T>
+inline Color<T> random()
 {
-    return Color(drand48(), drand48(), drand48());
+    return Color<T>(drand48(), drand48(), drand48());
 }
 
 /**
@@ -100,10 +102,11 @@ inline Color random()
  * @param vmax maximum value
  * @return the value v leading to interpolateColor(v, vmin, vmax)
  */
-inline double interpolateValue(const Color& c, double vmin, double vmax)
+template <typename T>
+inline T interpolateValue(const Color<T>& c, T vmin, T vmax)
 {
-    double dv = vmax - vmin;
-    double value = vmin;
+    T dv = vmax - vmin;
+    T value = vmin;
     if (c.r == 0 && c.b < 1 && c.g < 1){
         value = 0.25 * dv * c.g + vmin;
     } else if (c.r == 0 && c.g == 1 && c.b < 1){

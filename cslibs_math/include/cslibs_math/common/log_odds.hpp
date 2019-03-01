@@ -5,15 +5,16 @@
 
 namespace cslibs_math {
 namespace common {
+template <typename T>
 struct LogOdds {
-    inline static double to(const double p)
+    inline static T to(const T p)
     {
-        return std::log(p / (1.0 - p));
+        return std::log(p / static_cast<T>(1.0 - p));
     }
 
-    inline static double from(const double l)
+    inline static T from(const T l)
     {
-        return 1.0 / (1.0 + std::exp(-l));
+        return static_cast<T>(1.0) / (static_cast<T>(1.0) + std::exp(-l));
     }
 };
 }
