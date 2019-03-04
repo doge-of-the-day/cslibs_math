@@ -83,7 +83,7 @@ private:
     index_t     delta_;
 
     bool        steep_;
-    int         tep_;
+    int         step_;
     Tp          inc_;
     int         x_;
     Tp          y_;
