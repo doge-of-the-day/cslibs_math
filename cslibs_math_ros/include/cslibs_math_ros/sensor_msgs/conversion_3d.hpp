@@ -35,7 +35,7 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
 }
 
 template <typename T>
-inline void from(const cslibs_math_3d::Pointcloud3d<T>::Ptr &src,
+inline void from(const typename cslibs_math_3d::Pointcloud3d<T>::Ptr &src,
                  ::sensor_msgs::PointCloud2 &dst)
 {
     // metadata
