@@ -42,7 +42,7 @@ protected:
 /**
  * @brief The multi-dimensional uniform random generator class.
  */
-template<std::size_t Dim, typename T, typename Generator = std::mt19937_64>
+template<typename T, std::size_t Dim, typename Generator = std::mt19937_64>
 class EIGEN_ALIGN16 Uniform : public RandomGenerator<Generator>
 {
 public:
@@ -102,7 +102,7 @@ private:
  * @brief The one-dimensional uniform random generator class.
  */
 template<typename T, typename Generator>
-class EIGEN_ALIGN16 Uniform<1, T, Generator> : public RandomGenerator<Generator>
+class EIGEN_ALIGN16 Uniform<T, 1, Generator> : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -161,7 +161,7 @@ private:
 /**
  * @brief The multi-dimensional normally distributed random generator class.
  */
-template<std::size_t Dim, typename T, typename Generator = std::mt19937_64>
+template<typename T, std::size_t Dim, typename Generator = std::mt19937_64>
 class EIGEN_ALIGN16 Normal : public RandomGenerator<Generator>
 {
 public:
@@ -229,7 +229,7 @@ private:
  * @brief The one-dimensional normally distributed  random generator class.
  */
 template<typename T, typename Generator>
-class EIGEN_ALIGN16 Normal<1, T, Generator> : public RandomGenerator<Generator>
+class EIGEN_ALIGN16 Normal<T, 1, Generator> : public RandomGenerator<Generator>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
