@@ -273,7 +273,7 @@ public:
 
         const  T ratio_inverse = 1.0 - ratio;
         const  translation_t translation = translation_ * ratio_inverse + other.translation_ * ratio;
-        const  quaternion_t  rotation = rotation_.interpolate(other.rotation_, ratio);
+        const  rotation_t    rotation    = rotation_.interpolate(other.rotation_, ratio);
         return Transform3d(translation, rotation);
     }
 
@@ -291,8 +291,8 @@ inline cslibs_math_3d::Vector3d<T> operator * (const cslibs_math_3d::Transform3d
 }
 
 template <typename T>
-inline Eigen::Vector3d<T> operator * (const cslibs_math_3d::Transform3d<T> &t,
-                                      const Eigen::Vector3d<T>             &v)
+inline Eigen::Matrix<T, 3, 1> operator * (const cslibs_math_3d::Transform3d<T> &t,
+                                          const Eigen::Matrix<T, 3, 1>         &v)
 {
     return (t.rotation() * cslibs_math_3d::Vector3d<T>(v) + t.translation()).data();
 }
@@ -306,8 +306,8 @@ inline cslibs_math_3d::Transform3d<T> operator * (const cslibs_math_3d::Transfor
 }
 
 template <typename T>
-inline cslibs_math::linear::Vector<T, 2>  operator * (const cslibs_math_3d::Transform3d<T> &t,
-                                                      const cslibs_math::linear::Vector<T, 2>     &v)
+inline cslibs_math::linear::Vector<T, 2>  operator * (const cslibs_math_3d::Transform3d<T>    &t,
+                                                      const cslibs_math::linear::Vector<T, 2> &v)
 {
     const cslibs_math_3d::Vector3d<T> r = t * cslibs_math_3d::Vector3d<T>(v(0), v(1), v(2));
     return cslibs_math::linear::Vector<T, 2> (r(0), r(1));
