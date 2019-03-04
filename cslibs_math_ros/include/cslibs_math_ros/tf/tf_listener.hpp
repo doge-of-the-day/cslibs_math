@@ -34,7 +34,7 @@ public:
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
             return false;
 
-        transform.data() = conversion_2d::from(tf_transform);
+        transform.data() = conversion_2d::from<float>(tf_transform);
         transform.stamp() = cslibs_time::from(time);
         return true;
     }
@@ -48,7 +48,7 @@ public:
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
             return false;
 
-        transform.data() = conversion_2d::from(tf_transform);
+        transform.data() = conversion_2d::from<double>(tf_transform);
         transform.stamp() = cslibs_time::from(time);
         return true;
     }
@@ -64,7 +64,7 @@ public:
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
             return false;
 
-        transform.data() = conversion_3d::from(tf_transform);
+        transform.data() = conversion_3d::from<float>(tf_transform);
         transform.stamp() = cslibs_time::from(time);
         return true;
     }
@@ -78,7 +78,7 @@ public:
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
             return false;
 
-        transform.data() = conversion_3d::from(tf_transform);
+        transform.data() = conversion_3d::from<double>(tf_transform);
         transform.stamp() = cslibs_time::from(time);
         return true;
     }
