@@ -24,11 +24,24 @@ public:
     using TFProvider::lookupTransform;
 
     // 2d
-    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_2d_t<T>& transform,
+                         stamped_2d_t<float>& transform,
+                         const ros::Duration& timeout) override
+    {
+        ::tf::Transform tf_transform;
+        if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
+            return false;
+
+        transform.data() = conversion_2d::from(tf_transform);
+        transform.stamp() = cslibs_time::from(time);
+        return true;
+    }
+    bool lookupTransform(const std::string& target_frame,
+                         const std::string& source_frame,
+                         const ros::Time& time,
+                         stamped_2d_t<double>& transform,
                          const ros::Duration& timeout) override
     {
         ::tf::Transform tf_transform;
@@ -41,11 +54,24 @@ public:
     }
 
     // 3d
-    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_3d_t<T>& transform,
+                         stamped_3d_t<float>& transform,
+                         const ros::Duration& timeout) override
+    {
+        ::tf::Transform tf_transform;
+        if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
+            return false;
+
+        transform.data() = conversion_3d::from(tf_transform);
+        transform.stamp() = cslibs_time::from(time);
+        return true;
+    }
+    bool lookupTransform(const std::string& target_frame,
+                         const std::string& source_frame,
+                         const ros::Time& time,
+                         stamped_3d_t<double>& transform,
                          const ros::Duration& timeout) override
     {
         ::tf::Transform tf_transform;

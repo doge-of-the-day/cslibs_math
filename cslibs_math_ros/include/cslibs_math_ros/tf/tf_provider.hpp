@@ -10,12 +10,13 @@
 
 namespace cslibs_math_ros {
 namespace tf {
-template <typename T>
 class TFProvider
 {
 public:
-    using Ptr = std::shared_ptr<TFProvider<T>>;
+    using Ptr = std::shared_ptr<TFProvider>;
+    template <typename T>
     using stamped_2d_t = typename cslibs_time::Stamped<cslibs_math_2d::Transform2d<T>>;
+    template <typename T>
     using stamped_3d_t = typename cslibs_time::Stamped<cslibs_math_3d::Transform3d<T>>;
 
     virtual ~TFProvider() = default;
@@ -24,24 +25,31 @@ public:
     virtual bool lookupTransform(const std::string& target_frame,
                                  const std::string& source_frame,
                                  const ros::Time& time,
-                                 stamped_2d_t& transform,
+                                 stamped_2d_t<float>& transform,
+                                 const ros::Duration& timeout) = 0;
+    virtual bool lookupTransform(const std::string& target_frame,
+                                 const std::string& source_frame,
+                                 const ros::Time& time,
+                                 stamped_2d_t<double>& transform,
                                  const ros::Duration& timeout) = 0;
 
+    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_2d_t& transform)
+                         stamped_2d_t<T>& transform)
     {
         return lookupTransform(target_frame, source_frame, time, transform, {});
     }
 
+    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
                          cslibs_math_2d::Transform2d<T>& transform,
                          const ros::Duration& timeout = {})
     {
-        stamped_2d_t stamped;
+        stamped_2d_t<T> stamped;
         if (!lookupTransform(target_frame, source_frame, time, stamped, timeout))
             return false;
 
@@ -53,24 +61,31 @@ public:
     virtual bool lookupTransform(const std::string& target_frame,
                                  const std::string& source_frame,
                                  const ros::Time& time,
-                                 stamped_3d_t& transform,
+                                 stamped_3d_t<float>& transform,
+                                 const ros::Duration& timeout) = 0;
+    virtual bool lookupTransform(const std::string& target_frame,
+                                 const std::string& source_frame,
+                                 const ros::Time& time,
+                                 stamped_3d_t<double>& transform,
                                  const ros::Duration& timeout) = 0;
 
+    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_3d_t& transform)
+                         stamped_3d_t<T>& transform)
     {
         return lookupTransform(target_frame, source_frame, time, transform, {});
     }
 
+    template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
                          cslibs_math_3d::Transform3d<T>& transform,
                          const ros::Duration& timeout = {})
     {
-        stamped_3d_t stamped;
+        stamped_3d_t<T> stamped;
         if (!lookupTransform(target_frame, source_frame, time, stamped, timeout))
             return false;
 
