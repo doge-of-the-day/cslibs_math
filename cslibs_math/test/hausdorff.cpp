@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         std::cout << cslibs_math::linear::hausdorffFraction(pts, pts, 0.0);
         std::cout << cslibs_math::linear::hausdorffAvg(pts, pts);
         std::cout << cslibs_math::linear::hausdorffMPE(pts, pts);
-        std::cout << cslibs_math::linear::hausdorffCovariance<double,cslibs_math::linear::Vector,2>(pts, pts);
+        std::cout << cslibs_math::linear::hausdorffCovariance(pts, pts);
     }
 
     {
