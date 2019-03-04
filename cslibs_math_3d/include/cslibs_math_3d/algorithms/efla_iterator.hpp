@@ -56,11 +56,11 @@ public:
 
         increment_val_ = std::copysign(1.0, long_len);
         dec_inc0_ = (long_len == 0) ?
-                    static_cast<T>(middle_len) :
-                    (static_cast<T>(middle_len) / static_cast<T>(std::fabs(long_len)));
+                    static_cast<Tp>(middle_len) :
+                    (static_cast<Tp>(middle_len) / static_cast<Tp>(std::fabs(long_len)));
         dec_inc1_ = (long_len == 0) ?
-                    static_cast<T>(short_len) :
-                    (static_cast<T>(short_len) / static_cast<T>(std::fabs(long_len)));
+                    static_cast<Tp>(short_len) :
+                    (static_cast<Tp>(short_len) / static_cast<Tp>(std::fabs(long_len)));
 
         if (z_longer && !y_longer)
             std::swap(dec_inc0_, dec_inc1_);
