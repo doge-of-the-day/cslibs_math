@@ -540,4 +540,4 @@ std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Di
     return out;
 }
 
-#endif /* CSLIBS_MATH_DISTRIBUTION_HPP */
+#endif // CSLIBS_MATH_DISTRIBUTION_HPP

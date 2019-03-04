@@ -358,7 +358,7 @@ private:
             }
         }
 
-        LimitEigenValues<Dim, T, lambda_ratio_exponent>::apply(covariance_);
+        LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
         Eigen::EigenSolver<covariance_t> solver;
         solver.compute(covariance_);
@@ -523,8 +523,8 @@ private:
 }
 }
 
-template<std::size_t D, typename T, std::size_t L>
-std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::WeightedDistribution<D,T,L> &d)
+template<typename T, std::size_t D, std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::WeightedDistribution<T,D,L> &d)
 {
     out << d.getMean() << "\n";
     out << d.getCovariance() << "\n";
@@ -533,7 +533,7 @@ std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::We
 }
 
 template<typename T, std::size_t L>
-std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::WeightedDistribution<1,T,L> &d)
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::WeightedDistribution<T,1,L> &d)
 {
     out << d.getMean() << "\n";
     out << d.getVariance() << "\n";
