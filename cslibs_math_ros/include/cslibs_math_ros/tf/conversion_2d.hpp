@@ -17,7 +17,7 @@ inline cslibs_math_2d::Vector2d<T> from(const ::tf::Vector3 &v)
 template <typename T>
 inline cslibs_math_2d::Transform2d<T> from(const ::tf::Transform &t)
 {
-    return cslibs_math_2d::Transform2d<T>(from(t.getOrigin()),
+    return cslibs_math_2d::Transform2d<T>(from<T>(t.getOrigin()),
                                           ::tf::getYaw(t.getRotation()));
 }
 
@@ -41,7 +41,7 @@ inline void from(const std::vector<::tf::Transform> &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const ::tf::Transform &t){return from(t);});
+                  [](const ::tf::Transform &t){return from<T>(t);});
 }
 
 template <typename T>
@@ -51,7 +51,7 @@ inline void from(const std::vector<::tf::Vector3> &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const ::tf::Vector3 &v){return from(v);});
+                   [](const ::tf::Vector3 &v){return from<T>(v);});
 }
 
 template <typename T>
