@@ -20,7 +20,7 @@ inline cslibs_math_2d::Vector2d<T> from(const ::geometry_msgs::Point &p)
 template <typename T>
 inline cslibs_math_2d::Transform2d<T> from(const ::geometry_msgs::Pose &p)
 {
-    return cslibs_math_2d::Transform2d<T>(from(p.position),
+    return cslibs_math_2d::Transform2d<T>(from<T>(p.position),
                                           ::tf::getYaw(p.orientation));
 }
 
@@ -50,7 +50,7 @@ inline void from(const std::vector<::geometry_msgs::Pose> &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const ::geometry_msgs::Pose &p){return from(p);});
+                  [](const ::geometry_msgs::Pose &p){return from<T>(p);});
 }
 
 template <typename T>
@@ -60,7 +60,7 @@ inline void from(const std::vector<::geometry_msgs::Point> &src,
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const ::geometry_msgs::Point &p){return from(p);});
+                   [](const ::geometry_msgs::Point &p){return from<T>(p);});
 }
 
 template <typename T>
