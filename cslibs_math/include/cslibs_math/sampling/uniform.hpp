@@ -8,7 +8,7 @@
 
 namespace cslibs_math {
 namespace sampling {
-template<typename... Types>
+template<typename T, typename... Types>
 class EIGEN_ALIGN16 Uniform {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -21,7 +21,7 @@ public:
 
     static const std::size_t Dimension = sizeof...(Types);
 
-    using rng_t    = cslibs_math::random::Uniform<Dimension>;
+    using rng_t    = cslibs_math::random::Uniform<T, Dimension>;
     using sample_t = typename rng_t::sample_t;
 
     Uniform() = delete;

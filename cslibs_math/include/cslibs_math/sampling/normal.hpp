@@ -7,7 +7,7 @@
 
 namespace cslibs_math {
 namespace sampling {
-template<typename... Types>
+template<typename T, typename... Types>
 class EIGEN_ALIGN16 Normal {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -19,7 +19,7 @@ public:
     static_assert(sizeof...(Types) > 0, "Constraint : Dimension > 0");
     static_assert(is_valid_type<Types...>::value, "Parameter list contains forbidden type!");
 
-    using rng_t          = cslibs_math::random::Normal<Dimension>;
+    using rng_t = cslibs_math::random::Normal<T,Dimension>;
 
     Normal() = delete;
     Normal(const Normal &other) = delete;

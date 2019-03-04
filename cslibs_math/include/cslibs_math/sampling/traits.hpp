@@ -26,6 +26,7 @@ struct Radian {
      * @brief Apply semantic specific normalization.
      * @param rad - radian value
      */
+    template <typename T>
     static inline void normalize(T &rad)
     {
         rad = cslibs_math::common::angle::normalize(rad);
@@ -49,6 +50,7 @@ struct Metric {
     /**
      * @brief The normalization in this case is the identity.
      */
+    template <typename T>
     static inline void normalize(T &)
     {
     }

@@ -188,9 +188,9 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
     double dt = 0.0;
     for(const auto range : src->ranges) {
         if(in_linear_interval(range) && in_angular_interval(angle)) {
-            cslibs_math_2d::Transform2d<T>  T = cslibs_math_2d::Transform2d<T>::identity().interpolate(end_T_start, dt);
-            cslibs_math_2d::PolarPoint2d<T> pt = T * cslibs_math_2d::Point2d<T>(std::cos(angle) * range,
-                                                                                std::sin(angle) * range);
+            cslibs_math_2d::Transform2d<T>  Tf = cslibs_math_2d::Transform2d<T>::identity().interpolate(end_T_start, dt);
+            cslibs_math_2d::PolarPoint2d<T> pt = Tf * cslibs_math_2d::Point2d<T>(std::cos(angle) * range,
+                                                                                 std::sin(angle) * range);
             dst->insert(pt);
         } else {
             dst->insertInvalid();
