@@ -11,9 +11,9 @@
 namespace cslibs_math {
 namespace serialization {
 namespace distribution {
-template <std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
+template <typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
 struct binary {
-    using distribution_t    = cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>;
+    using distribution_t    = cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>;
     using sample_t          = typename distribution_t::sample_t;
     using correlated_t      = typename distribution_t::covariance_t;
 
@@ -78,13 +78,13 @@ struct binary {
 }
 
 namespace YAML {
-template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>>
+template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
+struct convert<cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>>
 {
-    using sample_t     = typename cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>::sample_t;
-    using covariance_t = typename cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>::covariance_t;
+    using sample_t     = typename cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>::sample_t;
+    using covariance_t = typename cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>::covariance_t;
 
-    static Node encode(const cslibs_math::statistics::Distribution<Dim, lambda_ratio_exponent> &rhs)
+    static Node encode(const cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent> &rhs)
     {
         Node n;
         n.push_back(rhs.getN());
@@ -101,7 +101,7 @@ struct convert<cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_expone
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent> &rhs)
     {
         if (!n.IsSequence() || n.size() != (1 + Dim + Dim * Dim))
             return false;
@@ -118,15 +118,15 @@ struct convert<cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_expone
             for (std::size_t j = 0 ; j < Dim ; ++ j)
                 correlated(i, j) = n[p++].as<T>();
 
-        rhs = cslibs_math::statistics::Distribution<Dim, T, lambda_ratio_exponent>(num, mean, correlated);
+        rhs = cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>(num, mean, correlated);
         return true;
     }
 };
 
 template<typename T, std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent>>
+struct convert<cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent>>
 {
-    static Node encode(const cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent> &rhs)
+    static Node encode(const cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent> &rhs)
     {
         Node n;
         n.push_back(rhs.getN());
@@ -136,12 +136,12 @@ struct convert<cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent> &rhs)
     {
         if(!n.IsSequence() || n.size() != 3)
             return false;
 
-        rhs = cslibs_math::statistics::Distribution<1, T, lambda_ratio_exponent>(
+        rhs = cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent>(
                     n[0].as<std::size_t>(), n[1].as<T>(), n[2].as<T>());
         return true;
     }

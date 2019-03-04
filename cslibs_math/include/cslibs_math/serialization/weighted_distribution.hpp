@@ -11,9 +11,9 @@
 namespace cslibs_math {
 namespace serialization {
 namespace weighted_distribution {
-template <std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
+template <typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
 struct binary {
-    using distribution_t    = cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_ratio_exponent>;
+    using distribution_t    = cslibs_math::statistics::WeightedDistribution<T, Dim, lambda_ratio_exponent>;
     using sample_t          = typename distribution_t::sample_t;
     using correlated_t      = typename distribution_t::covariance_t;
 
@@ -86,13 +86,13 @@ struct binary {
 }
 
 namespace YAML {
-template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_ratio_exponent>>
+template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
+struct convert<cslibs_math::statistics::WeightedDistribution<T, Dim, lambda_ratio_exponent>>
 {
-    using sample_t     = typename cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_ratio_exponent>::sample_t;
-    using covariance_t = typename cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_ratio_exponent>::covariance_t;
+    using sample_t     = typename cslibs_math::statistics::WeightedDistribution<T, Dim, lambda_ratio_exponent>::sample_t;
+    using covariance_t = typename cslibs_math::statistics::WeightedDistribution<T, Dim, lambda_ratio_exponent>::covariance_t;
 
-    static Node encode(const cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_ratio_exponent> &rhs)
+    static Node encode(const cslibs_math::statistics::WeightedDistribution<T, Dim, lambda_ratio_exponent> &rhs)
     {
         Node n;
         n.push_back(rhs.getSampleCount());
@@ -111,7 +111,7 @@ struct convert<cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_rati
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::WeightedDistribution<T, Dim, lambda_ratio_exponent> &rhs)
     {
         if (!n.IsSequence() || n.size() != (3 + Dim + Dim * Dim))
             return false;
@@ -130,15 +130,15 @@ struct convert<cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_rati
             for (std::size_t j = 0 ; j < Dim ; ++ j)
                 correlated(i, j) = n[p++].as<T>();
 
-        rhs = cslibs_math::statistics::WeightedDistribution<Dim, T, lambda_ratio_exponent>(sc, w, w_sq, mean, correlated);
+        rhs = cslibs_math::statistics::WeightedDistribution<T, Dim, lambda_ratio_exponent>(sc, w, w_sq, mean, correlated);
         return true;
     }
 };
 
 template<typename T, std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::WeightedDistribution<1, T, lambda_ratio_exponent>>
+struct convert<cslibs_math::statistics::WeightedDistribution<T, 1, lambda_ratio_exponent>>
 {
-    static Node encode(const cslibs_math::statistics::WeightedDistribution<1, T, lambda_ratio_exponent> &rhs)
+    static Node encode(const cslibs_math::statistics::WeightedDistribution<T, 1, lambda_ratio_exponent> &rhs)
     {
         Node n;
         n.push_back(rhs.getSampleCount());
@@ -150,12 +150,12 @@ struct convert<cslibs_math::statistics::WeightedDistribution<1, T, lambda_ratio_
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::WeightedDistribution<1, T, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::WeightedDistribution<T, 1, lambda_ratio_exponent> &rhs)
     {
         if(!n.IsSequence() || n.size() != 5)
             return false;
 
-        rhs = cslibs_math::statistics::WeightedDistribution<1, T, lambda_ratio_exponent>(
+        rhs = cslibs_math::statistics::WeightedDistribution<T, 1, lambda_ratio_exponent>(
                     n[0].as<std::size_t>(), n[1].as<T>(), n[2].as<T>(), n[3].as<T>(), n[4].as<T>());
         return true;
     }
