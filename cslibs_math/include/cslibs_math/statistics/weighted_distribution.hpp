@@ -13,21 +13,18 @@
 
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent = 0>
+template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent = 0>
 class EIGEN_ALIGN16 WeightedDistribution {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t         = Eigen::aligned_allocator<WeightedDistribution<Dim, T, lambda_ratio_exponent>>;
+    using allocator_t         = Eigen::aligned_allocator<WeightedDistribution<T, Dim, lambda_ratio_exponent>>;
 
-    using Ptr                 = std::shared_ptr<WeightedDistribution<Dim, T, lambda_ratio_exponent>> ;
+    using Ptr                 = std::shared_ptr<WeightedDistribution<T, Dim, lambda_ratio_exponent>> ;
     using sample_t            = Eigen::Matrix<T, Dim, 1>;
     using sample_transposed_t = Eigen::Matrix<T, 1, Dim>;
     using covariance_t        = Eigen::Matrix<T, Dim, Dim>;
     using eigen_values_t      = Eigen::Matrix<T, Dim, 1>;
     using eigen_vectors_t     = Eigen::Matrix<T, Dim, Dim>;
-    using allocator_t         = Eigen::aligned_allocator<WeightedDistribution>;
-
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
@@ -376,9 +373,13 @@ private:
 }__attribute__ ((aligned (16)));
 
 template<typename T, std::size_t lambda_ratio_exponent>
-class WeightedDistribution<1, T, lambda_ratio_exponent>
+class WeightedDistribution<T, 1, lambda_ratio_exponent>
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<WeightedDistribution<T, 1, lambda_ratio_exponent>>;
+    using Ptr         = std::shared_ptr<WeightedDistribution<T, 1, lambda_ratio_exponent>> ;
+
     static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
     inline WeightedDistribution() :

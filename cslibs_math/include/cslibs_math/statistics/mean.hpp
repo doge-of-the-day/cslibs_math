@@ -5,15 +5,15 @@
 
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, typename T>
+template<typename T, std::size_t Dim>
 class EIGEN_ALIGN16 Mean
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t = Eigen::aligned_allocator<Mean<T>>;
+    using allocator_t = Eigen::aligned_allocator<Mean<T,Dim>>;
 
-    using Ptr         = std::shared_ptr<Mean<T>>;
-    using sample_t    = Eigen::Matrix<Dim, T, 1>;
+    using Ptr         = std::shared_ptr<Mean<T,Dim>>;
+    using sample_t    = Eigen::Matrix<T, Dim, 1>;
 
     inline Mean() :
         mean_(Eigen::Matrix<T, Dim, 1>::Zero()),
@@ -59,8 +59,7 @@ class EIGEN_ALIGN16 Mean<T, 1>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-    using allocator_t = Eigen::aligned_allocator<Mean>;
+    using allocator_t = Eigen::aligned_allocator<Mean<T,1>>;
 
     Mean() :
         mean_(0.0),

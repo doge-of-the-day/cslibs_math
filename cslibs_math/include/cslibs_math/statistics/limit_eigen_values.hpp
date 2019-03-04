@@ -18,7 +18,7 @@ struct LambdaRatio<T, 0ul>
     constexpr const static T value = 1.0;
 };
 
-template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent>
+template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
 /**
  * @brief The LimitCovariance struct is used to assure, that eigen values are not too small.
  *        This will probihit the distribution to collapse in one dimension, since eigen values
@@ -49,7 +49,7 @@ struct LimitEigenValues
 };
 
 template<typename T, std::size_t Dim>
-struct LimitEigenValues<Dim, T, 0ul>
+struct LimitEigenValues<T, Dim, 0ul>
 {
     using matrix_t        = Eigen::Matrix<T, Dim, Dim>;
     using eigen_values_t  = Eigen::Matrix<T, Dim, 1>;

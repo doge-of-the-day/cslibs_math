@@ -15,7 +15,7 @@ public:
     using allocator_t = Eigen::aligned_allocator<WeightedAngularMean<T>>;
 
     using Ptr         = std::shared_ptr<WeightedAngularMean<T>>;
-    using complex_t   = Eigen::Vector2d;
+    using complex_t   = Eigen::Matrix<T, 2, 1>;
 
     WeightedAngularMean() :
         dirty_(false),

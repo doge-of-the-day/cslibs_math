@@ -126,7 +126,7 @@ inline Matrix<T, point_t::Dimension, point_t::Dimension>
         return Matrix<T, dim_t, dim_t>(std::numeric_limits<T>::infinity());
 
 
-    statistics::Distribution<dim_t, T> distribution;
+    statistics::Distribution<T,dim_t> distribution;
     for(const point_t &point_src : points_src) {
         if(point_src.isNormal()) {
             std::size_t nn = nearestNeighbour(point_src, points_dst);

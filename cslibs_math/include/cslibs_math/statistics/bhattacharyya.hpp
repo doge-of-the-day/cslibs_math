@@ -6,7 +6,7 @@
 
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, typename T>
+template<typename T, std::size_t Dim>
 inline T bhattacharyya(const Eigen::Matrix<T, Dim, Dim>   &s_a,
                        const Eigen::Matrix<T, Dim, 1>     &m_a,
                        const Eigen::Matrix<T, Dim, Dim>   &s_b,
@@ -22,19 +22,19 @@ inline T bhattacharyya(const Eigen::Matrix<T, Dim, Dim>   &s_a,
            0.5 * std::log(det_s / std::sqrt(det_sa * det_sb));
 }
 
-template<std::size_t Dim, typename T, std::size_t lamda_ratio_exponent = 0>
-inline T bhattacharyya(const Distribution<Dim, lamda_ratio_exponent> &a,
-                       const Distribution<Dim, lamda_ratio_exponent> &b)
+template<typename T, std::size_t Dim, std::size_t lamda_ratio_exponent = 0>
+inline T bhattacharyya(const Distribution<T, Dim, lamda_ratio_exponent> &a,
+                       const Distribution<T, Dim, lamda_ratio_exponent> &b)
 {
-    return bhattacharyya<Dim, T>(a.getCovariance(), a.getMean(),
-                                 b.getCovariance(), b.getMean());
+    return bhattacharyya<T, Dim,>(a.getCovariance(), a.getMean(),
+                                  b.getCovariance(), b.getMean());
 }
 
-template<std::size_t Dim, typename T, std::size_t lamda_ratio_exponent = 0>
-inline T bhattacharyya(const WeightedDistribution<Dim, lamda_ratio_exponent> &a,
-                       const WeightedDistribution<Dim, lamda_ratio_exponent> &b)
+template<typename T, std::size_t Dim, std::size_t lamda_ratio_exponent = 0>
+inline T bhattacharyya(const WeightedDistribution<T, Dim, lamda_ratio_exponent> &a,
+                       const WeightedDistribution<T, Dim, lamda_ratio_exponent> &b)
 {
-    return bhattacharyya<Dim, T>(a.getCovariance(), a.getMean(),
+    return bhattacharyya<T, Dim>(a.getCovariance(), a.getMean(),
                                  b.getCovariance(), b.getMean());
 }
 }

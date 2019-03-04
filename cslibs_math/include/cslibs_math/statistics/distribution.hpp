@@ -13,13 +13,13 @@
 
 namespace cslibs_math {
 namespace statistics {
-template<std::size_t Dim, typename T, std::size_t lambda_ratio_exponent = 0>
+template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent = 0>
 class EIGEN_ALIGN16 Distribution {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t         = Eigen::aligned_allocator<Distribution<Dim, T, lambda_ratio_exponent>>;
+    using allocator_t         = Eigen::aligned_allocator<Distribution<T, Dim, lambda_ratio_exponent>>;
 
-    using Ptr                 = std::shared_ptr<Distribution<Dim, T, lambda_ratio_exponent>>;
+    using Ptr                 = std::shared_ptr<Distribution<T, Dim, lambda_ratio_exponent>>;
     using sample_t            = Eigen::Matrix<T, Dim, 1>;
     using sample_transposed_t = Eigen::Matrix<T, 1, Dim>;
     using covariance_t        = Eigen::Matrix<T, Dim, Dim>;
@@ -359,7 +359,7 @@ private:
             }
         }
 
-        LimitEigenValues<Dim, T, lambda_ratio_exponent>::apply(covariance_);
+        LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
         Eigen::EigenSolver<covariance_t> solver;
         solver.compute(covariance_);
@@ -373,12 +373,12 @@ private:
 };
 
 template<typename T, std::size_t lambda_ratio_exponent>
-class Distribution<1, T, lambda_ratio_exponent>
+class Distribution<T, 1, lambda_ratio_exponent>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t = Eigen::aligned_allocator<Distribution<1, T, lambda_ratio_exponent>>;
-    using Ptr         = std::shared_ptr<Distribution<1, T, lambda_ratio_exponent>>;
+    using allocator_t = Eigen::aligned_allocator<Distribution<T, 1, lambda_ratio_exponent>>;
+    using Ptr         = std::shared_ptr<Distribution<T, 1, lambda_ratio_exponent>>;
 
     static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
@@ -522,8 +522,8 @@ private:
 }
 }
 
-template<std::size_t D, typename T, std::size_t L>
-std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<D,T,L> &d)
+template<typename T, std::size_t D, std::size_t L>
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<T,D,L> &d)
 {
     out << d.getMean() << "\n";
     out << d.getCovariance() << "\n";
@@ -532,7 +532,7 @@ std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Di
 }
 
 template<typename T, std::size_t L>
-std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<1,T,L> &d)
+std::ostream & operator << (std::ostream &out, const cslibs_math::statistics::Distribution<T,1,L> &d)
 {
     out << d.getMean() << "\n";
     out << d.getVariance() << "\n";
