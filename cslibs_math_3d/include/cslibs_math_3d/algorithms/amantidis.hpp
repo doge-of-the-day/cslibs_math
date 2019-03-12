@@ -79,6 +79,11 @@ public:
         return index_[2];
     }
 
+    inline index_t operator()() const
+    {
+        return index_;
+    }
+
     inline Amantidis& operator++()
     {
         std::size_t dim =  max_[0] < max_[1] ?

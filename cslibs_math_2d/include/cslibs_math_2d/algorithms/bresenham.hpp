@@ -67,6 +67,11 @@ public:
         return (steep_ ? index_[0] : index_[1]);
     }
 
+    inline index_t operator()() const
+    {
+        return {{x(), y()}};
+    }
+
     inline Bresenham& operator++()
     {
         return done() ? *this : iterate();

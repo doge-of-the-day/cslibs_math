@@ -75,7 +75,6 @@ public:
         static_assert(Dimension == sizeof...(args_t), "Dimension of the parameters must match the geometric dimension!");
     }
 
-
     inline Vector& operator = (const vector_t &data)
     {
         data_ = data;

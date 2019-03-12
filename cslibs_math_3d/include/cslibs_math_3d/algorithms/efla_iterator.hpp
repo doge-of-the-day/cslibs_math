@@ -82,6 +82,11 @@ public:
         return index_[2];
     }
 
+    inline index_t operator()() const
+    {
+        return index_;
+    }
+
     inline EFLAIterator& operator++()
     {
         return done() ? *this : (this->*iterate_)();

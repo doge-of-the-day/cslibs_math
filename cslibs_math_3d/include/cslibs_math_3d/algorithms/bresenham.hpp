@@ -88,8 +88,12 @@ public:
     inline int z() const
     {
         return index_[2];
-    }
+    }    
 
+    inline index_t operator()() const
+    {
+        return index_;
+    }
 
     inline Bresenham& operator++()
     {

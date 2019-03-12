@@ -16,6 +16,16 @@ std::array<_Tp, _Nm> operator - (const std::array<_Tp, _Nm> &__one,
 }
 
 template<typename _Tp, std::size_t _Nm>
+std::array<_Tp, _Nm> operator - (const std::array<_Tp, _Nm> &__one,
+                                 const _Tp s)
+{
+    std::array<_Tp, _Nm> arr;
+    for(std::size_t i = 0 ; i < _Nm ; ++i)
+        arr[i] = __one[i] - s;
+    return arr;
+}
+
+template<typename _Tp, std::size_t _Nm>
 std::array<_Tp, _Nm> operator + (const std::array<_Tp, _Nm> &__one,
                                  const std::array<_Tp, _Nm> &__two)
 {
