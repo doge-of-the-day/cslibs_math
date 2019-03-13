@@ -6,7 +6,7 @@
 namespace cslibs_math_2d {
 template <typename T>
 using Covariance2 = cslibs_math::linear::Matrix<T, 3, 3>;
-using Coveriance2d = Covariance2<double>;
+using Covariance2d = Covariance2<double>;
 using Covariance2f = Covariance2<float>;
 }
 
