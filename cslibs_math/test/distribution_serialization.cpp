@@ -10,7 +10,7 @@ const std::size_t MIN_NUM_SAMPLES = 100;
 const std::size_t MAX_NUM_SAMPLES = 1000;
 
 template <std::size_t Dim>
-using rng_t = typename cslibs_math::random::Uniform<Dim>;
+using rng_t = typename cslibs_math::random::Uniform<double,Dim>;
 
 template <std::size_t minDim, std::size_t Dim>
 struct Loop {
@@ -44,7 +44,7 @@ struct TestDimension {
         rng_t<1>   rng_num_samples(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
         rng_t<Dim> rng(min_sample, max_sample);
 
-        using distribution_t = cslibs_math::statistics::Distribution<Dim, 3>;
+        using distribution_t = cslibs_math::statistics::Distribution<double,Dim, 3>;
         for (std::size_t i = 0 ; i < REPETITIONS ; ++ i) {
              distribution_t d;
 
@@ -78,7 +78,7 @@ struct TestDimension<1> {
         rng_t<1> rng_num_samples(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
         rng_t<1> rng(-100.0, 100.0);
 
-        using distribution_t = cslibs_math::statistics::Distribution<1, 3>;
+        using distribution_t = cslibs_math::statistics::Distribution<double,1, 3>;
         for (std::size_t i = 0 ; i < REPETITIONS ; ++ i) {
              distribution_t d;
 

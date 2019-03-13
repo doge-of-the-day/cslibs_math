@@ -9,7 +9,7 @@
 #include <gtest/gtest.h>
 #include <tf/tf.h>
 
-using rng_t = cslibs_math::random::Uniform<1>;
+using rng_t = cslibs_math::random::Uniform<double,1>;
 
 TEST(Test_cslibs_math_3d, testTransformInitEye)
 {
@@ -119,7 +119,7 @@ TEST(Test_cslibs_math_3d, testTransformInitRotation)
                 cslibs_math::common::eq(std::abs(yaw) + std::abs(t_1.yaw()), M_PI, 1e-6));
 
     cslibs_math_3d::Transform3d t_2 = cslibs_math_3d::Transform3d(cslibs_math_3d::Point3d(),
-                                                                  cslibs_math_3d::Quaternion(roll, pitch, yaw));
+                                                                  cslibs_math_3d::Quaterniond(roll, pitch, yaw));
     EXPECT_EQ(t_2.tx(),  0.0);
     EXPECT_EQ(t_2.ty(),  0.0);
     EXPECT_EQ(t_2.tz(),  0.0);
@@ -157,7 +157,7 @@ TEST(Test_cslibs_math_3d, testTransformConstructors)
     EXPECT_EQ(t_1.tz(),  z);
 
     cslibs_math_3d::Transform3d t_2 = cslibs_math_3d::Transform3d(cslibs_math_3d::Point3d(x, y, z),
-                                                                  cslibs_math_3d::Quaternion(roll, pitch, yaw));
+                                                                  cslibs_math_3d::Quaterniond(roll, pitch, yaw));
     EXPECT_EQ(t_2.tx(),  x);
     EXPECT_EQ(t_2.ty(),  y);
     EXPECT_EQ(t_2.tz(),  z);
@@ -306,7 +306,7 @@ TEST(Test_cslibs_math_3d, testTransformRotation)
     const double yaw_0   = cslibs_math::common::angle::normalize(rng.get());
 
     cslibs_math_3d::Transform3d t_0(cslibs_math_3d::Vector3d(0.0),
-                                    cslibs_math_3d::Quaternion(roll_0, pitch_0, yaw_0));
+                                    cslibs_math_3d::Quaterniond(roll_0, pitch_0, yaw_0));
     EXPECT_TRUE(cslibs_math::common::eq(roll_0, t_0.roll(), 1e-6) ||
                 cslibs_math::common::eq(std::abs(roll_0) + std::abs(t_0.roll()), M_PI, 1e-6));
     EXPECT_TRUE(cslibs_math::common::eq(pitch_0, t_0.pitch(), 1e-6) ||
@@ -338,7 +338,7 @@ TEST(Test_cslibs_math_3d, testTransformRotation)
     const double yaw_1   = cslibs_math::common::angle::normalize(rng.get());
 
     cslibs_math_3d::Transform3d t_1(cslibs_math_3d::Vector3d(0.0),
-                                    cslibs_math_3d::Quaternion(roll_1, pitch_1, yaw_1));
+                                    cslibs_math_3d::Quaterniond(roll_1, pitch_1, yaw_1));
     tf::Transform t_1_tf(tf::createQuaternionFromRPY(roll_1, pitch_1, yaw_1),
                          tf::Vector3(0.0,0.0,0.0));
 
@@ -382,7 +382,7 @@ TEST(Test_cslibs_math_3d, testTransformFull)
     const double yaw_0   = cslibs_math::common::angle::normalize(rng.get());
 
     cslibs_math_3d::Transform3d t_0(cslibs_math_3d::Vector3d(x_0, y_0, z_0),
-                                    cslibs_math_3d::Quaternion(roll_0, pitch_0, yaw_0));
+                                    cslibs_math_3d::Quaterniond(roll_0, pitch_0, yaw_0));
     tf::Transform t_0_tf(tf::createQuaternionFromRPY(roll_0, pitch_0, yaw_0),
                          tf::Vector3(x_0, y_0, z_0));
 
@@ -417,7 +417,7 @@ TEST(Test_cslibs_math_3d, testTransformFull)
     const double yaw_1   = cslibs_math::common::angle::normalize(rng.get());
 
     cslibs_math_3d::Transform3d t_1(cslibs_math_3d::Vector3d(x_1, y_1, z_1),
-                                    cslibs_math_3d::Quaternion(roll_1, pitch_1, yaw_1));
+                                    cslibs_math_3d::Quaterniond(roll_1, pitch_1, yaw_1));
     tf::Transform t_1_tf(tf::createQuaternionFromRPY(roll_1, pitch_1, yaw_1),
                          tf::Vector3(x_1, y_1, z_1));
 
@@ -483,9 +483,9 @@ TEST(Test_cslibs_math_3d, testTransformInterpolation)
     tf::Transform t_1_tf(tf::createQuaternionFromRPY(roll_1, pitch_1, yaw_1),
                        tf::Vector3(x_1, y_1, z_1));
     cslibs_math_3d::Transform3d t_0(cslibs_math_3d::Vector3d(x_0, y_0, z_0),
-                                    cslibs_math_3d::Quaternion(roll_0, pitch_0, yaw_0));
+                                    cslibs_math_3d::Quaterniond(roll_0, pitch_0, yaw_0));
     cslibs_math_3d::Transform3d t_1(cslibs_math_3d::Vector3d(x_1, y_1, z_1),
-                                    cslibs_math_3d::Quaternion(roll_1, pitch_1, yaw_1));
+                                    cslibs_math_3d::Quaterniond(roll_1, pitch_1, yaw_1));
 
 
     double t_0_tf_roll, t_0_tf_pitch, t_0_tf_yaw;
@@ -550,7 +550,7 @@ TEST(Test_cslibs_math_3d, testTransformInverse)
     tf::Transform t_0_tf(tf::createQuaternionFromRPY(roll_0, pitch_0, yaw_0),
                        tf::Vector3(x_0, y_0, z_0));
     cslibs_math_3d::Transform3d t_0(cslibs_math_3d::Vector3d(x_0, y_0, z_0),
-                                    cslibs_math_3d::Quaternion(roll_0, pitch_0, yaw_0));
+                                    cslibs_math_3d::Quaterniond(roll_0, pitch_0, yaw_0));
 
     cslibs_math_3d::Transform3d t_r = t_0.inverse();
     tf::Transform t_r_tf = t_0_tf.inverse();

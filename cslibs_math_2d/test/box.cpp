@@ -4,7 +4,7 @@
 #include <cslibs_math_2d/linear/transform.hpp>
 #include <cslibs_math/random/random.hpp>
 
-using rng_t = cslibs_math::random::Uniform<1>;
+using rng_t = cslibs_math::random::Uniform<double,1>;
 
 TEST( Test_cslibs_math_2d, testBoxConstructors)
 {

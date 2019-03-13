@@ -14,7 +14,7 @@ namespace cs = cslibs_math::statistics;
 
 TEST(TestMuseMCL, testDistributionInsertion)
 {
-  cs::Distribution<2> distribution;
+  cs::Distribution<double,2> distribution;
   EXPECT_EQ(0, distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
@@ -44,7 +44,7 @@ TEST(TestMuseMCL, testDistributionMean)
 {
   const double tolerance = 1e-3;
 
-  cs::Distribution<2> distribution;
+  cs::Distribution<double,2> distribution;
   Eigen::Vector2d mean;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution.add(test_distribution_200.data[i]);
@@ -78,7 +78,7 @@ TEST(TestMuseMCL, testDistributionCovariance)
 {
   const double tolerance = 1e-3;
 
-  cs::Distribution<2> distribution;
+  cs::Distribution<double,2> distribution;
   Eigen::Matrix2d cov;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution.add(test_distribution_200.data[i]);
@@ -118,7 +118,7 @@ TEST(TestMuseMCL, testDistributionEigenValues)
 {
   const double tolerance = 1e-3;
 
-  cs::Distribution<2> distribution;
+  cs::Distribution<double,2> distribution;
   Eigen::Vector2d eigen_values;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution.add(test_distribution_200.data[i]);
@@ -151,8 +151,8 @@ TEST(TestMuseMCL, testDistributionEigenValues)
 TEST(TestMuseMCL, testDistributionEigenVectors)
 {
   auto equals = [] (const Eigen::Vector2d &a,
-      const Eigen::Vector2d &b,
-      const double eps) {
+                    const Eigen::Vector2d &b,
+                    const double eps) {
 
     Eigen::Matrix2d invert_direction = Eigen::Matrix2d::Identity() * -1;
     Eigen::Vector2d diff_a = a - b;
@@ -164,7 +164,7 @@ TEST(TestMuseMCL, testDistributionEigenVectors)
 
   const double tolerance = 1e-3;
 
-  cs::Distribution<2> distribution;
+  cs::Distribution<double,2> distribution;
   Eigen::Matrix2d eigen_vectors;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution.add(test_distribution_200.data[i]);
@@ -227,8 +227,8 @@ TEST(TestMuseMCL, testDistributionEigenVectors)
 
 TEST(TestMuseMCL, testDistributionCopy)
 {
-  cs::Distribution<2> distribution_a;
-  cs::Distribution<2> distribution_b;
+  cs::Distribution<double,2> distribution_a;
+  cs::Distribution<double,2> distribution_b;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution_a.add(test_distribution_200.data[i]);
   }
@@ -250,8 +250,8 @@ TEST(TestMuseMCL, testDistributionAddition)
 {
   const double tolerance = 1e-3;
 
-  cs::Distribution<2> distribution_a;
-  cs::Distribution<2> distribution_b;
+  cs::Distribution<double,2> distribution_a;
+  cs::Distribution<double,2> distribution_b;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution_a.add(test_distribution_200.data[i]);
   }
@@ -273,8 +273,8 @@ TEST(TestMuseMCL, testDistributionAddition)
   EXPECT_NEAR((distribution_a.getEigenVectors() - distribution_b.getEigenVectors()).norm(), 0.0, tolerance);
 
   auto test = [tolerance](const muse_mcl::TestDistribution<2> &t) {
-    cs::Distribution<2> wa;
-    cs::Distribution<2> wb;
+    cs::Distribution<double,2> wa;
+    cs::Distribution<double,2> wb;
 
     const std::size_t middle = t.data.size() / 2 + 1;
     for(std::size_t i = 0 ; i < middle ; ++i) {
@@ -305,7 +305,7 @@ TEST(TestMuseMCL, testDistributionAddition)
 
 TEST(TestMuseMCL, testWeightedDistribution)
 {
-  cs::WeightedDistribution<2> wd;
+  cs::WeightedDistribution<double,2> wd;
   for(std::size_t i = 0 ; i < 10 ; ++i) {
     wd.add(Eigen::Vector2d(i,i), 0.5);
   }
@@ -330,7 +330,7 @@ TEST(TestMuseMCL, testWeightedDistribution)
   EXPECT_NEAR(3.5, mean(0), 1e-6);
   EXPECT_NEAR(3.5, mean(1), 1e-6);
 
-  cs::WeightedDistribution<2> wdc = wd;
+  cs::WeightedDistribution<double,2> wdc = wd;
   wdc += wd;
   mean = wdc.getMean();
   EXPECT_NEAR(3.5, mean(0), 1e-6);
@@ -352,10 +352,10 @@ TEST(TestMuseMCL, testWeightedDistributionAddition)
   const double tolerance = 1e-3;
 
   auto test_addition = [tolerance](const muse_mcl::TestDistribution<2> &t) {
-    cs::WeightedDistribution<2> wa;
-    cs::WeightedDistribution<2> wb;
-    cs::WeightedDistribution<2> wc;
-    cs::WeightedDistribution<2> wd;
+    cs::WeightedDistribution<double,2> wa;
+    cs::WeightedDistribution<double,2> wb;
+    cs::WeightedDistribution<double,2> wc;
+    cs::WeightedDistribution<double,2> wd;
 
     const std::size_t middle = t.data.size() / 2 + 1;
     for(std::size_t i = 0 ; i < middle ; ++i) {
@@ -397,7 +397,7 @@ TEST(TestMuseMCL, testWeightedDistributionAddition)
   };
 
   auto test_scale = [tolerance](const muse_mcl::TestDistribution<2> &t) {
-    cs::WeightedDistribution<2> w;
+    cs::WeightedDistribution<double,2> w;
 
     const double weight = 1.0 / (t.data.size() + 1.0);
     for(std::size_t i = 0 ; i < t.data.size() ; ++i) {

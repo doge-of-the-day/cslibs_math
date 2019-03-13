@@ -48,7 +48,7 @@ template <typename T>
 inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
                  const interval_t &linear_interval,
                  const interval_t &angular_interval,
-                 typename cslibs_math_2d::PolarPointlcoud2<T>::Ptr &dst)
+                 typename cslibs_math_2d::PolarPointcloud2<T>::Ptr &dst)
 {
     const float range_min = std::max(linear_interval[0],  src->range_min);
     const float range_max = std::min(linear_interval[1],  src->range_max);
@@ -65,13 +65,13 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
     };
 
 
-    dst.reset(new cslibs_math_2d::PolarPointlcoud2<T>);
+    dst.reset(new cslibs_math_2d::PolarPointcloud2<T>);
     const float angle_incr = src->angle_increment;
     float angle = angle_min;
     for(const float range : src->ranges) {
         if(in_linear_interval(range) && in_angular_interval(angle)) {
             const cslibs_math_2d::PolarPoint2<T> p(static_cast<T>(angle),
-                                                    static_cast<T>(range));
+                                                   static_cast<T>(range));
             dst->insert(p);
         } else {
             dst->insertInvalid();
@@ -82,7 +82,7 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
 
 template <typename T>
 inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
-                 typename cslibs_math_2d::PolarPointlcoud2<T>::Ptr &dst)
+                 typename cslibs_math_2d::PolarPointcloud2<T>::Ptr &dst)
 {
     from(src,
          {{src->range_min, src->range_max}},
@@ -144,7 +144,7 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
                  const std::string   &fixed_frame,
                  const ros::Duration &tf_timeout,
                  cslibs_math_ros::tf::TFListener &tfl,
-                 typename cslibs_math_2d::PolarPointlcoud2<T>::Ptr &dst)
+                 typename cslibs_math_2d::PolarPointcloud2<T>::Ptr &dst)
 {
     const float range_min  = std::max(src->range_min, linear_interval[0]);
     const float range_max  = std::min(src->range_max, linear_interval[1]);
@@ -155,7 +155,7 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
     if(src->ranges.size() == 0ul)
         return;
 
-    dst.reset(new cslibs_math_2d::PolarPointlcoud2<T>);
+    dst.reset(new cslibs_math_2d::PolarPointcloud2<T>);
 
     auto in_linear_interval = [range_min, range_max](const float range)
     {
@@ -205,7 +205,7 @@ inline void from(const ::sensor_msgs::LaserScan::ConstPtr &src,
                  const std::string &fixed_frame,
                  const ros::Duration &tf_timeout,
                  cslibs_math_ros::tf::TFListener &tfl,
-                 typename cslibs_math_2d::PolarPointlcoud2<T>::Ptr &dst)
+                 typename cslibs_math_2d::PolarPointcloud2<T>::Ptr &dst)
 {
     from(src,
          {{src->range_min, src->range_max}},

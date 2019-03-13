@@ -181,6 +181,9 @@ private:
     point_t min_;
     point_t max_;
 };
+
+using Box3d = Box3<double>;
+using Box3f = Box3<float>;
 }
 
 template <typename T>

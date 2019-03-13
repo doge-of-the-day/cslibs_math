@@ -9,7 +9,7 @@
 
 #include <tf/tf.h>
 
-using rng_t = cslibs_math::random::Uniform<1>;
+using rng_t = cslibs_math::random::Uniform<double,1>;
 
 const std::size_t REPETITIONS = 10000;
 

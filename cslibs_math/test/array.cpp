@@ -6,7 +6,7 @@
 #include <cslibs_math/linear/vector.hpp>
 #include <cslibs_math/linear/matrix.hpp>
 
-using rng_t = cslibs_math::random::Uniform<1>;
+using rng_t = cslibs_math::random::Uniform<double,1>;
 const std::size_t REPETITIONS = 10000;
 
 #include <eigen3/Eigen/Core>
@@ -55,9 +55,9 @@ TEST(Test_cslibs_math, testArrayPlus)
     rng_t rng(-100.0, 100.0);
     for(std::size_t i = 0 ; i < REPETITIONS ; ++i) {
         std::array<int, 2> i_2_0 = {{static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())}};
+                                     static_cast<int>(rng.get())}};
         std::array<int, 2> i_2_1 = {{static_cast<int>(rng.get()),
-                                    static_cast<int>(rng.get())}};
+                                     static_cast<int>(rng.get())}};
         std::array<int, 2> i_2_2 = i_2_1 + i_2_0;
         EXPECT_EQ(i_2_2[0], i_2_1[0] + i_2_0[0]);
         EXPECT_EQ(i_2_2[1], i_2_1[1] + i_2_0[1]);

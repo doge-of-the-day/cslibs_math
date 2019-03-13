@@ -12,7 +12,7 @@
 
 const static std::size_t ITERATIONS = 100000;
 
-using rng_t = cslibs_math::random::Uniform<1>;
+using rng_t = cslibs_math::random::Uniform<double,1>;
 
 TEST(Test_cslibs_math_2d, testTransformInitEye)
 {

@@ -17,7 +17,7 @@ const static std::size_t ITERATIONS = 1000000;
 
 TEST(Test_cslibs_math_3d, testDefaultConstructor)
 {
-    const cslibs_math_3d::Quaternion q;
+    const cslibs_math_3d::Quaterniond q;
     const tf::Quaternion tf_q = tf::createIdentityQuaternion();
     EXPECT_NEAR(tf_q.w(), q.w(), 1e-6);
     EXPECT_NEAR(tf_q.x(), q.x(), 1e-6);
@@ -27,10 +27,10 @@ TEST(Test_cslibs_math_3d, testDefaultConstructor)
 
 TEST(Test_cslibs_math_3d, testYawConstructor)
 {
-    cslibs_math::random::Uniform<1> rng(-M_PI, M_PI);
+    cslibs_math::random::Uniform<double,1> rng(-M_PI, M_PI);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double yaw = rng.get();
-        const cslibs_math_3d::Quaternion q(yaw);
+        const cslibs_math_3d::Quaterniond q(yaw);
         const tf::Quaternion tf_q = tf::createQuaternionFromYaw(yaw);
 
         EXPECT_NEAR(tf_q.w(), q.w(), 1e-6);
@@ -43,12 +43,12 @@ TEST(Test_cslibs_math_3d, testYawConstructor)
         EXPECT_NEAR(q.pitch(), 0.0, 1e-6);
     }
 
-    cslibs_math_3d::Quaternion q(M_PI);
+    cslibs_math_3d::Quaterniond q(M_PI);
     cslibs_math::utility::tiny_time::duration_t dur;
     cslibs_math::utility::tiny_time::duration_t dur_tf;
     cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        q = cslibs_math_3d::Quaternion(M_PI);
+        q = cslibs_math_3d::Quaterniond(M_PI);
     }
     tf::Quaternion tf_q;
     dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
@@ -64,12 +64,12 @@ TEST(Test_cslibs_math_3d, testYawConstructor)
 
 TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
 {
-    cslibs_math::random::Uniform<1> rng(-M_PI, M_PI);
+    cslibs_math::random::Uniform<double,1> rng(-M_PI, M_PI);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double roll  = rng.get();
         const double pitch = rng.get();
         const double yaw   = rng.get();
-        const cslibs_math_3d::Quaternion q(roll, pitch, yaw);
+        const cslibs_math_3d::Quaterniond q(roll, pitch, yaw);
         const tf::Quaternion tf_q = tf::createQuaternionFromRPY(roll, pitch, yaw);
 
         EXPECT_NEAR(tf_q.w(), q.w(), 1e-6);
@@ -85,12 +85,12 @@ TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
                     cslibs_math::common::eq(std::abs(yaw) + std::abs(q.yaw()), M_PI, 1e-6));
     }
 
-    cslibs_math_3d::Quaternion q(M_PI, 0.0, 0.0);
+    cslibs_math_3d::Quaterniond q(M_PI, 0.0, 0.0);
     cslibs_math::utility::tiny_time::duration_t dur;
     cslibs_math::utility::tiny_time::duration_t dur_tf;
     cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        q = cslibs_math_3d::Quaternion(M_PI, 0.0, 0.0);
+        q = cslibs_math_3d::Quaterniond(M_PI, 0.0, 0.0);
     }
     dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
     tf::Quaternion tf_q(tf::createQuaternionFromRPY(M_PI, 0.0, 0.0));
@@ -106,13 +106,13 @@ TEST(Test_cslibs_math_3d, testRollPitchYawConstructor)
 
 TEST(Test_cslibs_math_3d, testCoefficientConstructor)
 {
-    cslibs_math::random::Uniform<1> rng(-1.0, 1.0);
+    cslibs_math::random::Uniform<double,1> rng(-1.0, 1.0);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double x = rng.get();
         const double y = rng.get();
         const double z = rng.get();
         const double w = rng.get();
-        const cslibs_math_3d::Quaternion q(x,y,z,w);
+        const cslibs_math_3d::Quaterniond q(x,y,z,w);
         const tf::Quaternion tf_q(x,y,z,w);
         EXPECT_NEAR(tf_q.w(), q.w(), 1e-6);
         EXPECT_NEAR(tf_q.x(), q.x(), 1e-6);
@@ -123,9 +123,9 @@ TEST(Test_cslibs_math_3d, testCoefficientConstructor)
     cslibs_math::utility::tiny_time::duration_t dur;
     cslibs_math::utility::tiny_time::duration_t dur_tf;
     cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
-    cslibs_math_3d::Quaternion q(0.0,0.0,0.0,1.0);
+    cslibs_math_3d::Quaterniond q(0.0,0.0,0.0,1.0);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        q = cslibs_math_3d::Quaternion(0.0,0.0,0.0,1.0);
+        q = cslibs_math_3d::Quaterniond(0.0,0.0,0.0,1.0);
     }
     dur = cslibs_math::utility::tiny_time::clock_t::now() - start;
     tf::Quaternion tf_q(0.0,0.0,0.0,1.0);
@@ -142,21 +142,21 @@ TEST(Test_cslibs_math_3d, testCoefficientConstructor)
 
 TEST(Test_cslibs_math_3d, testCopyMoveConstructor)
 {
-    cslibs_math::random::Uniform<1> rng(-1.0, 1.0);
+    cslibs_math::random::Uniform<double,1> rng(-1.0, 1.0);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double x = rng.get();
         const double y = rng.get();
         const double z = rng.get();
         const double w = rng.get();
-        const cslibs_math_3d::Quaternion q0(x,y,z,w);
+        const cslibs_math_3d::Quaterniond q0(x,y,z,w);
 
-        const cslibs_math_3d::Quaternion q1(q0);
+        const cslibs_math_3d::Quaterniond q1(q0);
         EXPECT_NEAR(q0.w(), q1.w(), 1e-6);
         EXPECT_NEAR(q0.x(), q1.x(), 1e-6);
         EXPECT_NEAR(q0.y(), q1.y(), 1e-6);
         EXPECT_NEAR(q0.z(), q1.z(), 1e-6);
 
-        const cslibs_math_3d::Quaternion q2(std::move(q1));
+        const cslibs_math_3d::Quaterniond q2(std::move(q1));
         EXPECT_NEAR(q0.w(), q2.w(), 1e-6);
         EXPECT_NEAR(q0.x(), q2.x(), 1e-6);
         EXPECT_NEAR(q0.y(), q2.y(), 1e-6);
@@ -166,14 +166,14 @@ TEST(Test_cslibs_math_3d, testCopyMoveConstructor)
     cslibs_math::utility::tiny_time::duration_t dur_copy;
     cslibs_math::utility::tiny_time::duration_t dur_move;
     cslibs_math::utility::tiny_time::time_t     start = cslibs_math::utility::tiny_time::clock_t::now();
-    const cslibs_math_3d::Quaternion q0(0.0,0.0,0.0,1.0);
+    const cslibs_math_3d::Quaterniond q0(0.0,0.0,0.0,1.0);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const cslibs_math_3d::Quaternion q1(q0);
+        const cslibs_math_3d::Quaterniond q1(q0);
     }
     dur_copy = cslibs_math::utility::tiny_time::clock_t::now() - start;
     start = cslibs_math::utility::tiny_time::clock_t::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        const cslibs_math_3d::Quaternion q1(std::move(q0));
+        const cslibs_math_3d::Quaterniond q1(std::move(q0));
     }
     dur_move = cslibs_math::utility::tiny_time::clock_t::now() - start;
 
@@ -184,21 +184,21 @@ TEST(Test_cslibs_math_3d, testCopyMoveConstructor)
 
 TEST(Test_cslibs_math_3d, testCopyMoveAssignment)
 {
-    cslibs_math::random::Uniform<1> rng(-1.0, 1.0);
+    cslibs_math::random::Uniform<double,1> rng(-1.0, 1.0);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double x = rng.get();
         const double y = rng.get();
         const double z = rng.get();
         const double w = rng.get();
-        const cslibs_math_3d::Quaternion q0(x,y,z,w);
+        const cslibs_math_3d::Quaterniond q0(x,y,z,w);
 
-        cslibs_math_3d::Quaternion q1;
+        cslibs_math_3d::Quaterniond q1;
         q1 = q0;
         EXPECT_NEAR(q0.w(), q1.w(), 1e-6);
         EXPECT_NEAR(q0.x(), q1.x(), 1e-6);
         EXPECT_NEAR(q0.y(), q1.y(), 1e-6);
         EXPECT_NEAR(q0.z(), q1.z(), 1e-6);
-        cslibs_math_3d::Quaternion q2;
+        cslibs_math_3d::Quaterniond q2;
         q2 = std::move(q1);
         EXPECT_NEAR(q0.w(), q2.w(), 1e-6);
         EXPECT_NEAR(q0.x(), q2.x(), 1e-6);
@@ -209,22 +209,22 @@ TEST(Test_cslibs_math_3d, testCopyMoveAssignment)
 
 TEST(Test_cslibs_math_3d, testOperatorPlus)
 {
-    cslibs_math::random::Uniform<1> rng(-M_PI, M_PI);
+    cslibs_math::random::Uniform<double,1> rng(-M_PI, M_PI);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double r0 = rng.get();
         const double p0 = rng.get();
         const double y0 = rng.get();
-        const cslibs_math_3d::Quaternion q0(r0, p0, y0);
+        const cslibs_math_3d::Quaterniond q0(r0, p0, y0);
         const tf::Quaternion tf_q0 = tf::createQuaternionFromRPY(r0, p0, y0);
         const double r1 = rng.get();
         const double p1 = rng.get();
         const double y1 = rng.get();
-        const cslibs_math_3d::Quaternion q1(r1, p1, y1);
+        const cslibs_math_3d::Quaterniond q1(r1, p1, y1);
         const tf::Quaternion tf_q1 = tf::createQuaternionFromRPY(r1, p1, y1);
 
-        const cslibs_math_3d::Quaternion q2 = q1 + q0;
+        const cslibs_math_3d::Quaterniond q2 = q1 + q0;
         const tf::Quaternion tf_q2 = tf_q1 + tf_q0;
-        cslibs_math_3d::Quaternion q3 = q1;
+        cslibs_math_3d::Quaterniond q3 = q1;
         q3 += q0;
         EXPECT_NEAR(tf_q2.w(), q2.w(), 1e-6);
         EXPECT_NEAR(tf_q2.x(), q2.x(), 1e-6);
@@ -236,7 +236,7 @@ TEST(Test_cslibs_math_3d, testOperatorPlus)
         EXPECT_NEAR(tf_q2.z(), q3.z(), 1e-6);
     }
 
-    cslibs_math_3d::Quaternion q(0.0,0.0,0.0,1.0);
+    cslibs_math_3d::Quaterniond q(0.0,0.0,0.0,1.0);
     cslibs_math::utility::tiny_time::duration_t dur;
     cslibs_math::utility::tiny_time::duration_t dur_tf;
     cslibs_math::utility::tiny_time::duration_t dur_assign;
@@ -274,22 +274,22 @@ TEST(Test_cslibs_math_3d, testOperatorPlus)
 
 TEST(Test_cslibs_math_3d, testOperatorMinus)
 {
-    cslibs_math::random::Uniform<1> rng(-M_PI, M_PI);
+    cslibs_math::random::Uniform<double,1> rng(-M_PI, M_PI);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double r0 = rng.get();
         const double p0 = rng.get();
         const double y0 = rng.get();
-        const cslibs_math_3d::Quaternion q0(r0, p0, y0);
+        const cslibs_math_3d::Quaterniond q0(r0, p0, y0);
         const tf::Quaternion tf_q0 = tf::createQuaternionFromRPY(r0, p0, y0);
         const double r1 = rng.get();
         const double p1 = rng.get();
         const double y1 = rng.get();
-        const cslibs_math_3d::Quaternion q1(r1, p1, y1);
+        const cslibs_math_3d::Quaterniond q1(r1, p1, y1);
         const tf::Quaternion tf_q1 = tf::createQuaternionFromRPY(r1, p1, y1);
 
-        const cslibs_math_3d::Quaternion q2 = q1 - q0;
+        const cslibs_math_3d::Quaterniond q2 = q1 - q0;
         const tf::Quaternion tf_q2 = tf_q1 - tf_q0;
-        cslibs_math_3d::Quaternion q3 = q1;
+        cslibs_math_3d::Quaterniond q3 = q1;
         q3 -= q0;
         EXPECT_NEAR(tf_q2.w(), q2.w(), 1e-6);
         EXPECT_NEAR(tf_q2.x(), q2.x(), 1e-6);
@@ -304,21 +304,21 @@ TEST(Test_cslibs_math_3d, testOperatorMinus)
 
 TEST(Test_cslibs_math_3d, testOperatorDot)
 {
-    cslibs_math::random::Uniform<1> rng(-M_PI, M_PI);
+    cslibs_math::random::Uniform<double,1> rng(-M_PI, M_PI);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double r0 = rng.get();
         const double p0 = rng.get();
         const double y0 = rng.get();
-        const cslibs_math_3d::Quaternion q0(r0, p0, y0);
+        const cslibs_math_3d::Quaterniond q0(r0, p0, y0);
         const tf::Quaternion tf_q0 = tf::createQuaternionFromRPY(r0, p0, y0);
         const double r1 = rng.get();
         const double p1 = rng.get();
         const double y1 = rng.get();
-        const cslibs_math_3d::Quaternion q1(r1, p1, y1);
+        const cslibs_math_3d::Quaterniond q1(r1, p1, y1);
         const tf::Quaternion tf_q1 = tf::createQuaternionFromRPY(r1, p1, y1);
-        const cslibs_math_3d::Quaternion q2 = q1 * q0;
+        const cslibs_math_3d::Quaterniond q2 = q1 * q0;
         const tf::Quaternion tf_q2 = tf_q1 * tf_q0;
-        cslibs_math_3d::Quaternion q3 = q1;
+        cslibs_math_3d::Quaterniond q3 = q1;
         q3 *= q0;
         EXPECT_NEAR(tf_q2.w(), q2.w(), 1e-6);
         EXPECT_NEAR(tf_q2.x(), q2.x(), 1e-6);
@@ -342,14 +342,14 @@ TEST(Test_cslibs_math_3d, testOperatorDot)
 
 TEST(Test_cslibs_math_3d, testNormalize)
 {
-    cslibs_math::random::Uniform<1> rng(-1.0, 1.0);
+    cslibs_math::random::Uniform<double,1> rng(-1.0, 1.0);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         const double x = rng.get();
         const double y = rng.get();
         const double z = rng.get();
         const double w = rng.get();
-        cslibs_math_3d::Quaternion q0(x,y,z,w);
-        const cslibs_math_3d::Quaternion q1 = q0.normalized();
+        cslibs_math_3d::Quaterniond q0(x,y,z,w);
+        const cslibs_math_3d::Quaterniond q1 = q0.normalized();
         q0.normalize();
         EXPECT_NEAR(q0.norm(),  1.0, 1e-6);
         EXPECT_NEAR(q1.norm(),  1.0, 1e-6);
