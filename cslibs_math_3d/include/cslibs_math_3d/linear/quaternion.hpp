@@ -13,7 +13,7 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     using data_t = T[4];
 
-    static Quaternion fromAngleAxis(const Vector3d<T>& angle_axis)
+    static Quaternion fromAngleAxis(const Vector3<T>& angle_axis)
     {
 
         auto scale = 0.5;
@@ -60,7 +60,7 @@ public:
         data_[3] = w;
     }
 
-    inline Quaternion(const T angle, const Vector3d<T>& axis)
+    inline Quaternion(const T angle, const Vector3<T>& axis)
     {
         T sa = std::sin(0.5*angle);
         T norm = axis.length();
@@ -304,12 +304,12 @@ public:
         return q;
     }
 
-    Vector3d<T> toAngleAxis() const
+    Vector3<T> toAngleAxis() const
     {
         auto normed = normalized();
         if (normed.w() < 0)
             normed = -normed;
-        const auto xyz = Vector3d<T>(normed.x(), normed.y(), normed.z());
+        const auto xyz = Vector3<T>(normed.x(), normed.y(), normed.z());
 
         const auto angle = 2 * std::atan2(xyz.length(), normed.w());
         const auto scale = angle < 1e-7 ? 2. : angle / std::sin(angle / 2.);
@@ -405,6 +405,9 @@ private:
         return d < 0.0 ? std::acos(dot(data_, (-q).data_) / s) : std::acos(d / s);
     }
 };
+
+using Quaterniond = Quaternion<double>;
+using Quaternionf = Quaternion<float>;
 }
 
 template <typename T>
@@ -444,13 +447,13 @@ inline cslibs_math_3d::Quaternion<T> operator * (const cslibs_math_3d::Quaternio
 }
 
 template <typename T>
-inline cslibs_math_3d::Vector3d<T> operator * (const cslibs_math_3d::Quaternion<T> &q,
-                                               const cslibs_math_3d::Vector3d<T> &v)
+inline cslibs_math_3d::Vector3<T> operator * (const cslibs_math_3d::Quaternion<T> &q,
+                                              const cslibs_math_3d::Vector3<T> &v)
 {
     cslibs_math_3d::Quaternion<T> inverse = q.invert();
     cslibs_math_3d::Quaternion<T> qv(v(0), v(1), v(2), 0.0);
     qv = q * qv * inverse;
-    return cslibs_math_3d::Vector3d<T>(qv.x(),qv.y(),qv.z());
+    return cslibs_math_3d::Vector3<T>(qv.x(),qv.y(),qv.z());
 }
 
 #endif // CSLIBS_MATH_3D_QUATERNION_HPP

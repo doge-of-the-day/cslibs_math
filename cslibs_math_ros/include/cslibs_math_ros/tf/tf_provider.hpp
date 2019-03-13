@@ -15,9 +15,9 @@ class TFProvider
 public:
     using Ptr = std::shared_ptr<TFProvider>;
     template <typename T>
-    using stamped_2d_t = typename cslibs_time::Stamped<cslibs_math_2d::Transform2d<T>>;
+    using stamped_2d_t = typename cslibs_time::Stamped<cslibs_math_2d::Transform2<T>>;
     template <typename T>
-    using stamped_3d_t = typename cslibs_time::Stamped<cslibs_math_3d::Transform3d<T>>;
+    using stamped_3d_t = typename cslibs_time::Stamped<cslibs_math_3d::Transform3<T>>;
 
     virtual ~TFProvider() = default;
 
@@ -46,7 +46,7 @@ public:
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         cslibs_math_2d::Transform2d<T>& transform,
+                         cslibs_math_2d::Transform2<T>& transform,
                          const ros::Duration& timeout = {})
     {
         stamped_2d_t<T> stamped;
@@ -82,7 +82,7 @@ public:
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         cslibs_math_3d::Transform3d<T>& transform,
+                         cslibs_math_3d::Transform3<T>& transform,
                          const ros::Duration& timeout = {})
     {
         stamped_3d_t<T> stamped;

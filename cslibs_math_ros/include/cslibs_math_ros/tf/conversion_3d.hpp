@@ -10,13 +10,13 @@ namespace cslibs_math_ros {
 namespace tf {
 namespace conversion_3d {
 template <typename T>
-inline cslibs_math_3d::Vector3d<T> from(const ::tf::Vector3 &v)
+inline cslibs_math_3d::Vector3<T> from(const ::tf::Vector3 &v)
 {
-    return cslibs_math_3d::Vector3d<T>(v.x(), v.y(), v.z());
+    return cslibs_math_3d::Vector3<T>(v.x(), v.y(), v.z());
 }
 
 template <typename T>
-inline ::tf::Vector3 from(const cslibs_math_3d::Vector3d<T> &v)
+inline ::tf::Vector3 from(const cslibs_math_3d::Vector3<T> &v)
 {
     return ::tf::Vector3(v(0), v(1), v(2));
 }
@@ -34,14 +34,14 @@ inline cslibs_math_3d::Quaternion<T> from(const ::tf::Quaternion &q)
 }
 
 template <typename T>
-inline cslibs_math_3d::Transform3d<T> from(const ::tf::Transform &t)
+inline cslibs_math_3d::Transform3<T> from(const ::tf::Transform &t)
 {
-    return cslibs_math_3d::Transform3d<T>(from<T>(t.getOrigin()),
+    return cslibs_math_3d::Transform3<T>(from<T>(t.getOrigin()),
                                           from<T>(t.getRotation()));
 }
 
 template <typename T>
-inline ::tf::Transform from(const cslibs_math_3d::Transform3d<T> &t)
+inline ::tf::Transform from(const cslibs_math_3d::Transform3<T> &t)
 {
     return ::tf::Transform(from(t.rotation()),
                            from(t.translation()));
@@ -49,7 +49,7 @@ inline ::tf::Transform from(const cslibs_math_3d::Transform3d<T> &t)
 
 template <typename T>
 inline void from(const std::vector<::tf::Transform> &src,
-                 std::vector<cslibs_math_3d::Transform3d<T>> &dst)
+                 std::vector<cslibs_math_3d::Transform3<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -59,7 +59,7 @@ inline void from(const std::vector<::tf::Transform> &src,
 
 template <typename T>
 inline void from(const std::vector<::tf::Vector3> &src,
-                 std::vector<cslibs_math_3d::Transform3d<T>> &dst)
+                 std::vector<cslibs_math_3d::Transform3<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -68,23 +68,23 @@ inline void from(const std::vector<::tf::Vector3> &src,
 }
 
 template <typename T>
-inline void from(const std::vector<cslibs_math_3d::Transform3d<T>> &src,
+inline void from(const std::vector<cslibs_math_3d::Transform3<T>> &src,
                  std::vector<::tf::Transform> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_3d::Transform3d<T> &t){return from(t);});
+                  [](const cslibs_math_3d::Transform3<T> &t){return from(t);});
 }
 
 template <typename T>
-inline void from(const std::vector<cslibs_math_3d::Vector3d<T>> &src,
+inline void from(const std::vector<cslibs_math_3d::Vector3<T>> &src,
                  std::vector<::tf::Vector3> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_3d::Vector3d<T> &v){return from(v);});
+                  [](const cslibs_math_3d::Vector3<T> &v){return from(v);});
 }
 }
 }

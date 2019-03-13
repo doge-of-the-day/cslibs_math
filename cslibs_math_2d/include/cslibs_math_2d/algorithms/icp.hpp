@@ -13,7 +13,7 @@ public:
     enum Termination {Eps, Iteration};
 
     using covariance_t = Eigen::Matrix<T,2,2>;
-    using transform_t  = Transform2d<T>;
+    using transform_t  = Transform2<T>;
 
     inline Result(const std::size_t iterations = 100,
                   const Termination termination = Iteration,
@@ -78,7 +78,7 @@ class EIGEN_ALIGN16 Parameters {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    using transform_t = Transform2d<T>;
+    using transform_t = Transform2<T>;
 
     inline Parameters(const std::size_t max_iterations = 100,
                       const T trans_eps = 1e-4,
@@ -152,13 +152,13 @@ private:
 };
 
 template <typename T>
-inline void apply(const Pointcloud2d<T>::ConstPtr &src,
-                  const Pointcloud2d<T>::ConstPtr &dst,
+inline void apply(const Pointcloud2<T>::ConstPtr &src,
+                  const Pointcloud2<T>::ConstPtr &dst,
                   const Parameters<T> &params,
                   Result<T> &r)
 {
-    const Pointcloud2d<T>::points_t &src_points = src->getPoints();
-    const Pointcloud2d<T>::points_t &dst_points = dst->getPoints();
+    const Pointcloud2<T>::points_t &src_points = src->getPoints();
+    const Pointcloud2<T>::points_t &dst_points = dst->getPoints();
     const std::size_t src_size = src_points.size();
     const std::size_t dst_size = dst_points.size();
 
@@ -168,9 +168,9 @@ inline void apply(const Pointcloud2d<T>::ConstPtr &src,
     const T rot_eps = sq(params.rotEps());
     const T max_distance = sq(params.maxDistance());
 
-    Transform2d<T> &transform = r.transform();
+    Transform2<T> &transform = r.transform();
     transform = params.transform();
-    Pointcloud2d<T>::points_t src_points_transformed(src_size);
+    Pointcloud2<T>::points_t src_points_transformed(src_size);
 
     std::vector<std::size_t> indices(src_size, std::numeric_limits<std::size_t>::max());
 
@@ -179,8 +179,8 @@ inline void apply(const Pointcloud2d<T>::ConstPtr &src,
         return index < std::numeric_limits<std::size_t>::max();
     };
 
-    Point2d<T> dst_mean;
-    for(const Point2d<T> &p : dst_points) {
+    Point2<T> dst_mean;
+    for(const Point2<T> &p : dst_points) {
         src_mean += p;
     }
     dst_mean /= static_cast<T>(dst_size);
@@ -191,18 +191,18 @@ inline void apply(const Pointcloud2d<T>::ConstPtr &src,
     for(std::size_t i = 0 ; i < max_iterations_ ; ++i) {
         std::fill(indices.begin(), indices.end(), std::numeric_limits<std::size_t>::max());
 
-        Point2d<T> src_mean;
+        Point2<T> src_mean;
 
         /// associate
         for(std::size_t s ; s < src_size ; ++s) {
-            Point2d<T> &sp = src_points_transformed[s];
+            Point2<T> &sp = src_points_transformed[s];
             sp = transform * src_points[s];
             std::size_t &index = indices[s];
             src_mean += sp;
 
             T min_distance = std::numeric_limits<T>::max();
             for(std::size_t d = 0 ; d < dst_size ; ++d) {
-                const Point2d<T> &dp = dst_points[d];
+                const Point2<T> &dp = dst_points[d];
                 const T dist = distance2(dp, sp);
                 if(dist < min_distance &&
                         dist < max_distance) {
@@ -214,17 +214,17 @@ inline void apply(const Pointcloud2d<T>::ConstPtr &src,
         src_mean /= static_cast<T>(src_size);
 
         for(std::size_t s = 0 ; s < src_size ; ++s) {
-            const Point2d<T> &sp = src_points_transformed[s];
+            const Point2<T> &sp = src_points_transformed[s];
             const std::size_t index = indices[s];
             if(is_assigned(index)) {
-                const Point2d<T> &dp = dst_points[index];
+                const Point2<T> &dp = dst_points[index];
                 S += (sp - src_mean).data() * (dp - dst_mean).data().transpose();
             }
 
         }
 
         const T dyaw = std::atan2(S(0,1) - S(1,0), S(0,0) + S(1,1));
-        Transform2d<T> dt(dyaw);
+        Transform2<T> dt(dyaw);
         dt.translation() = dst_mean - dt * src_mean;
         transform *= dt;
 

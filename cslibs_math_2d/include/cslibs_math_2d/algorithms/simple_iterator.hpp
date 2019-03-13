@@ -15,7 +15,7 @@ public:
     using Ptr           = std::shared_ptr<SimpleIterator<T>>;
 
     using index_t       = std::array<int, 2>;
-    using point_t       = Point2d<T>;
+    using point_t       = Point2<T>;
 
     inline explicit SimpleIterator(const index_t &start,
                                    const index_t &end) :

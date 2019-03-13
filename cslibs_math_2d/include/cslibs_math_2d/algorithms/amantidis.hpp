@@ -10,7 +10,7 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
-template <typename Tp = float>
+template <typename Tp = double>
 class EIGEN_ALIGN16 Amantidis
 {
 public:
@@ -31,8 +31,8 @@ public:
     }
 
     template <typename T>
-    inline explicit Amantidis(const Point2d<T> &start,
-                              const Point2d<T> &end,
+    inline explicit Amantidis(const Point2<T> &start,
+                              const Point2<T> &end,
                               const T           resolution) :
         start_{{static_cast<int>(std::floor(start(0) / resolution)),
                 static_cast<int>(std::floor(start(1) / resolution))}},
@@ -42,7 +42,7 @@ public:
         delta_{{0.0, 0.0}},
         max_{{0.0, 0.0}}
     {
-        const Point2d<T> d = end - start;
+        const Point2<T> d = end - start;
         const static T dmax =  std::numeric_limits<T>::max();
         const bool dx = cslibs_math::common::neq(d(0), 0.0);
         const bool dy = cslibs_math::common::neq(d(1), 0.0);

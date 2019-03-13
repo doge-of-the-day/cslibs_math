@@ -18,32 +18,32 @@ template <typename T>
 using boost_lineset_t = typename cslibs_boost_geometry::types::LineSet<boost_point_t<T>>::type;
 
 template <typename T>
-inline Point2d<T> from(const boost_point_t<T> &p)
+inline Point2<T> from(const boost_point_t<T> &p)
 {
-    return Point2d<T>(p.x(), p.y());
+    return Point2<T>(p.x(), p.y());
 }
 
 template <typename T>
-inline Line2d<T> from(const boost_line_t<T> &l)
+inline Line2<T> from(const boost_line_t<T> &l)
 {
     return {{from(l.first), from(l.second)}};
 }
 
 template <typename T>
-inline boost_point_t from(const Point2d<T> &p)
+inline boost_point_t from(const Point2<T> &p)
 {
     return boost_point_t(p.x(), p.y());
 }
 
 template <typename T>
-inline boost_line_t from(const Line2d<T> &l)
+inline boost_line_t from(const Line2<T> &l)
 {
     return {from(l[0]), from(l[1])};
 }
 
 template <typename T>
 inline void from(const boost_pointset_t<T> &src,
-                 std::vector<Point2d<T>> &dst)
+                 std::vector<Point2<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -53,7 +53,7 @@ inline void from(const boost_pointset_t<T> &src,
 
 template <typename T>
 inline void from(const boost_lineset_t<T> &src,
-                 std::vector<Line2d<T>> &dst)
+                 std::vector<Line2<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -62,23 +62,23 @@ inline void from(const boost_lineset_t<T> &src,
 }
 
 template <typename T>
-inline void from(const std::vector<Point2d<T>> &src,
+inline void from(const std::vector<Point2<T>> &src,
                  boost_pointset_t<T> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const Point2d<T> &p){return from(p);});
+                   [](const Point2<T> &p){return from(p);});
 }
 
 template <typename T>
-inline void from(const std::vector<Line2d<T>> &src,
+inline void from(const std::vector<Line2<T>> &src,
                  boost_lineset_t<T> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                   [](const Line2d<T> &l){return from(l);});
+                   [](const Line2<T> &l){return from(l);});
 }
 }
 }

@@ -7,11 +7,10 @@
 
 const std::size_t ITERATIONS = 1000000;
 
-
 TEST( Test_cslibs_math_2d, testAmantidisDryrun)
 {
     auto test = [](const cslibs_math_2d::Point2d &p0,
-            const cslibs_math_2d::Point2d &p1)
+                   const cslibs_math_2d::Point2d &p1)
     {
         cslibs_math_2d::algorithms::Amantidis a0(p0, p1, 1.0);
 

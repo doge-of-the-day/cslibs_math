@@ -18,16 +18,16 @@ inline cslibs_time::TimeFrame from(const ::sensor_msgs::PointCloud2ConstPtr &src
 
 template <typename T>
 inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
-                 typename cslibs_math_3d::Pointcloud3d<T>::Ptr &dst)
+                 typename cslibs_math_3d::Pointcloud3<T>::Ptr &dst)
 {
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_z(*src, "z");
 
-    dst.reset(new cslibs_math_3d::Pointcloud3d<T>);
+    dst.reset(new cslibs_math_3d::Pointcloud3<T>);
     for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
         if (!std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z)) {
-            cslibs_math_3d::Point3d<T> p(*iter_x, *iter_y, *iter_z);
+            cslibs_math_3d::Point3<T> p(*iter_x, *iter_y, *iter_z);
             if (p.isNormal())
                 dst->insert(p);
         }
@@ -35,7 +35,7 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
 }
 
 template <typename T>
-inline void from(const typename cslibs_math_3d::Pointcloud3d<T>::Ptr &src,
+inline void from(const typename cslibs_math_3d::Pointcloud3<T>::Ptr &src,
                  ::sensor_msgs::PointCloud2 &dst)
 {
     // metadata
@@ -63,7 +63,7 @@ inline void from(const typename cslibs_math_3d::Pointcloud3d<T>::Ptr &src,
 
 template <typename T>
 inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
-                 typename cslibs_math_3d::PointcloudRGB3d<T>::Ptr &dst)
+                 typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &dst)
 {
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
@@ -73,14 +73,14 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
     ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_b(*src, "b");
     ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_a(*src, "a");
 
-    dst.reset(new cslibs_math_3d::PointcloudRGB3d<T>);
+    dst.reset(new cslibs_math_3d::PointcloudRGB3<T>);
     for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z, ++iter_r, ++iter_g, ++iter_b, ++iter_a) {
         if (!std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z)) {
-            cslibs_math_3d::Point3d<T> p(*iter_x, *iter_y, *iter_z);
+            cslibs_math_3d::Point3<T> p(*iter_x, *iter_y, *iter_z);
             cslibs_math::color::Color<T> c(static_cast<float>(*iter_r)/256.0f,
                                            static_cast<float>(*iter_g)/256.0f,
                                            static_cast<float>(*iter_b)/256.0f);
-            cslibs_math_3d::PointRGB3d<T> point(p, static_cast<float>(*iter_a)/256.0, c);
+            cslibs_math_3d::PointRGB3<T> point(p, static_cast<float>(*iter_a)/256.0, c);
             if (p.isNormal())
                 dst->insert(point);
         }
@@ -88,7 +88,7 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
 }
 
 template <typename T>
-inline void from(const typename cslibs_math_3d::PointcloudRGB3d<T>::Ptr &src,
+inline void from(const typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &src,
                  ::sensor_msgs::PointCloud2 &dst)
 {
     // metadata
@@ -111,7 +111,7 @@ inline void from(const typename cslibs_math_3d::PointcloudRGB3d<T>::Ptr &src,
     ::sensor_msgs::PointCloud2Iterator<u_int8_t> iter_a(dst, "a");
 
     for (const auto &p : *src) {
-        cslibs_math_3d::Point3d<T> pos = p.getPoint();
+        cslibs_math_3d::Point3<T> pos = p.getPoint();
         cslibs_math::color::Color<T> c = p.getColor();
         float a = p.getAlpha();
         *iter_x = static_cast<float>(pos(0));

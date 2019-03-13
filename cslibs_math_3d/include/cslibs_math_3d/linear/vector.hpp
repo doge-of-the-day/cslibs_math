@@ -6,12 +6,14 @@
 
 namespace cslibs_math_3d {
 template <typename T>
-using Vector3d = cslibs_math::linear::Vector<T,3>;
+using Vector3 = cslibs_math::linear::Vector<T,3>;
+using Vector3d = Vector3<double>;
+using Vector3f = Vector3<float>;
 }
 
 namespace std {
 template <typename T>
-inline bool isnormal(const cslibs_math_3d::Vector3d<T> &v)
+inline bool isnormal(const cslibs_math_3d::Vector3<T> &v)
 {
     return std::isnormal(v(0)) &&
            std::isnormal(v(1)) &&
@@ -20,7 +22,7 @@ inline bool isnormal(const cslibs_math_3d::Vector3d<T> &v)
 }
 
 template <typename T>
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Vector3d<T> &v)
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Vector3<T> &v)
 {
     out << "[" << v(0) << "," << v(1) << "," << v(2) << "]";
     return out;

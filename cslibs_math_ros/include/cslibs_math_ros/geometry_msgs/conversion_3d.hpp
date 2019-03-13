@@ -8,13 +8,13 @@ namespace cslibs_math_ros {
 namespace geometry_msgs {
 namespace conversion_3d {
 template <typename T>
-inline cslibs_math_3d::Vector3d<T> from(const ::geometry_msgs::Point &p)
+inline cslibs_math_3d::Vector3<T> from(const ::geometry_msgs::Point &p)
 {
-    return cslibs_math_3d::Vector3d<T>(p.x, p.y, p.z);
+    return cslibs_math_3d::Vector3<T>(p.x, p.y, p.z);
 }
 
 template <typename T>
-inline ::geometry_msgs::Point toPoint(const ::cslibs_math_3d::Vector3d<T> &p)
+inline ::geometry_msgs::Point toPoint(const ::cslibs_math_3d::Vector3<T> &p)
 {
     ::geometry_msgs::Point res;
     res.x = p(0);
@@ -24,7 +24,7 @@ inline ::geometry_msgs::Point toPoint(const ::cslibs_math_3d::Vector3d<T> &p)
 }
 
 template <typename T>
-inline ::geometry_msgs::Vector3 toVector3(const ::cslibs_math_3d::Vector3d<T> &p)
+inline ::geometry_msgs::Vector3 toVector3(const ::cslibs_math_3d::Vector3<T> &p)
 {
     ::geometry_msgs::Vector3 res;
     res.x = p(0);

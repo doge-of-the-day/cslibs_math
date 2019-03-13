@@ -5,7 +5,9 @@
 
 namespace cslibs_math_3d {
 template <typename T>
-using Pose3d = Transform3d<T>;
+using Pose3 = Transform3<T>;
+using Pose3d = Pose3<double>;
+using Pose3f = Pose3<float>;
 }
 
 #endif // CSLIBS_MATH_3D_POSE_3D_HPP

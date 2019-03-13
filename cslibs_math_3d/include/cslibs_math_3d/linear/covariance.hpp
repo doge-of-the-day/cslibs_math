@@ -5,7 +5,9 @@
 
 namespace cslibs_math_3d {
 template <typename T>
-using Covariance3d = cslibs_math::linear::Matrix<T, 6, 6>;
+using Covariance3 = cslibs_math::linear::Matrix<T, 6, 6>;
+using Covariance3d = Covariance3<double>;
+using Covariance3f = Covariance3<float>;
 }
 
 #endif // CSLIBS_MATH_3D_COVARIANCE_3D_HPP

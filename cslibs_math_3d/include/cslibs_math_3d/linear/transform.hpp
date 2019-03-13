@@ -7,103 +7,103 @@
 
 namespace cslibs_math_3d {
 template <typename T>
-class EIGEN_ALIGN16 Transform3d {
+class EIGEN_ALIGN16 Transform3 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t       = Eigen::aligned_allocator<Transform3d<T>>;
+    using allocator_t       = Eigen::aligned_allocator<Transform3<T>>;
 
     using eigen_vector_3d_t = Eigen::Matrix<T, 3, 1>;
     using eigen_vector_6d_t = Eigen::Matrix<T, 6, 1>;
-    using translation_t     = Vector3d<T>;
+    using translation_t     = Vector3<T>;
     using rotation_t        = Quaternion<T>;
 
-    inline Transform3d()
+    inline Transform3()
     {
     }
 
-    static inline Transform3d identity()
+    static inline Transform3 identity()
     {
-        return Transform3d();
+        return Transform3();
     }
 
-    inline Transform3d(const T x,
-                       const T y,
+    inline Transform3(const T x,
+                      const T y,
                        const T z) :
         translation_(x, y, z)
     {
     }
 
-    inline Transform3d(const translation_t &translation) :
+    inline Transform3(const translation_t &translation) :
         translation_(translation)
     {
     }
 
-    inline Transform3d(const T yaw) :
+    inline Transform3(const T yaw) :
         rotation_(yaw)
     {
     }
 
-    inline Transform3d(const T x,
-                       const T y,
-                       const T z,
-                       const T yaw) :
+    inline Transform3(const T x,
+                      const T y,
+                      const T z,
+                      const T yaw) :
         translation_(x, y, z),
         rotation_(yaw)
     {
     }
 
-    inline Transform3d(const translation_t &translation,
-                       const T yaw) :
+    inline Transform3(const translation_t &translation,
+                      const T yaw) :
         translation_(translation),
         rotation_(yaw)
     {
     }
 
-    inline Transform3d(const translation_t &translation,
-                       const rotation_t &rotation) :
+    inline Transform3(const translation_t &translation,
+                      const rotation_t &rotation) :
         translation_(translation),
         rotation_(rotation)
     {
     }
 
-    inline Transform3d(const T x,
-                       const T y,
-                       const T z,
-                       const T roll,
-                       const T pitch,
-                       const T yaw) :
+    inline Transform3(const T x,
+                      const T y,
+                      const T z,
+                      const T roll,
+                      const T pitch,
+                      const T yaw) :
         translation_(x, y, z),
         rotation_(roll, pitch, yaw)
     {
     }
 
-    inline Transform3d(const Transform3d &other) :
+    inline Transform3(const Transform3 &other) :
         translation_(other.translation_),
         rotation_(other.rotation_)
     {
     }
 
-    inline Transform3d(Transform3d &&other) :
+    inline Transform3(Transform3 &&other) :
         translation_(std::move(other.translation_)),
         rotation_(std::move(other.rotation_))
     {
     }
 
-    inline static Transform3d random()
+    inline static Transform3 random()
     {
         const Eigen::Matrix<T, 6, 1> r = Eigen::Matrix<T, 6, 1>::Random();
-        return Transform3d(r[0],r[1],r[2],
-                           r[3],r[4],r[5]);
+        return Transform3(r[0],r[1],r[2],
+                          r[3],r[4],r[5]);
     }
 
-    inline Transform3d & operator *= (const Transform3d &other)
+    inline Transform3 & operator *= (const Transform3 &other)
     {
         translation_ += rotation_ * other.translation_;
         rotation_    *= other.rotation_;
         return *this;
     }
 
-    inline Transform3d& operator = (const Transform3d &other)
+    inline Transform3& operator = (const Transform3 &other)
     {
         translation_ = other.translation_;
         rotation_ = other.rotation_;
@@ -111,28 +111,28 @@ public:
     }
 
 
-    inline Transform3d& operator = (const Eigen::Matrix<T, 6, 1> &eigen)
+    inline Transform3& operator = (const Eigen::Matrix<T, 6, 1> &eigen)
     {
         translation_ = translation_t(eigen(0), eigen(1), eigen(2));
         rotation_    = rotation_t(eigen(3), eigen(4), eigen(5));
         return *this;
     }
 
-    inline Transform3d& operator = (Transform3d &&other)
+    inline Transform3& operator = (Transform3 &&other)
     {
         translation_ = std::move(other.translation_);
         rotation_    = std::move(other.rotation_);
         return *this;
     }
 
-    inline Transform3d inverse() const
+    inline Transform3 inverse() const
     {
         rotation_t rotation_inverse = rotation_.invert();
-        return Transform3d(rotation_inverse * -translation_,
+        return Transform3(rotation_inverse * -translation_,
                            rotation_inverse);
     }
 
-    inline Transform3d operator -() const
+    inline Transform3 operator -() const
     {
         return inverse();
     }
@@ -259,8 +259,8 @@ public:
         rotation_.setRPY(roll, pitch, yaw);
     }
 
-    inline Transform3d interpolate(const Transform3d &other,
-                                   const T ratio) const
+    inline Transform3 interpolate(const Transform3 &other,
+                                  const T ratio) const
     {
         assert(ratio  >= 0.0);
         assert(ratio <= 1.0);
@@ -274,48 +274,51 @@ public:
         const  T ratio_inverse = 1.0 - ratio;
         const  translation_t translation = translation_ * ratio_inverse + other.translation_ * ratio;
         const  rotation_t    rotation    = rotation_.interpolate(other.rotation_, ratio);
-        return Transform3d(translation, rotation);
+        return Transform3(translation, rotation);
     }
 
 private:
     translation_t translation_;
     rotation_t    rotation_;
 };
+
+using Transform3d = Transform3<double>;
+using Transform3f = Transform3<float>;
 }
 
 template <typename T>
-inline cslibs_math_3d::Vector3d<T> operator * (const cslibs_math_3d::Transform3d<T> &t,
-                                               const cslibs_math_3d::Vector3d<T>    &v)
+inline cslibs_math_3d::Vector3<T> operator * (const cslibs_math_3d::Transform3<T> &t,
+                                              const cslibs_math_3d::Vector3<T>    &v)
 {
     return t.rotation() * v + t.translation();
 }
 
 template <typename T>
-inline Eigen::Matrix<T, 3, 1> operator * (const cslibs_math_3d::Transform3d<T> &t,
-                                          const Eigen::Matrix<T, 3, 1>         &v)
+inline Eigen::Matrix<T, 3, 1> operator * (const cslibs_math_3d::Transform3<T> &t,
+                                          const Eigen::Matrix<T, 3, 1>        &v)
 {
-    return (t.rotation() * cslibs_math_3d::Vector3d<T>(v) + t.translation()).data();
+    return (t.rotation() * cslibs_math_3d::Vector3<T>(v) + t.translation()).data();
 }
 
 template <typename T>
-inline cslibs_math_3d::Transform3d<T> operator * (const cslibs_math_3d::Transform3d<T> &a,
-                                                  const cslibs_math_3d::Transform3d<T> &b)
+inline cslibs_math_3d::Transform3<T> operator * (const cslibs_math_3d::Transform3<T> &a,
+                                                 const cslibs_math_3d::Transform3<T> &b)
 {
-    return cslibs_math_3d::Transform3d<T>(a.translation() + a.rotation() * b.translation(),
-                                       a.rotation() * b.rotation());
+    return cslibs_math_3d::Transform3<T>(a.translation() + a.rotation() * b.translation(),
+                                      a.rotation() * b.rotation());
 }
 
 template <typename T>
-inline cslibs_math::linear::Vector<T, 2>  operator * (const cslibs_math_3d::Transform3d<T>    &t,
+inline cslibs_math::linear::Vector<T, 2>  operator * (const cslibs_math_3d::Transform3<T>    &t,
                                                       const cslibs_math::linear::Vector<T, 2> &v)
 {
-    const cslibs_math_3d::Vector3d<T> r = t * cslibs_math_3d::Vector3d<T>(v(0), v(1), v(2));
+    const cslibs_math_3d::Vector3<T> r = t * cslibs_math_3d::Vector3<T>(v(0), v(1), v(2));
     return cslibs_math::linear::Vector<T, 2> (r(0), r(1));
 }
 
 namespace std {
 template <typename T>
-inline std::string to_string(const cslibs_math_3d::Transform3d<T> &t)
+inline std::string to_string(const cslibs_math_3d::Transform3<T> &t)
 {
 
     return "[" + std::to_string(t.tx())   + " " + std::to_string(t.ty()) + " " + std::to_string(t.tz()) +
@@ -325,7 +328,7 @@ inline std::string to_string(const cslibs_math_3d::Transform3d<T> &t)
 }
 
 template <typename T>
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Transform3d<T> &t)
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Transform3<T> &t)
 {
     out << "[" << t.tx() << ", " << t.ty() << ", " << t.tz() << ", "
         << t.roll() << ", " << t.pitch() << ", " << t.yaw() << "]";

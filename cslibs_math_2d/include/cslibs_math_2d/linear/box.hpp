@@ -10,18 +10,18 @@
 
 namespace cslibs_math_2d {
 template <typename T>
-class EIGEN_ALIGN16 Box2d
+class EIGEN_ALIGN16 Box2
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t     = Eigen::aligned_allocator<Box2d>;
+    using allocator_t     = Eigen::aligned_allocator<Box2<T>>;
 
-    using point_t        = Point2d<T>;
-    using line_t         = Line2d<T>;
+    using point_t        = Point2<T>;
+    using line_t         = Line2<T>;
     using point_set_t    = std::set<point_t, typename point_t::allocator_t>;
     using coefficients_t = std::array<T, 2>;
 
-    inline Box2d() :
+    inline Box2() :
         min_(std::numeric_limits<T>::lowest(),
              std::numeric_limits<T>::lowest()),
         max_(std::numeric_limits<T>::max(),
@@ -29,27 +29,27 @@ public:
     {
     }
 
-    inline Box2d(const T min_x, const T min_y,
+    inline Box2(const T min_x, const T min_y,
                  const T max_x, const T max_y) :
         min_(min_x, min_y),
         max_(max_x, max_y)
     {
     }
 
-    inline Box2d(const point_t &min,
+    inline Box2(const point_t &min,
                  const point_t &max) :
         min_(min),
         max_(max)
     {
     }
 
-    inline Box2d(const Box2d &other) :
+    inline Box2(const Box2 &other) :
         min_(other.min_),
         max_(other.max_)
     {
     }
 
-    inline Box2d(Box2d &&other) :
+    inline Box2(Box2 &&other) :
         min_(std::move(other.min_)),
         max_(std::move(other.max_))
     {
@@ -196,7 +196,7 @@ private:
 }
 
 template <typename T>
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Box2d<T> &b)
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_2d::Box2<T> &b)
 {
     out << "[" << b.getMin() << "," << b.getMax() << "]";
     return out;

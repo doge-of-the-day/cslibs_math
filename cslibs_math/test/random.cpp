@@ -6,7 +6,7 @@ TEST(Test_cslibs_math, testNorma1D)
 {
     const std::size_t size = 100000;
 
-    cslibs_math::random::Normal<1> rng(0.0, 1.0);
+    cslibs_math::random::Normal<double,1> rng(0.0, 1.0);
     std::vector<double> seq_1(size, 0.0);
     std::vector<double> seq_2(size, 0.0);
     std::vector<double> seq_3(size, 0.0);

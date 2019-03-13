@@ -10,44 +10,44 @@
 
 namespace cslibs_math_3d {
 template <typename T>
-class EIGEN_ALIGN16 Box3d
+class EIGEN_ALIGN16 Box3
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t = Eigen::aligned_allocator<Box3d>;
+    using allocator_t = Eigen::aligned_allocator<Box3<T>>;
 
-    using point_t        = Point3d<T>;
-    using line_t         = Line3d<T>;
+    using point_t        = Point3<T>;
+    using line_t         = Line3<T>;
     using point_set_t    = std::set<point_t, typename point_t::allocator_t>;
     using coefficients_t = std::array<T, 3>;
 
-    inline Box3d() :
+    inline Box3() :
         min_(std::numeric_limits<T>::lowest()),
         max_(std::numeric_limits<T>::max())
     {
     }
 
-    inline Box3d(const T min_x, const T min_y, const T min_z,
-                 const T max_x, const T max_y, const T max_z) :
+    inline Box3(const T min_x, const T min_y, const T min_z,
+                const T max_x, const T max_y, const T max_z) :
         min_(min_x, min_y, min_z),
         max_(max_x, max_y, max_z)
     {
     }
 
-    inline Box3d(const point_t &min,
-                 const point_t &max) :
+    inline Box3(const point_t &min,
+                const point_t &max) :
         min_(min),
         max_(max)
     {
     }
 
-    inline Box3d(const Box3d &other) :
+    inline Box3(const Box3 &other) :
         min_(other.min_),
         max_(other.max_)
     {
     }
 
-    inline Box3d(Box3d &&other) :
+    inline Box3(Box3 &&other) :
         min_(std::move(other.min_)),
         max_(std::move(other.max_))
     {
@@ -184,7 +184,7 @@ private:
 }
 
 template <typename T>
-inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Box3d<T> &b)
+inline std::ostream & operator << (std::ostream &out, const cslibs_math_3d::Box3<T> &b)
 {
     out << "[" << b.getMin() << "," << b.getMax() << "]";
     return out;

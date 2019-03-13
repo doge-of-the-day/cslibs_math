@@ -5,23 +5,23 @@
 
 namespace cslibs_math_2d {
 template <typename T>
-class EIGEN_ALIGN16 PolarPoint2d
+class EIGEN_ALIGN16 PolarPoint2
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t = Eigen::aligned_allocator<PolarPoint2d<T>>;
+    using allocator_t = Eigen::aligned_allocator<PolarPoint2<T>>;
 
-    using point_t = Point2d<T>;
+    using point_t = Point2<T>;
 
-    inline PolarPoint2d() :
+    inline PolarPoint2() :
         cartesian_(std::numeric_limits<T>::infinity()),
         theta_(0.0),
         rho_(std::numeric_limits<T>::infinity())
     {
     }
 
-    inline PolarPoint2d(const T theta,
-                        const T rho) :
+    inline PolarPoint2(const T theta,
+                       const T rho) :
         cartesian_(std::cos(theta) * rho,
                    std::sin(theta) * rho),
         theta_(theta),
@@ -29,37 +29,37 @@ public:
     {
     }
 
-    inline PolarPoint2d(const point_t &cartesian) :
+    inline PolarPoint2(const point_t &cartesian) :
         cartesian_(cartesian),
         theta_(cslibs_math_2d::angle(cartesian)),
         rho_(cartesian.length())
     {
     }
 
-    inline PolarPoint2d(const point_t &cartesian,
-                        const T theta,
-                        const T rho) :
+    inline PolarPoint2(const point_t &cartesian,
+                       const T theta,
+                       const T rho) :
         cartesian_(cartesian),
         theta_(theta),
         rho_(rho)
     {
     }
 
-    inline PolarPoint2d(const PolarPoint2d &other) :
+    inline PolarPoint2(const PolarPoint2 &other) :
         cartesian_(other.cartesian_),
         theta_(other.theta_),
         rho_(other.rho_)
     {
     }
 
-    inline PolarPoint2d(PolarPoint2d &&other) :
+    inline PolarPoint2(PolarPoint2 &&other) :
         cartesian_(std::move(other.cartesian_)),
         theta_(other.theta_),
         rho_(other.rho_)
     {
     }
 
-    virtual ~PolarPoint2d() = default;
+    virtual ~PolarPoint2() = default;
 
     inline bool isNormal() const
     {
@@ -99,36 +99,36 @@ public:
         return cartesian_;
     }
 
-    inline PolarPoint2d min(const PolarPoint2d &other) const
+    inline PolarPoint2 min(const PolarPoint2 &other) const
     {
-        return PolarPoint2d(cslibs_math::linear::min(cartesian_, other.cartesian_),
-                            std::min(theta_, other.theta_),
-                            std::min(rho_, other.rho_));
+        return PolarPoint2(cslibs_math::linear::min(cartesian_, other.cartesian_),
+                           std::min(theta_, other.theta_),
+                           std::min(rho_, other.rho_));
     }
 
-    inline PolarPoint2d max(const PolarPoint2d &other) const
+    inline PolarPoint2 max(const PolarPoint2 &other) const
     {
-        return PolarPoint2d(cslibs_math::linear::max(cartesian_, other.cartesian_),
-                            std::max(theta_, other.theta_),
-                            std::max(rho_, other.rho_));
+        return PolarPoint2(cslibs_math::linear::max(cartesian_, other.cartesian_),
+                           std::max(theta_, other.theta_),
+                           std::max(rho_, other.rho_));
     }
 
-    inline static PolarPoint2d inf()
+    inline static PolarPoint2 inf()
     {
-        return PolarPoint2d(std::numeric_limits<T>::infinity(),
-                            std::numeric_limits<T>::infinity());
+        return PolarPoint2(std::numeric_limits<T>::infinity(),
+                           std::numeric_limits<T>::infinity());
     }
 
-    inline static PolarPoint2d max()
+    inline static PolarPoint2 max()
     {
-        return PolarPoint2d(std::numeric_limits<T>::max(),
-                            std::numeric_limits<T>::max());
+        return PolarPoint2(std::numeric_limits<T>::max(),
+                           std::numeric_limits<T>::max());
     }
 
-    inline static PolarPoint2d min()
+    inline static PolarPoint2 min()
     {
-        return PolarPoint2d(std::numeric_limits<T>::lowest(),
-                            std::numeric_limits<T>::lowest());
+        return PolarPoint2(std::numeric_limits<T>::lowest(),
+                           std::numeric_limits<T>::lowest());
     }
 
 private:
@@ -148,6 +148,9 @@ private:
         rho_   = cartesian_.length();
     }
 };
+
+using PolarPoint2d = PolarPoint2<double>;
+using PolarPoint2f = PolarPoint2<float>;
 }
 
 #endif // CSLIBS_MATH_2D_POLAR_HPP

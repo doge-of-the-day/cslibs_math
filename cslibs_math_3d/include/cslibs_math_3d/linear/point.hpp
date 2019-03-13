@@ -6,51 +6,53 @@
 
 namespace cslibs_math_3d {
 template <typename T>
-using Point3d = Vector3d<T>;
+using Point3 = Vector3<T>;
+using Point3d = Point3<double>;
+using Point3f = Point3<float>;
 
 template <typename T>
-class EIGEN_ALIGN16 PointRGB3d //: public Point3d
+class EIGEN_ALIGN16 PointRGB3
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t = Eigen::aligned_allocator<PointRGB3d>;
+    using allocator_t = Eigen::aligned_allocator<PointRGB3<T>>;
 
-    using point_t = Point3d<T>;
+    using point_t = Point3<T>;
     using color_t = cslibs_math::color::Color<T>;
 
-    inline PointRGB3d():
+    inline PointRGB3():
         a_(1.0)
     {
     }
 
-    inline PointRGB3d(const PointRGB3d &other) :
+    inline PointRGB3(const PointRGB3 &other) :
         point_(other.point_),
         a_(other.a_),
         color_(other.color_)
     {
     }
 
-    inline PointRGB3d(PointRGB3d &&other) :
+    inline PointRGB3(PointRGB3 &&other) :
         point_(std::move(other.point_)),
         a_(std::move(other.a_)),
         color_(std::move(other.color_))
     {
     }
 
-    inline PointRGB3d(const point_t &pos) :
+    inline PointRGB3(const point_t &pos) :
         point_(pos),
         a_(1.0)
     {
     }
 
-    inline PointRGB3d(const point_t &pos, T a, color_t& c) :
+    inline PointRGB3(const point_t &pos, T a, color_t& c) :
         point_(pos),
         a_(a),
         color_(c)
     {
     }
 
-    virtual ~PointRGB3d() = default;
+    virtual ~PointRGB3() = default;
 
     inline point_t getPoint() const
     {
@@ -82,29 +84,29 @@ public:
         color_ = c;
     }
 
-    inline PointRGB3d min(const PointRGB3d &other) const
+    inline PointRGB3 min(const PointRGB3 &other) const
     {
-        return PointRGB3d(cslibs_math::linear::min(point_, other.point_));
+        return PointRGB3(cslibs_math::linear::min(point_, other.point_));
     }
 
-    inline PointRGB3d max(const PointRGB3d &other) const
+    inline PointRGB3 max(const PointRGB3 &other) const
     {
-        return PointRGB3d(cslibs_math::linear::max(point_, other.point_));
+        return PointRGB3(cslibs_math::linear::max(point_, other.point_));
     }
 
-    inline static PointRGB3d inf()
+    inline static PointRGB3 inf()
     {
-        return PointRGB3d(point_t::inf());
+        return PointRGB3(point_t::inf());
     }
 
-    inline static PointRGB3d max()
+    inline static PointRGB3 max()
     {
-        return PointRGB3d(point_t::max());
+        return PointRGB3(point_t::max());
     }
 
-    inline static PointRGB3d min()
+    inline static PointRGB3 min()
     {
-        return PointRGB3d(point_t::min());
+        return PointRGB3(point_t::min());
     }
 
 private:
@@ -112,6 +114,9 @@ private:
     T       a_;
     color_t color_;
 };
+
+using PointRGB3d = PointRGB3<double>;
+using PointRGB3f = PointRGB3<float>;
 }
 
 #endif // CSLIBS_MATH_2D_POINT_3D_HPP

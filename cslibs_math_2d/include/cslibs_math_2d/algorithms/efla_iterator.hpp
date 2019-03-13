@@ -17,8 +17,8 @@ public:
     using index_t       = std::array<int, 2>;
 
     template <typename T>
-    inline explicit EFLAIterator(const Point2d<T> &p0,
-                                 const Point2d<T> &p1,
+    inline explicit EFLAIterator(const Point2<T> &p0,
+                                 const Point2<T> &p1,
                                  const T          &resolution) :
         EFLAIterator({{static_cast<int>(std::floor(p0(0) / resolution)),
                        static_cast<int>(std::floor(p0(1) / resolution))}},

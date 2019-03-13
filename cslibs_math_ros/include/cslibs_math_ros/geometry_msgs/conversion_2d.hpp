@@ -12,20 +12,20 @@ namespace cslibs_math_ros {
 namespace geometry_msgs {
 namespace conversion_2d {
 template <typename T>
-inline cslibs_math_2d::Vector2d<T> from(const ::geometry_msgs::Point &p)
+inline cslibs_math_2d::Vector2<T> from(const ::geometry_msgs::Point &p)
 {
-    return cslibs_math_2d::Vector2d<T>(p.x, p.y);
+    return cslibs_math_2d::Vector2<T>(p.x, p.y);
 }
 
 template <typename T>
-inline cslibs_math_2d::Transform2d<T> from(const ::geometry_msgs::Pose &p)
+inline cslibs_math_2d::Transform2<T> from(const ::geometry_msgs::Pose &p)
 {
-    return cslibs_math_2d::Transform2d<T>(from<T>(p.position),
+    return cslibs_math_2d::Transform2<T>(from<T>(p.position),
                                           ::tf::getYaw(p.orientation));
 }
 
 template <typename T>
-inline ::geometry_msgs::Point from(const cslibs_math_2d::Vector2d<T> &v)
+inline ::geometry_msgs::Point from(const cslibs_math_2d::Vector2<T> &v)
 {
     ::geometry_msgs::Point p;
     p.x = v(0);
@@ -35,7 +35,7 @@ inline ::geometry_msgs::Point from(const cslibs_math_2d::Vector2d<T> &v)
 }
 
 template <typename T>
-inline ::geometry_msgs::Pose from(const cslibs_math_2d::Transform2d<T> &t)
+inline ::geometry_msgs::Pose from(const cslibs_math_2d::Transform2<T> &t)
 {
     ::geometry_msgs::Pose p;
     p.orientation = ::tf::createQuaternionMsgFromYaw(t.yaw());
@@ -45,7 +45,7 @@ inline ::geometry_msgs::Pose from(const cslibs_math_2d::Transform2d<T> &t)
 
 template <typename T>
 inline void from(const std::vector<::geometry_msgs::Pose> &src,
-                 std::vector<cslibs_math_2d::Transform2d<T>> &dst)
+                 std::vector<cslibs_math_2d::Transform2<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -55,7 +55,7 @@ inline void from(const std::vector<::geometry_msgs::Pose> &src,
 
 template <typename T>
 inline void from(const std::vector<::geometry_msgs::Point> &src,
-                 std::vector<cslibs_math_2d::Vector2d<T>> &dst)
+                 std::vector<cslibs_math_2d::Vector2<T>> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
@@ -64,23 +64,23 @@ inline void from(const std::vector<::geometry_msgs::Point> &src,
 }
 
 template <typename T>
-inline void from(const std::vector<cslibs_math_2d::Transform2d<T>> &src,
+inline void from(const std::vector<cslibs_math_2d::Transform2<T>> &src,
                  std::vector<::geometry_msgs::Pose> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_2d::Transform2d<T> &t){return from(t);});
+                  [](const cslibs_math_2d::Transform2<T> &t){return from(t);});
 }
 
 template <typename T>
-inline void from(const std::vector<cslibs_math_2d::Vector2d<T>> &src,
+inline void from(const std::vector<cslibs_math_2d::Vector2<T>> &src,
                  std::vector<::geometry_msgs::Point> &dst)
 {
     dst.resize(src.size());
     std::transform(src.begin(), src.end(),
                    dst.begin(),
-                  [](const cslibs_math_2d::Vector2d<T> &v){return from(v);});
+                  [](const cslibs_math_2d::Vector2<T> &v){return from(v);});
 }
 }
 }

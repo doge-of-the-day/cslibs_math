@@ -14,7 +14,7 @@ public:
     enum Termination {EPS, ITERATIONS};
 
     using covariance_t = Eigen::Matrix<T,3,3>;
-    using transform_t  = Transform3d<T>;
+    using transform_t  = Transform3<T>;
 
     inline Result(const std::size_t iterations = 100,
                   const Termination termination = ITERATIONS,
@@ -79,7 +79,7 @@ class EIGEN_ALIGN16 Parameters {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-    using transform_t = Transform3d<T>;
+    using transform_t = Transform3<T>;
 
     inline Parameters(const std::size_t max_iterations = 100,
                       const T trans_eps = 1e-4,
@@ -170,9 +170,9 @@ inline void apply(const src_iterator_t &src_begin,
     const T max_distance = sq(params.maxDistance());
     const std::size_t max_iterations = params.maxIterations();
 
-    Transform3d &transform = r.transform();
+    Transform3<T> &transform = r.transform();
     transform = params.transform();
-    Pointcloud3d::points_t src_points_transformed(src_size);
+    typename Pointcloud3<T>::points_t src_points_transformed(src_size);
 
     std::vector<std::size_t> indices(src_size, std::numeric_limits<std::size_t>::max());
 
@@ -181,30 +181,30 @@ inline void apply(const src_iterator_t &src_begin,
         return index < std::numeric_limits<std::size_t>::max();
     };
 
-    Point3d dst_mean;
+    Point3<T> dst_mean;
     for(auto itr = dst_begin; itr != dst_end; ++itr) {
         dst_mean += *itr;
     }
     dst_mean /= static_cast<T>(dst_size);
 
 
-    Eigen::Matrix3d &S = r.covariance();
+    Eigen::Matrix<T, 3, 3> &S = r.covariance();
 
     for(std::size_t i = 0 ; i < max_iterations ; ++i) {
         std::fill(indices.begin(), indices.end(), std::numeric_limits<std::size_t>::max());
 
-        Point3d src_mean;
+        Point3<T> src_mean;
 
         /// associate
         for(std::size_t s = 0 ; s < src_size ; ++s) {
-            Point3d &sp = src_points_transformed[s];
+            Point3<T> &sp = src_points_transformed[s];
             sp = transform * *std::next(src_begin, s);
             std::size_t &index = indices[s];
             src_mean += sp;
 
             T min_distance = std::numeric_limits<T>::max();
             for(std::size_t d = 0 ; d < dst_size ; ++d) {
-                const Point3d &dp = *std::next(dst_begin, d);
+                const Point3<T> &dp = *std::next(dst_begin, d);
                 const T dist = distance2(dp, sp);
                 if(dist < min_distance &&
                         dist < max_distance) {
@@ -215,25 +215,25 @@ inline void apply(const src_iterator_t &src_begin,
         }
         src_mean /= static_cast<T>(src_size);
 
-        S = Eigen::Matrix3d::Zero();
+        S = Eigen::Matrix<T, 3, 3>::Zero();
         for(std::size_t s = 0 ; s < src_size ; ++s) {
-            const Point3d &sp = src_points_transformed[s];
+            const Point3<T> &sp = src_points_transformed[s];
             const std::size_t index = indices[s];
             if(is_assigned(index)) {
-                const Point3d &dp = *std::next(dst_begin, index);
+                const Point3<T> &dp = *std::next(dst_begin, index);
                 S += (sp - src_mean).data() * (dp - dst_mean).data().transpose();
             }
 
         }
 
         Eigen::JacobiSVD<Eigen::Matrix<T, 3, 3> > svd (S, Eigen::ComputeFullU | Eigen::ComputeFullV);
-        Eigen::Matrix3d R =(svd.matrixU() * svd.matrixV().transpose()).transpose();
+        Eigen::Matrix<T, 3, 3> R =(svd.matrixU() * svd.matrixV().transpose()).transpose();
         // Eigen::Matrix<T, 3, 1> T = dst_mean.data() - R * src_mean.data();
         Eigen::Quaternion<T> qe(R);
 
-        Quaternion   q(qe.x(), qe.y(), qe.z(), qe.w());
-        Transform3d  dt(dst_mean - q * src_mean,
-                        q);
+        Quaternion    q(qe.x(), qe.y(), qe.z(), qe.w());
+        Transform3<T> dt(dst_mean - q * src_mean,
+                         q);
         transform *= dt;
 
         if(dt.translation().length2() < trans_eps ||
@@ -249,8 +249,8 @@ inline void apply(const src_iterator_t &src_begin,
 }
 
 template <typename T>
-inline void apply(const Pointcloud3d<T>::ConstPtr &src,
-                  const Pointcloud3d<T>::ConstPtr &dst,
+inline void apply(const Pointcloud3<T>::ConstPtr &src,
+                  const Pointcloud3<T>::ConstPtr &dst,
                   const Parameters<T> &params,
                   Result<T> &r)
 {

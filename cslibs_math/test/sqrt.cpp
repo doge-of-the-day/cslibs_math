@@ -3,7 +3,7 @@
 #include <cslibs_math/random/random.hpp>
 #include <cslibs_math/common/sqrt.hpp>
 
-using rng_t = cslibs_math::random::Uniform<1>;
+using rng_t = cslibs_math::random::Uniform<double,1>;
 const std::size_t REPETITIONS = 10000;
 
 TEST(Test_cslibs_math, testSqrt)

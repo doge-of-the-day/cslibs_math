@@ -28,8 +28,8 @@ public:
     }
 
     template <typename T>
-    inline explicit Bresenham(const Point3d<T> &p0,
-                              const Point3d<T> &p1,
+    inline explicit Bresenham(const Point3<T> &p0,
+                              const Point3<T> &p1,
                               const T resolution):
         Bresenham({{static_cast<int>(std::floor(p0(0) / resolution)),
                     static_cast<int>(std::floor(p0(1) / resolution)),
