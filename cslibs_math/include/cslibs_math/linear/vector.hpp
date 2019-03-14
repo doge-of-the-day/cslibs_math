@@ -147,7 +147,7 @@ public:
         return *this;
     }
 
-    inline Vector & operator /= (const double s)
+    inline Vector & operator /= (const T s)
     {
         data_ /= s;
         return *this;

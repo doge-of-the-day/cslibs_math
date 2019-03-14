@@ -176,7 +176,7 @@ public:
         return *this;
     }
 
-    inline Matrix & operator /= (const double s)
+    inline Matrix & operator /= (const T s)
     {
         data_ /= s;
         return *this;
@@ -262,12 +262,12 @@ public:
         return Matrix<T, M, N>(static_cast<Eigen::Matrix<T, M, N>>(data_.transpose()));
     }
 
-    inline double determinant()
+    inline T determinant()
     {
         return data_.determinant();
     }
 
-    inline double determinant() const
+    inline T determinant() const
     {
         return data_.determinant();
     }
