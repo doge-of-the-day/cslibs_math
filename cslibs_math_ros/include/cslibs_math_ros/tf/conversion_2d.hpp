@@ -24,7 +24,7 @@ inline cslibs_math_2d::Transform2<T> from(const ::tf::Transform &t)
 template <typename T>
 inline ::tf::Vector3 from(const cslibs_math_2d::Vector2<T> &v)
 {
-    return ::tf::Vector3(v(0), v(1), 0.0);
+    return ::tf::Vector3(v(0), v(1), T());
 }
 
 template <typename T>

@@ -4,6 +4,7 @@
 #include <cslibs_math_3d/linear/quaternion.hpp>
 #include <cslibs_math_3d/linear/vector.hpp>
 #include <cslibs_math/common/angle.hpp>
+#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math_3d {
 template <typename T>
@@ -28,7 +29,7 @@ public:
 
     inline Transform3(const T x,
                       const T y,
-                       const T z) :
+                      const T z) :
         translation_(x, y, z)
     {
     }
@@ -129,7 +130,7 @@ public:
     {
         rotation_t rotation_inverse = rotation_.invert();
         return Transform3(rotation_inverse * -translation_,
-                           rotation_inverse);
+                          rotation_inverse);
     }
 
     inline Transform3 operator -() const
@@ -262,16 +263,16 @@ public:
     inline Transform3 interpolate(const Transform3 &other,
                                   const T ratio) const
     {
-        assert(ratio  >= 0.0);
+        assert(ratio >= 0.0);
         assert(ratio <= 1.0);
-        if(ratio == 0.0) {
+        if (ratio == T()) {
             return *this;
         }
-        if(ratio == 1.0) {
+        if (ratio == cslibs_math::utility::traits<T>::One) {
             return other;
         }
 
-        const  T ratio_inverse = 1.0 - ratio;
+        const  T ratio_inverse = cslibs_math::utility::traits<T>::One - ratio;
         const  translation_t translation = translation_ * ratio_inverse + other.translation_ * ratio;
         const  rotation_t    rotation    = rotation_.interpolate(other.rotation_, ratio);
         return Transform3(translation, rotation);

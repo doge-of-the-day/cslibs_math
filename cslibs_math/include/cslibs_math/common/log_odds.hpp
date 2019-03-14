@@ -2,6 +2,7 @@
 #define CSLIBS_MATH_LOG_ODDS_HPP
 
 #include <cmath>
+#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math {
 namespace common {
@@ -9,12 +10,12 @@ template <typename T>
 struct LogOdds {
     inline static T to(const T p)
     {
-        return std::log(p / static_cast<T>(1.0 - p));
+        return std::log(p / (utility::traits<T>::One - p));
     }
 
     inline static T from(const T l)
     {
-        return static_cast<T>(1.0) / (static_cast<T>(1.0) + std::exp(-l));
+        return utility::traits<T>::One / (utility::traits<T>::One + std::exp(-l));
     }
 };
 }

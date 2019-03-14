@@ -4,18 +4,20 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigen>
 
+#include <cslibs_math/utility/traits.hpp>
+
 namespace cslibs_math {
 namespace statistics {
 
 template<typename T, std::size_t exp>
 struct LambdaRatio
 {
-    constexpr const static T value = 0.1 * LambdaRatio<T, exp - 1ul>::value;
+    constexpr const static T value = utility::traits<T>::Tenth * LambdaRatio<T, exp - 1ul>::value;
 };
 template<typename T>
 struct LambdaRatio<T, 0ul>
 {
-    constexpr const static T value = 1.0;
+    constexpr const static T value = utility::traits<T>::One;
 };
 
 template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
@@ -75,7 +77,7 @@ struct LimitEigenValuesByZero {
 
         matrix_t Lambda = matrix_t::Zero();
         for(std::size_t i = 0 ; i < Dim; ++i) {
-            Lambda(i,i) = std::max(eigen_values(i), 0.0);
+            Lambda(i,i) = std::max(eigen_values(i), T()); // T() = zero
         }
         matrix_io = eigen_vectors * Lambda * eigen_vectors.transpose();
     }

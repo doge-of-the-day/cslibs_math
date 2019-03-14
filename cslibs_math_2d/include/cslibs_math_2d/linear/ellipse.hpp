@@ -4,6 +4,8 @@
 #include <cslibs_math/linear/vector.hpp>
 #include <cslibs_math/linear/matrix.hpp>
 #include <cslibs_math/common/equal.hpp>
+#include <cslibs_math/utility/traits.hpp>
+
 #include <eigen3/Eigen/Jacobi>
 #include <vector>
 #include <limits>
@@ -96,7 +98,7 @@ public:
 
     inline bool fit(const points_t& points)
     {
-        if(points.size() < 6){
+        if (points.size() < 6){
             std::cerr << "At least 6 points are required for an ellipse fit. Given are " + std::to_string(points.size()) + " points." << "\n";
             return false;
         }
@@ -121,7 +123,7 @@ protected:
             result(row,2) = p(0) * p (1);
             result(row,3) = p(0);
             result(row,4) = p(1);
-            result(row,5) = T(1);
+            result(row,5) = utility::traits<T>::One;
             ++row;
         }
         return result;
@@ -130,14 +132,14 @@ protected:
     inline Eigen::Matrix<T,6,6> getMatrixM(const points_t& points)
     {
         Eigen::Matrix<T,6,6> res = Eigen::Matrix<T,6,6>::Zero(6,6);
-        for(auto p : points){
+        for (auto p : points){
             Eigen::Matrix<T,6,1> xi;
-            xi(0,0) = p(0) * p (0);
-            xi(1,0) = p(1) * p (1);
-            xi(2,0) = p(0) * p (1);
+            xi(0,0) = p(0) * p(0);
+            xi(1,0) = p(1) * p(1);
+            xi(2,0) = p(0) * p(1);
             xi(3,0) = p(0);
             xi(4,0) = p(1);
-            xi(5,0) = T(1);
+            xi(5,0) = utility::traits<T>::One;
             res += xi * xi.transpose();
         }
         res /= points.size();
@@ -153,25 +155,25 @@ protected:
         const T& D = hyper_params(3,0);
         const T& E = hyper_params(4,0);
         const T& F = hyper_params(5,0);
-        if( A == 0  && B == 0 && C == 0 && D == 0 && E == 0 && F==0){
+        if (A == 0  && B == 0 && C == 0 && D == 0 && E == 0 && F==0) {
             std::cerr << "Did not find non trivial solution. Ellipse fit not possible." << "\n";
             return false;
         }
         Eigen::Matrix<T,3,3> M0;
         M0(0,0) = F;
-        M0(0,1) = 0.5*D;
-        M0(0,2) = 0.5*E;
-        M0(1,0) = 0.5*D;
+        M0(0,1) = utility::traits<T>::Half*D;
+        M0(0,2) = utility::traits<T>::Half*E;
+        M0(1,0) = utility::traits<T>::Half*D;
         M0(1,1) = A;
-        M0(1,2) = 0.5*B;
-        M0(2,0) = 0.5*E;
-        M0(2,1) = 0.5*B;
+        M0(1,2) = utility::traits<T>::Half*B;
+        M0(2,0) = utility::traits<T>::Half*E;
+        M0(2,1) = utility::traits<T>::Half*B;
         M0(2,2) = C;
 
         Eigen::Matrix<T,2,2> M;
         M(0,0) = A;
-        M(0,1) = 0.5*B;
-        M(1,0) = 0.5*B;
+        M(0,1) = utility::traits<T>::Half*B;
+        M(1,0) = utility::traits<T>::Half*B;
         M(1,1) = C;
 
         T detM0 = M0.determinant();
@@ -196,7 +198,7 @@ protected:
             T cy = (B*D -2*A*E)/(4*A*C -B*B);
             T t = (A-C)/B;
             T alpha = std::atan(1/t);
-            alpha *= 0.5;
+            alpha *= utility::traits<T>::Half;
 
             solution = Ellipse<T>(a,b,cx,cy,alpha);
 

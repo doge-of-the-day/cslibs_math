@@ -10,6 +10,7 @@
 
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
 #include <cslibs_math/common/sqrt.hpp>
+#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math {
 namespace statistics {
@@ -26,20 +27,20 @@ public:
     using eigen_values_t      = Eigen::Matrix<T, Dim, 1>;
     using eigen_vectors_t     = Eigen::Matrix<T, Dim, Dim>;
 
-    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
+    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(utility::traits<T>::Two * M_PI);
 
 
     WeightedDistribution() :
         sample_count_(0),
         mean_(sample_t::Zero()),
         correlated_(covariance_t::Zero()),
-        W_(0.0),
-        W_sq_(0.0),
+        W_(T()),
+        W_sq_(T()),
         covariance_(covariance_t::Zero()),
         information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
-        determinant_(0.0),
+        determinant_(T()),
         dirty_(false)
     {
     }
@@ -58,7 +59,7 @@ public:
         information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
-        determinant_(0.0),
+        determinant_(T()),
         dirty_(true)
     {
     }
@@ -131,27 +132,31 @@ public:
 
     inline void reset()
     {
-        mean_       = sample_t::Zero();
-        covariance_ = covariance_t::Zero();
-        correlated_ = covariance_t::Zero();
-        eigen_vectors_ = eigen_vectors_t::Zero();
-        eigen_values_  = eigen_values_t::Zero();
-        W_ = 0.0;
-        W_sq_ = 0.0;
-        sample_count_ = 0;
+        sample_count_       = 0;
+        mean_               = sample_t::Zero();
+        correlated_         = covariance_t::Zero();
+        W_                  = T();
+        W_sq_               = T();
+
+        covariance_         = covariance_t::Zero();
+        information_matrix_ = covariance_t::Zero();
+        eigen_vectors_      = eigen_vectors_t::Zero();
+        eigen_values_       = eigen_values_t::Zero();
+        determinant_        = T();
+
         dirty_ = true;
     }
 
     /// Modification
     inline void add(const sample_t &p, const T w)
     {
-        if(w <= 0.0)
+        if (w <= T())
             return;
 
         const T _W = W_ + w;
         mean_ = (mean_ * W_ + p * w) / _W;
-        for(std::size_t i = 0 ; i < Dim ; ++i) {
-            for(std::size_t j = i ; j < Dim ; ++j) {
+        for (std::size_t i = 0 ; i < Dim ; ++i) {
+            for (std::size_t j = i ; j < Dim ; ++j) {
                 correlated_(i, j) = (correlated_(i, j) * W_ + w * p(i) * p(j)) / static_cast<T>(_W);
             }
         }
@@ -162,7 +167,7 @@ public:
     }
 
 
-    inline WeightedDistribution& operator+=(const WeightedDistribution &other)
+    inline WeightedDistribution& operator += (const WeightedDistribution &other)
     {
         const T _W = W_ + other.W_;
         mean_ = (mean_ * W_ + other.mean_ * other.W_) / _W;
@@ -202,7 +207,7 @@ public:
 
     inline void getMean(sample_t &mean) const
     {
-        mean = mean_;
+        mean = sample_t(mean_);
     }
 
     inline covariance_t getCorrelated() const
@@ -212,121 +217,129 @@ public:
 
     inline covariance_t getCovariance() const
     {
-        auto update_return_covariance = [this](){update(); return covariance_;};
-        return valid() ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
+        auto update_return_covariance = [this](){
+            update(); return covariance_;
+        };
+        return (dirty_ && valid()) ? update_return_covariance() : covariance_;
     }
 
     inline void getCovariance(covariance_t &covariance) const
     {
-        auto update_return_covariance = [this](){update(); return covariance_;};
-        covariance = valid() ? (dirty_ ? update_return_covariance() : covariance_) : covariance_t::Zero();
+        auto update_return_covariance = [this](){
+            update(); return covariance_t(covariance_);
+        };
+        covariance = (dirty_ && valid()) ? update_return_covariance() : covariance_t(covariance_);
     }
 
     inline covariance_t getInformationMatrix() const
     {
-        auto update_return_information = [this](){update(); return information_matrix_;};
-        return valid() ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
+        auto update_return_information = [this](){
+            update(); return information_matrix_;
+        };
+        return (dirty_ && valid()) ? update_return_information() : information_matrix_;
     }
 
     inline void getInformationMatrix(covariance_t &information_matrix) const
     {
-        auto update_return_information = [this](){update(); return information_matrix_;};
-        information_matrix = valid() ? (dirty_ ? update_return_information() : information_matrix_) : covariance_t::Zero();
+        auto update_return_information = [this](){
+            update(); return covariance_t(information_matrix_);
+        };
+        information_matrix = (dirty_ && valid()) ? update_return_information() : covariance_t(information_matrix_);
     }
 
     inline eigen_values_t getEigenValues(const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
-            if(dirty_) update();
-            return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+            update(); return abs ? eigen_values_.cwiseAbs() : eigen_values_;
         };
-        return valid() ?  update_return_eigen() : eigen_values_t::Zero();
+        return (dirty_ && valid()) ? update_return_eigen() : (abs ? eigen_values_.cwiseAbs() : eigen_values_);
     }
 
     inline void getEigenValues(eigen_values_t &eigen_values,
                                const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
-            if(dirty_) update();
-            return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+            update(); return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_);
         };
-        eigen_values = valid() ?  update_return_eigen() : eigen_values_t::Zero();
+        eigen_values = (dirty_ && valid()) ?  update_return_eigen() : (abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_));
     }
 
     inline eigen_vectors_t getEigenVectors() const
     {
         auto update_return_eigen = [this]() {
-            if(dirty_) update();
-            return eigen_vectors_;
+            update(); return eigen_vectors_;
         };
-        return valid() ? update_return_eigen() : eigen_vectors_t::Zero();
+        return (dirty_ && valid()) ? update_return_eigen() : eigen_vectors_;
     }
 
     inline void getEigenVectors(eigen_vectors_t &eigen_vectors) const
     {
         auto update_return_eigen = [this]() {
-            if(dirty_) update();
-            return eigen_vectors_;
+            update(); return eigen_vectors_;
         };
-        eigen_vectors = valid() ? update_return_eigen() : eigen_vectors_t::Zero();
+        eigen_vectors = (dirty_ && valid()) ? update_return_eigen() : eigen_vectors_t(eigen_vectors_);
     }
 
     /// Evaluation
     inline T denominator() const
     {
         auto update_return = [this](){
-            if(dirty_) update();
-            return 1.0 / (determinant_ * sqrt_2_M_PI);
+            if (dirty_) update();
+            return utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
         };
-        return valid() ? update_return() : 0.0;
+        return valid() ? update_return() : T();
     }
 
     inline T sample(const sample_t &p) const
     {
         auto update_sample = [this, &p]() {
-            if(dirty_) update();
-            const sample_t  q        = p - mean_;
-            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
-            const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
+            if (dirty_) update();
+            const sample_t q = p - mean_;
+            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
+            const T denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
-        return valid() ? update_sample() : 0.0;
+        return valid() ? update_sample() : T();
     }
 
     inline T sample(const sample_t &p,
                     sample_t &q) const
     {
         auto update_sample = [this, &p, &q]() {
-            if(dirty_) update();
+            if (dirty_) update();
             q = p - mean_;
-            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
-            const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
+            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
+            const T denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
-        return valid() ? update_sample() : 0.0;
+        return valid() ? update_sample() : T();
     }
 
     inline T sampleNonNormalized(const sample_t &p) const
     {
         auto update_sample = [this, &p]() {
-            if(dirty_) update();
-            const sample_t  q   = p - mean_;
-            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
+            if (dirty_) update();
+            const sample_t q = p - mean_;
+            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             return std::exp(exponent);
         };
-        return valid() ? update_sample() : 0.0;
+        return valid() ? update_sample() : T();
     }
 
     inline T sampleNonNormalized(const sample_t &p,
-                                      sample_t &q) const
+                                 sample_t &q) const
     {
         auto update_sample = [this, &p, &q]() {
-            if(dirty_) update();
+            if (dirty_) update();
             q = p - mean_;
-            const T exponent    = -0.5 * static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
+            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             return std::exp(exponent);
         };
-        return valid() ? update_sample() : 0.0;
+        return valid() ? update_sample() : T();
     }
 
     inline void merge(const WeightedDistribution&)
@@ -380,17 +393,17 @@ public:
     using allocator_t = Eigen::aligned_allocator<WeightedDistribution<T, 1, lambda_ratio_exponent>>;
     using Ptr         = std::shared_ptr<WeightedDistribution<T, 1, lambda_ratio_exponent>> ;
 
-    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
+    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(utility::traits<T>::Two * M_PI);
 
     inline WeightedDistribution() :
         sample_count_(0),
-        mean_(0.0),
-        variance_(0.0),
-        standard_deviation_(0.0),
-        squared_(0.0),
-        dirty_(false),
-        W_(0.0),
-        W_sq_(0.0)
+        mean_(T()),
+        squared_(T()),
+        W_(T()),
+        W_sq_(T()),
+        variance_(T()),
+        standard_deviation_(T()),
+        dirty_(false)
     {
     }
 
@@ -402,10 +415,10 @@ public:
         sample_count_(sample_count),
         mean_(mean),
         squared_(squared),
-        variance_(0.0),
-        standard_deviation_(0.0),
         W_(w),
         W_sq_(w_sq),
+        variance_(T()),
+        standard_deviation_(T()),
         dirty_(true)
     {
     }
@@ -416,14 +429,14 @@ public:
 
     inline void reset()
     {
-        mean_               = 0.0;
-        squared_            = 0.0;
-        variance_           = 0.0;
-        standard_deviation_ = 0.0;
-        dirty_              = false;
-        W_                  = 0.0;
-        W_sq_               = 0.0;
         sample_count_       = 0;
+        mean_               = T();
+        squared_            = T();
+        variance_           = T();
+        W_                  = T();
+        W_sq_               = T();
+        standard_deviation_ = T();
+        dirty_              = false;
     }
 
     inline void add(const T s, const T w)
@@ -449,6 +462,11 @@ public:
         return *this;
     }
 
+    inline bool valid() const
+    {
+        return sample_count_ > 1;
+    }
+
     inline std::size_t getSampleCount() const
     {
         return sample_count_;
@@ -471,30 +489,40 @@ public:
 
     inline T getVariance() const
     {
-        if (dirty_) update();
-        return variance_;
+        auto update_return_variance = [this]() {
+            update(); return variance_;
+        };
+        return (dirty_ && valid()) ? update_return_variance() : variance_;
     }
 
     inline T getStandardDeviation() const
     {
-        if (dirty_) update();
-        return standard_deviation_;
+        auto update_return_standard_deviation = [this]() {
+            update(); return standard_deviation_;
+        };
+        return (dirty_ && valid()) ? update_return_standard_deviation() : standard_deviation_;
     }
 
     inline T sample(const T s) const
     {
-        if (dirty_) update();
-        const T d = 2 * variance_;
-        const T x = (s - mean_);
-        return std::exp(-0.5 * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
+        auto update_sample = [this, &s]() {
+            if (dirty_) update();
+            const T d = utility::traits<T>::Two * variance_;
+            const T x = s - mean_;
+            return std::exp(-utility::traits<T>::Half * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
+        };
+        return valid() ? update_sample() : T();
     }
 
     inline T sampleNonNormalized(const T s) const
     {
-        if (dirty_) update();
-        const T d = 2 * variance_;
-        const T x = (s - mean_);
-        return std::exp(-0.5 * x * x / d);
+        auto update_sample = [this, &s]() {
+            if (dirty_) update();
+            const T d = utility::traits<T>::Two * variance_;
+            const T x = s - mean_;
+            return std::exp(-utility::traits<T>::Half * x * x / d);
+        };
+        return valid() ? update_sample() : T();
     }
 
     inline void merge(const WeightedDistribution&)
@@ -504,12 +532,14 @@ public:
 private:
     std::size_t     sample_count_;
     T               mean_;
-    mutable T       variance_;
-    mutable T       standard_deviation_;
     T               squared_;
-    bool            dirty_;
     T               W_;
     T               W_sq_;
+
+    mutable T       variance_;
+    mutable T       standard_deviation_;
+
+    mutable bool    dirty_;
 
     inline void update() const
     {

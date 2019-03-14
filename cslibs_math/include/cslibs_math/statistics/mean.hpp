@@ -38,7 +38,7 @@ public:
 
     inline void add(const sample_t &sample)
     {
-        mean_ = (mean_ * n_1 + sample) / n_;
+        mean_ = (mean_ * static_cast<T>(n_1) + sample) / static_cast<T>(n_);
         ++n_;
         ++n_1;
     }
@@ -62,7 +62,7 @@ public:
     using allocator_t = Eigen::aligned_allocator<Mean<T,1>>;
 
     Mean() :
-        mean_(0.0),
+        mean_(T()),
         n_(1),
         n_1(0)
     {
@@ -70,7 +70,7 @@ public:
 
     inline void add(const T &sample)
     {
-        mean_ = (mean_ * n_1 + sample) / n_;
+        mean_ = (mean_ * static_cast<T>(n_1) + sample) / static_cast<T>(n_);
         ++n_;
         ++n_1;
     }

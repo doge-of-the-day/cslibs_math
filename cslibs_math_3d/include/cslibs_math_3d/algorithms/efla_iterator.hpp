@@ -7,7 +7,7 @@
 
 namespace cslibs_math_3d {
 namespace algorithms {
-template <typename Tp = float>
+template <typename Tp = double>
 class EIGEN_ALIGN16 EFLAIterator
 {
 public:

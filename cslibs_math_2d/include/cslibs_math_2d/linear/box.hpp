@@ -4,6 +4,7 @@
 #include <cslibs_math_2d/linear/line.hpp>
 
 #include <cslibs_math/common/equal.hpp>
+#include <cslibs_math/utility/traits.hpp>
 
 #include <limits>
 #include <set>
@@ -102,13 +103,13 @@ public:
         const auto p1 = line[1];
         const auto d = p1 - p0;
 
-        T t0 = 0.0;
-        T t1 = 1.0;
+        T t0 = T();
+        T t1 = utility::traits<T>::One;
 
         auto clip = [] (const T p, const T q,
                         T &t0, T &t1)
         {
-            if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
+            if(cslibs_math::common::eq(p, T()) && q < T())
                 return false;
 
             const T r = q / p;
@@ -146,22 +147,22 @@ public:
         const auto p1 = line[1];
         const auto d = p1 - p0;
 
-        T t0 = 0.0;
-        T t1 = 1.0;
+        T t0 = T();
+        T t1 = utility::traits<T>::One;
 
         auto clip = [] (const T p, const T q,
                         T &t0, T &t1)
         {
-            if(cslibs_math::common::eq(p, 0.0) && q < 0.0)
+            if(cslibs_math::common::eq(p, T()) && q < T())
                 return false;
 
             const T r = q / p;
-            if(p < 0) {
+            if (p < 0) {
                 if(r > t1)
                     return false;
                 t0 = r > t0 ? r : t0;
             }
-            if(p > 0) {
+            if (p > 0) {
                 if(r < t0)
                     return false;
                 t1 = r < t1 ? r : t1;

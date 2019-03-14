@@ -34,7 +34,7 @@ public:
                static_cast<int>(std::floor(p1(2) / resolution))}}),
         resolution_(resolution),
         diff_((p1-p0) * resolution),
-        point_(0.0, 0.0, 0.0),
+        point_(T(), T(), T()),
         index_(start_),
         min_(std::min(start_, end_)),
         max_(std::max(start_, end_))

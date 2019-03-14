@@ -3,6 +3,7 @@
 
 #include <cslibs_math_2d/linear/vector.hpp>
 #include <cslibs_math/common/angle.hpp>
+#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math_2d
 {
@@ -22,10 +23,10 @@ public:
     using allocator_t = Eigen::aligned_allocator<Transform2<T>>;
 
     inline Transform2() :
-        translation_(0.0, 0.0),
-        yaw_(0.0),
-        sin_(0.0),
-        cos_(1.0)
+        translation_(T(), T()),
+        yaw_(T()),
+        sin_(T()),
+        cos_(cslibs_math::utility::traits<T>::One)
     {
     }
 
@@ -42,34 +43,34 @@ public:
 
     static inline Transform2 identity()
     {
-        return Transform2(0.0, 0.0);
+        return Transform2(T(), T());
     }
 
     inline Transform2(const T x,
-                       const T y) :
+                      const T y) :
         translation_(x, y),
-        yaw_(0.0),
-        sin_(0.0),
-        cos_(1.0)
+        yaw_(T()),
+        sin_(T()),
+        cos_(cslibs_math::utility::traits<T>::One)
     {
     }
 
     inline Transform2(const Vector2<T> &translation) :
         translation_(translation),
-        yaw_(0.0),
-        sin_(0.0),
-        cos_(1.0)
+        yaw_(T()),
+        sin_(T()),
+        cos_(cslibs_math::utility::traits<T>::One)
     {
     }
 
     inline Transform2(const T yaw) :
-        Transform2(0.0, 0.0, yaw)
+        Transform2(T(), T(), yaw)
     {
     }
 
     inline Transform2(const T x,
-                       const T y,
-                       const T yaw) :
+                      const T y,
+                      const T yaw) :
         translation_(x, y),
         yaw_(yaw),
         sin_(std::sin(yaw_)),
@@ -78,7 +79,7 @@ public:
     }
 
     inline Transform2(const Vector2<T> &translation,
-                       const T yaw) :
+                      const T yaw) :
         translation_(translation),
         yaw_(yaw),
         sin_(std::sin(yaw_)),
@@ -110,12 +111,12 @@ public:
 
     inline Transform2 & operator *= (const Transform2 &other)
     {
-        if(yaw_ == 0.0) {
+        if(yaw_ == T()) {
             translation_ += other.translation_;
             yaw_ = other.yaw_;
             sin_ = other.sin_;
             cos_ = other.cos_;
-        } else if(other.yaw_ == 0.0) {
+        } else if (other.yaw_ == T()) {
             translation_ = (*this) * other.translation_;
         } else {
             translation_ = (*this) * other.translation_;
@@ -255,13 +256,13 @@ public:
     {
         assert(ratio >= 0.0);
         assert(ratio <= 1.0);
-        if (ratio == 0.0)
+        if (ratio == T())
             return *this;
 
-        if (ratio == 1.0)
+        if (ratio == cslibs_math::utility::traits<T>::One)
             return other;
 
-        const T ratio_inverse = 1.0 - ratio;
+        const T ratio_inverse = cslibs_math::utility::traits<T>::One - ratio;
         const Vector2<T> translation = translation_ * ratio_inverse + other.translation_ * ratio;
         const T yaw = cslibs_math::common::angle::normalize(yaw_ + ratio * cslibs_math::common::angle::normalize(other.yaw_ - yaw_));
         return Transform2(translation, yaw);
@@ -288,23 +289,23 @@ template <typename T>
 inline cslibs_math_2d::Vector2<T> operator * (const cslibs_math_2d::Transform2<T> &t,
                                               const cslibs_math_2d::Vector2<T> &v)
 {
-    return t.yaw() == 0.0 ? v + t.translation()
+    return t.yaw() == T() ? v + t.translation()
                           : cslibs_math_2d::Vector2<T>(t.cos() * v(0) - t.sin() * v(1) + t.translation()(0),
-                                                        t.sin() * v(0) + t.cos() * v(1) + t.translation()(1));
+                                                       t.sin() * v(0) + t.cos() * v(1) + t.translation()(1));
 }
 
 template <typename T>
 inline cslibs_math_2d::Transform2<T> operator * (const cslibs_math_2d::Transform2<T> &a,
                                                  const cslibs_math_2d::Transform2<T> &b)
 {
-    return a.yaw() == 0.0 ? cslibs_math_2d::Transform2<T>(b.translation() + a.translation(),
-                                                           b.yaw(), b.sin(), b.cos())
-                          : b.yaw() == 0.0 ? cslibs_math_2d::Transform2<T>(a * b.translation(),
-                                                                            a.yaw(), a.sin(), a.cos())
+    return a.yaw() == T() ? cslibs_math_2d::Transform2<T>(b.translation() + a.translation(),
+                                                          b.yaw(), b.sin(), b.cos())
+                          : b.yaw() == T() ? cslibs_math_2d::Transform2<T>(a * b.translation(),
+                                                                           a.yaw(), a.sin(), a.cos())
                                            : cslibs_math_2d::Transform2<T>(a * b.translation(),
-                                                                            cslibs_math::common::angle::normalize(a.yaw() + b.yaw()),
-                                                                            a.sin() * b.cos() + a.cos() * b.sin(),
-                                                                            a.cos() * b.cos() - a.sin() * b.sin());
+                                                                           cslibs_math::common::angle::normalize(a.yaw() + b.yaw()),
+                                                                           a.sin() * b.cos() + a.cos() * b.sin(),
+                                                                           a.cos() * b.cos() - a.sin() * b.sin());
 }
 
 template <typename T>

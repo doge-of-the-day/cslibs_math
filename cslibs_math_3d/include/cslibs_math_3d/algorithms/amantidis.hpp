@@ -25,8 +25,8 @@ public:
         start_{{0, 0, 0}},
         end_{{0, 0, 0}},
         index_{{0, 0, 0}},
-        delta_{{0.0, 0.0, 0.0}},
-        max_{{0.0, 0.0, 0.0}}
+        delta_{{Tp(), Tp(), Tp()}},
+        max_{{Tp(), Tp(), Tp()}}
     {
     }
 
@@ -41,17 +41,17 @@ public:
               static_cast<int>(std::floor(end(1) / resolution)),
               static_cast<int>(std::floor(end(2) / resolution))}},
         index_(start_),
-        delta_{{0.0, 0.0, 0.0}},
-        max_{{0.0, 0.0, 0.0}}
+        delta_{{Tp(), Tp(), Tp()}},
+        max_{{Tp(), Tp(), Tp()}}
     {
         const Point3<T> d = end - start;
         const static T dmax =  std::numeric_limits<T>::max();
-        const bool dx = cslibs_math::common::neq(d(0), 0.0);
-        const bool dy = cslibs_math::common::neq(d(1), 0.0);
-        const bool dz = cslibs_math::common::neq(d(2), 0.0);
-        step_[0]       = d(0) >= 0.0 ? 1 : -1;
-        step_[1]       = d(1) >= 0.0 ? 1 : -1;
-        step_[2]       = d(2) >= 0.0 ? 1 : -1;
+        const bool dx = cslibs_math::common::neq(d(0), T());
+        const bool dy = cslibs_math::common::neq(d(1), T());
+        const bool dz = cslibs_math::common::neq(d(2), T());
+        step_[0]       = d(0) >= Tp() ? 1 : -1;
+        step_[1]       = d(1) >= Tp() ? 1 : -1;
+        step_[2]       = d(2) >= Tp() ? 1 : -1;
         delta_[0]      = dx ? resolution / d(0) * step_[0] : dmax;
         delta_[1]      = dy ? resolution / d(1) * step_[1] : dmax;
         delta_[2]      = dz ? resolution / d(2) * step_[2] : dmax;

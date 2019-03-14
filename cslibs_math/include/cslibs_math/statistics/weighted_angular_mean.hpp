@@ -3,8 +3,10 @@
 
 #include <memory>
 #include <complex>
-#include <cslibs_math/common/angle.hpp>
 #include <eigen3/Eigen/Core>
+
+#include <cslibs_math/common/angle.hpp>
+#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math {
 namespace statistics {
@@ -19,9 +21,9 @@ public:
 
     WeightedAngularMean() :
         dirty_(false),
-        mean_(0.0),
-        complex_mean_(0.0, 0.0),
-        W_(0.0)
+        mean_(T()),
+        complex_mean_(T(), T()),
+        W_(T())
     {
     }
 
@@ -62,15 +64,15 @@ public:
     void reset()
     {
         dirty_           = true;
-        mean_            = 0.0;
-        complex_mean_(0) = 0.0;
-        complex_mean_(1) = 0.0;
-        W_               = 0.0;
+        mean_            = T();
+        complex_mean_(0) = T();
+        complex_mean_(1) = T();
+        W_               = T();
     }
 
     inline void add(const T rad, const T w)
     {
-        if(w == 0.0)
+        if (w == T())
             return;
 
         T _W = W_ + w;
@@ -112,7 +114,7 @@ public:
 
     inline T getCovariance() const
     {
-        return -2.0 * std::log(std::hypot(complex_mean_(0), complex_mean_(1)));
+        return -utility::traits<T>::Two * std::log(std::hypot(complex_mean_(0), complex_mean_(1)));
     }
 
 private:

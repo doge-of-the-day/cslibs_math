@@ -13,7 +13,7 @@ public:
     using Ptr                 = std::shared_ptr<WeightedQuaternionMean<T>> ;
 
     WeightedQuaternionMean() :
-        W_(0.0),
+        W_(T()),
         mean_(Eigen::Quaternion<T>::Identity())
     {
     }
@@ -32,7 +32,7 @@ public:
 
     WeightedQuaternionMean & operator += (const Eigen::Quaternion<T> &q, const T w)
     {
-        if(W_ == 0.0) {
+        if (W_ == T()) {
             mean = q * w;
             W_ = w;
         } else {
@@ -61,7 +61,7 @@ private:
                                  const Eigen::Quaternion<T> &q_b)
     {
         T dot = q_a.dot(q_b);
-        return dot < 0.0;
+        return dot < T();
     }
 };
 }

@@ -19,8 +19,8 @@ public:
 
     AngularMean() :
         dirty_(true),
-        mean_(0.0),
-        complex_mean_(0.0, 0.0),
+        mean_(T()),
+        complex_mean_(T(), T()),
         n_(1ul),
         n_1_(0ul)
     {
@@ -66,11 +66,11 @@ public:
 
     void reset()
     {
-        dirty_ = true;
-        mean_ = 0.0;
-        complex_mean_ = 0.0;
-        n_ = 1ul;
-        n_1_ = 0ul;
+        dirty_          = true;
+        mean_           = T();
+        complex_mean_   = complex(T(), T());
+        n_              = 1ul;
+        n_1_            = 0ul;
     }
 
     inline void add(const T rad)
@@ -86,9 +86,8 @@ public:
     {
         dirty_ = true;
         std::size_t _n = n_1_ + other.n_1_;
-        complex   _mean = (complex_mean_ * static_cast<T>(n_1_) + other.complex_mean_ * static_cast<T>(other.n_1_)) /
+        complex_mean_ = (complex_mean_ * static_cast<T>(n_1_) + other.complex_mean_ * static_cast<T>(other.n_1_)) /
                            static_cast<T>(_n);
-        complex_mean_ = _mean;
         n_   = _n + 1;
         n_1_ = _n;
         dirty_ = true;
@@ -102,7 +101,7 @@ public:
 
     inline T getMean() const
     {
-        if(dirty_) {
+        if (dirty_) {
             mean_ = common::angle::fromComplex(complex_mean_);
             dirty_ = false;
         }
@@ -110,7 +109,7 @@ public:
     }
 
     inline void getMean(T &mean) {
-        if(dirty_) {
+        if (dirty_) {
             mean_ = common::angle::fromComplex(complex_mean_);
             dirty_ = false;
         }
