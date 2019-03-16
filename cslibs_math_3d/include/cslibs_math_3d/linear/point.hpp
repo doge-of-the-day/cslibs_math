@@ -20,6 +20,7 @@ public:
 
     using point_t = Point3<T>;
     using color_t = cslibs_math::color::Color<T>;
+    using type_t  = T;
 
     inline PointRGB3():
         a_(cslibs_math::utility::traits<T>::One)
@@ -40,13 +41,26 @@ public:
     {
     }
 
+    inline PointRGB3& operator=(const PointRGB3 &other)
+    {
+        point_ = other.point_;
+        a_ = other.a_;
+        color_ = other.color_;
+        return *this;
+    }
+
     inline PointRGB3(const point_t &pos) :
         point_(pos),
         a_(cslibs_math::utility::traits<T>::One)
     {
     }
 
-    inline PointRGB3(const point_t &pos, T a, color_t& c) :
+    inline PointRGB3(const double& v) :
+        PointRGB3(point_t(v,v,v))
+    {
+    }
+
+    inline PointRGB3(const point_t &pos, const T& a, const color_t& c) :
         point_(pos),
         a_(a),
         color_(c)
