@@ -5,7 +5,7 @@
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
-namespace muse_mcl {
+namespace cslibs_math {
 template<std::size_t Dim>
 struct EIGEN_ALIGN16 TestDistribution {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

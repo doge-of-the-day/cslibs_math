@@ -39,7 +39,8 @@ public:
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(T()),  // zero initialization
-        dirty_(false)
+        dirty_(false),
+        dirty_eigenvalues_(false)
     {
     }
 
@@ -56,7 +57,8 @@ public:
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(T()),
-        dirty_(true)
+        dirty_(true),
+        dirty_eigenvalues_(true)
     {
     }
 
@@ -70,7 +72,8 @@ public:
         eigen_values_(other.eigen_values_),
         eigen_vectors_(other.eigen_vectors_),
         determinant_(other.determinant_),
-        dirty_(other.dirty_)
+        dirty_(other.dirty_),
+        dirty_eigenvalues_(other.dirty_eigenvalues_)
     {
     }
 
@@ -88,6 +91,7 @@ public:
         determinant_          = other.determinant_;
 
         dirty_                = other.dirty_;
+        dirty_eigenvalues_    = other.dirty_eigenvalues_;
         return *this;
     }
 
@@ -105,6 +109,7 @@ public:
         determinant_          = other.determinant_;
 
         dirty_                = other.dirty_;
+        dirty_eigenvalues_    = other.dirty_eigenvalues_;
     }
 
     inline Distribution& operator=(Distribution &&other)
@@ -121,6 +126,7 @@ public:
         determinant_          = other.determinant_;
 
         dirty_                = other.dirty_;
+        dirty_eigenvalues_    = other.dirty_eigenvalues_;
         return *this;
     }
 
@@ -138,20 +144,22 @@ public:
         determinant_        = T();
 
         dirty_              = true;
+        dirty_eigenvalues_  = true;
     }
 
     /// Modification
     inline void add(const sample_t &p)
     {
         mean_ = (mean_ * static_cast<T>(n_1_) + p) / static_cast<T>(n_);
-        for(std::size_t i = 0 ; i < Dim ; ++i) {
-            for(std::size_t j = i ; j < Dim ; ++j) {
+        for (std::size_t i = 0 ; i < Dim ; ++i) {
+            for (std::size_t j = i ; j < Dim ; ++j) {
                 correlated_(i, j) = (correlated_(i, j) * static_cast<T>(n_1_) + p(i) * p(j)) / static_cast<T>(n_);
             }
         }
         ++n_;
         ++n_1_;
         dirty_ = true;
+        dirty_eigenvalues_ = true;
     }
 
     inline Distribution& operator += (const sample_t &p)
@@ -168,6 +176,7 @@ public:
         n_1_        = _n;
         n_          = _n + 1;
         dirty_      = true;
+        dirty_eigenvalues_ = true;
         return *this;
     }
 
@@ -236,34 +245,34 @@ public:
     inline eigen_values_t getEigenValues(const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
-            update(); return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+            updateEigenvalues(); return abs ? eigen_values_.cwiseAbs() : eigen_values_;
         };
-        return (dirty_ && valid()) ?  update_return_eigen() : (abs ? eigen_values_.cwiseAbs() : eigen_values_);
+        return (dirty_eigenvalues_ && valid()) ?  update_return_eigen() : (abs ? eigen_values_.cwiseAbs() : eigen_values_);
     }
 
     inline void getEigenValues(eigen_values_t &eigen_values,
                                const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
-            update(); return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_);
+            updateEigenvalues(); return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_);
         };
-        eigen_values = (dirty_ && valid()) ? update_return_eigen() : (abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_));
+        eigen_values = (dirty_eigenvalues_ && valid()) ? update_return_eigen() : (abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_));
     }
 
     inline eigen_vectors_t getEigenVectors() const
     {
         auto update_return_eigen = [this]() {
-            update(); return eigen_vectors_;
+            updateEigenvalues(); return eigen_vectors_;
         };
-        return (dirty_ && valid()) ? update_return_eigen() : eigen_vectors_;
+        return (dirty_eigenvalues_ && valid()) ? update_return_eigen() : eigen_vectors_;
     }
 
     inline void getEigenVectors(eigen_vectors_t &eigen_vectors) const
     {
         auto update_return_eigen = [this]() {
-            update(); return eigen_vectors_t(eigen_vectors_);
+            updateEigenvalues(); return eigen_vectors_t(eigen_vectors_);
         };
-        eigen_vectors = (dirty_ && valid()) ? update_return_eigen() : eigen_vectors_t(eigen_vectors_);
+        eigen_vectors = (dirty_eigenvalues_ && valid()) ? update_return_eigen() : eigen_vectors_t(eigen_vectors_);
     }
 
     /// Evaluation
@@ -280,10 +289,9 @@ public:
     {
         auto update_sample = [this, &p]() {
             if (dirty_) update();
-            const sample_t q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
-                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
-            const T denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
+            const auto& q = p - mean_;
+            const auto& exponent = - utility::traits<T>::Half * q.transpose() * information_matrix_ * q;
+            const auto& denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
         return valid() ? update_sample() : T(); // T() = zero
@@ -295,9 +303,8 @@ public:
         auto update_sample = [this, &p, &q]() {
             if (dirty_) update();
             q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
-                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
-            const T denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
+            const auto& exponent = - utility::traits<T>::Half * q.transpose() * information_matrix_ * q;
+            const auto& denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
         return valid() ? update_sample() : T(); // T() = zero
@@ -312,9 +319,8 @@ public:
     {
         auto update_sample = [this, &p]() {
             if (dirty_) update();
-            const sample_t q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
-                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
+            const auto& q = p - mean_;
+            const T& exponent = - utility::traits<T>::Half * q.transpose() * information_matrix_ * q;
             return std::exp(exponent);
         };
         return valid() ? update_sample() : T(); // T() = zero
@@ -326,8 +332,7 @@ public:
         auto update_sample = [this, &p, &q]() {
             if (dirty_) update();
             q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
-                        static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
+            const T exponent = - utility::traits<T>::Half * q.transpose() * information_matrix_ * q;
             return std::exp(exponent);
         };
         return valid() ? update_sample() : T(); // T() = zero
@@ -355,6 +360,7 @@ private:
     mutable T                    determinant_;
 
     mutable bool                 dirty_;
+    mutable bool                 dirty_eigenvalues_;
 
     inline void update() const
     {
@@ -368,14 +374,23 @@ private:
 
         LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
+        information_matrix_ = covariance_.inverse();
+        determinant_        = covariance_.determinant();
+
+        dirty_              = false;
+    }
+
+    inline void updateEigenvalues() const
+    {
+        if (dirty_)
+            update();
+
         Eigen::EigenSolver<covariance_t> solver;
         solver.compute(covariance_);
         eigen_vectors_ = solver.eigenvectors().real();
         eigen_values_  = solver.eigenvalues().real();
 
-        information_matrix_ = covariance_.inverse();
-        determinant_        = covariance_.determinant();
-        dirty_              = false;
+        dirty_eigenvalues_ = false;
     }
 };
 

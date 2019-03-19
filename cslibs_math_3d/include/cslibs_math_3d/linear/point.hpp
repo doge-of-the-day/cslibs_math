@@ -99,14 +99,16 @@ public:
         color_ = c;
     }
 
-    inline PointRGB3 min(const PointRGB3 &other) const
+    inline PointRGB3& min(const PointRGB3 &other)
     {
-        return PointRGB3(cslibs_math::linear::min(point_, other.point_));
+        setPoint(point_.min(other.point_));
+        return *this;
     }
 
-    inline PointRGB3 max(const PointRGB3 &other) const
+    inline PointRGB3& max(const PointRGB3 &other)
     {
-        return PointRGB3(cslibs_math::linear::max(point_, other.point_));
+        setPoint(point_.max(other.point_));
+        return *this;
     }
 
     inline static PointRGB3 inf()

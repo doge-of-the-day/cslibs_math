@@ -108,8 +108,8 @@ public:
              max_.max(p);
         };
 
-        min_ = point_t(std::numeric_limits<typename point_t::type_t>::max());
-        max_ = point_t(std::numeric_limits<typename point_t::type_t>::min());
+        min_ = point_t::max();
+        max_ = point_t::min();
         std::for_each(data_.begin(), data_.end(),
                       apply);
     }

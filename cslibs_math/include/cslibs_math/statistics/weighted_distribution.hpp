@@ -41,7 +41,8 @@ public:
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(T()),
-        dirty_(false)
+        dirty_(false),
+        dirty_eigenvalues_(false)
     {
     }
 
@@ -60,7 +61,8 @@ public:
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(T()),
-        dirty_(true)
+        dirty_(true),
+        dirty_eigenvalues_(false)
     {
     }
 
@@ -75,7 +77,8 @@ public:
         eigen_values_(other.eigen_values_),
         eigen_vectors_(other.eigen_vectors_),
         determinant_(other.determinant_),
-        dirty_(other.dirty_)
+        dirty_(other.dirty_),
+        dirty_eigenvalues_(other.dirty_eigenvalues_)
     {
     }
 
@@ -94,6 +97,7 @@ public:
         determinant_            = other.determinant_;
 
         dirty_                  = other.dirty_;
+        dirty_eigenvalues_      = other.dirty_eigenvalues_;
         return *this;
     }
 
@@ -108,7 +112,8 @@ public:
         eigen_values_(std::move(other.eigen_values_)),
         eigen_vectors_(std::move(other.eigen_vectors_)),
         determinant_(other.determinant_),
-        dirty_(other.dirty_)
+        dirty_(other.dirty_),
+        dirty_eigenvalues_(other.dirty_eigenvalues_)
     {
     }
 
@@ -127,6 +132,7 @@ public:
         determinant_            = other.determinant_;
 
         dirty_                  = other.dirty_;
+        dirty_eigenvalues_      = other.dirty_eigenvalues_;
         return *this;
     }
 
@@ -144,7 +150,8 @@ public:
         eigen_values_       = eigen_values_t::Zero();
         determinant_        = T();
 
-        dirty_ = true;
+        dirty_              = true;
+        dirty_eigenvalues_  = true;
     }
 
     /// Modification
@@ -164,6 +171,7 @@ public:
         W_     = _W;
         W_sq_ +=  w*w;
         dirty_ =  true;
+        dirty_eigenvalues_ = true;
     }
 
 
@@ -176,6 +184,7 @@ public:
         W_sq_ += other.W_sq_;
         sample_count_ += other.sample_count_;
         dirty_ = true;
+        dirty_eigenvalues_ = true;
         return *this;
     }
 
@@ -250,34 +259,34 @@ public:
     inline eigen_values_t getEigenValues(const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
-            update(); return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+            updateEigenvalues(); return abs ? eigen_values_.cwiseAbs() : eigen_values_;
         };
-        return (dirty_ && valid()) ? update_return_eigen() : (abs ? eigen_values_.cwiseAbs() : eigen_values_);
+        return (dirty_eigenvalues_ && valid()) ? update_return_eigen() : (abs ? eigen_values_.cwiseAbs() : eigen_values_);
     }
 
     inline void getEigenValues(eigen_values_t &eigen_values,
                                const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
-            update(); return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_);
+            updateEigenvalues(); return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_);
         };
-        eigen_values = (dirty_ && valid()) ?  update_return_eigen() : (abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_));
+        eigen_values = (dirty_eigenvalues_ && valid()) ?  update_return_eigen() : (abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_t(eigen_values_));
     }
 
     inline eigen_vectors_t getEigenVectors() const
     {
         auto update_return_eigen = [this]() {
-            update(); return eigen_vectors_;
+            updateEigenvalues(); return eigen_vectors_;
         };
-        return (dirty_ && valid()) ? update_return_eigen() : eigen_vectors_;
+        return (dirty_eigenvalues_ && valid()) ? update_return_eigen() : eigen_vectors_;
     }
 
     inline void getEigenVectors(eigen_vectors_t &eigen_vectors) const
     {
         auto update_return_eigen = [this]() {
-            update(); return eigen_vectors_;
+            updateEigenvalues(); return eigen_vectors_;
         };
-        eigen_vectors = (dirty_ && valid()) ? update_return_eigen() : eigen_vectors_t(eigen_vectors_);
+        eigen_vectors = (dirty_eigenvalues_ && valid()) ? update_return_eigen() : eigen_vectors_t(eigen_vectors_);
     }
 
     /// Evaluation
@@ -360,6 +369,7 @@ private:
     mutable T                 determinant_;
 
     mutable bool              dirty_;
+    mutable bool              dirty_eigenvalues_;
 
     inline void update() const
     {
@@ -373,17 +383,26 @@ private:
 
         LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
+        information_matrix_ = covariance_.inverse();
+        determinant_        = covariance_.determinant();
+
+        dirty_              = false;
+    }
+
+    inline void updateEigenvalues() const
+    {
+        if (dirty_)
+            update();
+
         Eigen::EigenSolver<covariance_t> solver;
         solver.compute(covariance_);
         eigen_vectors_ = solver.eigenvectors().real();
         eigen_values_  = solver.eigenvalues().real();
 
-        information_matrix_ = covariance_.inverse();
-        determinant_        = covariance_.determinant();
-        dirty_              = false;
+        dirty_eigenvalues_ = false;
     }
 
-}__attribute__ ((aligned (16)));
+};
 
 template<typename T, std::size_t lambda_ratio_exponent>
 class WeightedDistribution<T, 1, lambda_ratio_exponent>

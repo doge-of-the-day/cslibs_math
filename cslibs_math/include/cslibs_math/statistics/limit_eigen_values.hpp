@@ -22,7 +22,7 @@ struct LambdaRatio<T, 0ul>
 
 template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
 /**
- * @brief The LimitCovariance struct is used to assure, that eigen values are not too small.
+ * @brief The LimitEigenValues struct is used to assure, that eigen values are not too small.
  *        This will probihit the distribution to collapse in one dimension, since eigen values
  *        represent the length of the eigen vectors, which build a local orthonormal system.
  */

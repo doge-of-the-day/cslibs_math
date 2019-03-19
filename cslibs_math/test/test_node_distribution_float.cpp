@@ -14,11 +14,14 @@ namespace cs = cslibs_math::statistics;
 
 TEST(Test_cslibs_math, testDistributionInsertion)
 {
-  cs::Distribution<double,2> distribution;
+  cs::Distribution<float,2> distribution;
   EXPECT_EQ(0, distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
-    distribution.add(test_distribution_200.data[i]);
+    Eigen::Matrix<float,2,1> data;
+    data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+    data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+    distribution.add(data);
   }
   EXPECT_EQ(test_distribution_200.data.size(), distribution.getN());
 
@@ -26,7 +29,10 @@ TEST(Test_cslibs_math, testDistributionInsertion)
   EXPECT_EQ(0, distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
-    distribution.add(test_distribution_500.data[i]);
+    Eigen::Matrix<float,2,1> data;
+    data[0] = static_cast<float>(test_distribution_500.data[i][0]);
+    data[1] = static_cast<float>(test_distribution_500.data[i][1]);
+    distribution.add(data);
   }
   EXPECT_EQ(test_distribution_500.data.size(), distribution.getN());
 
@@ -34,7 +40,10 @@ TEST(Test_cslibs_math, testDistributionInsertion)
   EXPECT_EQ(0, distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
-    distribution.add(test_distribution_5000.data[i]);
+    Eigen::Matrix<float,2,1> data;
+    data[0] = static_cast<float>(test_distribution_5000.data[i][0]);
+    data[1] = static_cast<float>(test_distribution_5000.data[i][1]);
+    distribution.add(data);
   }
   EXPECT_EQ(test_distribution_5000.data.size(), distribution.getN());
 
@@ -42,12 +51,15 @@ TEST(Test_cslibs_math, testDistributionInsertion)
 
 TEST(Test_cslibs_math, testDistributionMean)
 {
-  const double tolerance = 1e-3;
+  const float tolerance = 1e-3;
 
-  cs::Distribution<double,2> distribution;
-  Eigen::Vector2d mean;
+  cs::Distribution<float,2> distribution;
+  Eigen::Vector2f mean;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
-    distribution.add(test_distribution_200.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+      distribution.add(data);
   }
 
   mean = distribution.getMean();
@@ -57,7 +69,10 @@ TEST(Test_cslibs_math, testDistributionMean)
 
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
-    distribution.add(test_distribution_500.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_500.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_500.data[i][1]);
+      distribution.add(data);
   }
 
   mean = distribution.getMean();
@@ -66,7 +81,10 @@ TEST(Test_cslibs_math, testDistributionMean)
 
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
-    distribution.add(test_distribution_5000.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_5000.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_5000.data[i][1]);
+      distribution.add(data);
   }
 
   mean = distribution.getMean();
@@ -76,12 +94,15 @@ TEST(Test_cslibs_math, testDistributionMean)
 
 TEST(Test_cslibs_math, testDistributionCovariance)
 {
-  const double tolerance = 1e-3;
+  const float tolerance = 1e-3;
 
-  cs::Distribution<double,2> distribution;
-  Eigen::Matrix2d cov;
+  cs::Distribution<float,2> distribution;
+  Eigen::Matrix2f cov;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
-    distribution.add(test_distribution_200.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+      distribution.add(data);
   }
 
   cov = distribution.getCovariance();
@@ -93,7 +114,10 @@ TEST(Test_cslibs_math, testDistributionCovariance)
 
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
-    distribution.add(test_distribution_500.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_500.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_500.data[i][1]);
+      distribution.add(data);
   }
 
   cov = distribution.getCovariance();
@@ -104,7 +128,10 @@ TEST(Test_cslibs_math, testDistributionCovariance)
 
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
-    distribution.add(test_distribution_5000.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_5000.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_5000.data[i][1]);
+      distribution.add(data);
   }
 
   cov = distribution.getCovariance();
@@ -116,12 +143,15 @@ TEST(Test_cslibs_math, testDistributionCovariance)
 
 TEST(Test_cslibs_math, testDistributionEigenValues)
 {
-  const double tolerance = 1e-3;
+  const float tolerance = 1e-3;
 
-  cs::Distribution<double,2> distribution;
-  Eigen::Vector2d eigen_values;
+  cs::Distribution<float,2> distribution;
+  Eigen::Vector2f eigen_values;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
-    distribution.add(test_distribution_200.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+      distribution.add(data);
   }
 
   eigen_values = distribution.getEigenValues();
@@ -131,7 +161,10 @@ TEST(Test_cslibs_math, testDistributionEigenValues)
 
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
-    distribution.add(test_distribution_500.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_500.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_500.data[i][1]);
+      distribution.add(data);
   }
 
   eigen_values = distribution.getEigenValues();
@@ -140,7 +173,10 @@ TEST(Test_cslibs_math, testDistributionEigenValues)
 
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
-    distribution.add(test_distribution_5000.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_5000.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_5000.data[i][1]);
+      distribution.add(data);
   }
 
   eigen_values = distribution.getEigenValues();
@@ -150,34 +186,41 @@ TEST(Test_cslibs_math, testDistributionEigenValues)
 
 TEST(Test_cslibs_math, testDistributionEigenVectors)
 {
-  auto equals = [] (const Eigen::Vector2d &a,
-                    const Eigen::Vector2d &b,
-                    const double eps) {
+  auto equals = [] (const Eigen::Vector2f &a,
+                    const Eigen::Vector2f &b,
+                    const float eps) {
 
-    Eigen::Matrix2d invert_direction = Eigen::Matrix2d::Identity() * -1;
-    Eigen::Vector2d diff_a = a - b;
-    Eigen::Vector2d diff_b = a - invert_direction * b;
+    Eigen::Matrix2f invert_direction = Eigen::Matrix2f::Identity() * -1;
+    Eigen::Vector2f diff_a = a - b;
+    Eigen::Vector2f diff_b = a - invert_direction * b;
 
     return (fabs(diff_a(0)) <= eps && fabs(diff_a(1)) <= eps) ||
         (fabs(diff_b(0)) <= eps && fabs(diff_b(1)) <= eps);
   };
 
-  const double tolerance = 1e-3;
+  const float tolerance = 1e-3;
 
-  cs::Distribution<double,2> distribution;
-  Eigen::Matrix2d eigen_vectors;
+  cs::Distribution<float,2> distribution;
+  Eigen::Matrix2f eigen_vectors;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
-    distribution.add(test_distribution_200.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+      distribution.add(data);
   }
 
   eigen_vectors = distribution.getEigenVectors();
 
-  Eigen::Vector2d exp_a = test_distribution_200.eigen_vectors.col(0);
-  Eigen::Vector2d exp_b = test_distribution_200.eigen_vectors.col(1);
+  Eigen::Vector2f exp_a;
+  exp_a[0] = static_cast<float>(test_distribution_200.eigen_vectors.col(0)[0]);
+  exp_a[1] = static_cast<float>(test_distribution_200.eigen_vectors.col(0)[1]);
+  Eigen::Vector2f exp_b;
+  exp_b[0] = static_cast<float>(test_distribution_200.eigen_vectors.col(1)[0]);
+  exp_b[1] = static_cast<float>(test_distribution_200.eigen_vectors.col(1)[1]);
 
-  Eigen::Vector2d rec_a = eigen_vectors.col(0);
-  Eigen::Vector2d rec_b = eigen_vectors.col(1);
-  /// direction and storage order of vectors has not to euqal
+  Eigen::Vector2f rec_a = eigen_vectors.col(0);
+  Eigen::Vector2f rec_b = eigen_vectors.col(1);
+  /// direction and storage order of vectors has not to be equal
   bool condition = (equals(exp_a, rec_a, tolerance) && equals(exp_b, rec_b, tolerance)) ||
       (equals(exp_a, rec_b, tolerance) && equals(exp_b, rec_a, tolerance));
 
@@ -186,13 +229,18 @@ TEST(Test_cslibs_math, testDistributionEigenVectors)
   /// 500
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
-    distribution.add(test_distribution_500.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_500.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_500.data[i][1]);
+      distribution.add(data);
   }
 
   eigen_vectors = distribution.getEigenVectors();
 
-  exp_a = test_distribution_500.eigen_vectors.col(0);
-  exp_b = test_distribution_500.eigen_vectors.col(1);
+  exp_a[0] = static_cast<float>(test_distribution_500.eigen_vectors.col(0)[0]);
+  exp_a[1] = static_cast<float>(test_distribution_500.eigen_vectors.col(0)[1]);
+  exp_b[0] = static_cast<float>(test_distribution_500.eigen_vectors.col(1)[0]);
+  exp_b[1] = static_cast<float>(test_distribution_500.eigen_vectors.col(1)[1]);
 
   rec_a = eigen_vectors.col(0);
   rec_b = eigen_vectors.col(1);
@@ -207,13 +255,18 @@ TEST(Test_cslibs_math, testDistributionEigenVectors)
   /// 5000
   distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
-    distribution.add(test_distribution_5000.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_5000.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_5000.data[i][1]);
+      distribution.add(data);
   }
 
   eigen_vectors = distribution.getEigenVectors();
 
-  exp_a = test_distribution_5000.eigen_vectors.col(0);
-  exp_b = test_distribution_5000.eigen_vectors.col(1);
+  exp_a[0] = static_cast<float>(test_distribution_5000.eigen_vectors.col(0)[0]);
+  exp_a[1] = static_cast<float>(test_distribution_5000.eigen_vectors.col(0)[1]);
+  exp_b[0] = static_cast<float>(test_distribution_5000.eigen_vectors.col(1)[0]);
+  exp_b[1] = static_cast<float>(test_distribution_5000.eigen_vectors.col(1)[1]);
 
   rec_a = eigen_vectors.col(0);
   rec_b = eigen_vectors.col(1);
@@ -227,10 +280,13 @@ TEST(Test_cslibs_math, testDistributionEigenVectors)
 
 TEST(Test_cslibs_math, testDistributionCopy)
 {
-  cs::Distribution<double,2> distribution_a;
-  cs::Distribution<double,2> distribution_b;
+  cs::Distribution<float,2> distribution_a;
+  cs::Distribution<float,2> distribution_b;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
-    distribution_a.add(test_distribution_200.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+      distribution_a.add(data);
   }
 
   distribution_b = distribution_a;
@@ -248,19 +304,25 @@ TEST(Test_cslibs_math, testDistributionCopy)
 
 TEST(Test_cslibs_math, testDistributionAddition)
 {
-  const double tolerance = 1e-3;
+  const float tolerance = 1e-3;
 
-  cs::Distribution<double,2> distribution_a;
-  cs::Distribution<double,2> distribution_b;
+  cs::Distribution<float,2> distribution_a;
+  cs::Distribution<float,2> distribution_b;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
-    distribution_a.add(test_distribution_200.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+      distribution_a.add(data);
   }
 
   distribution_b  = distribution_a;
   distribution_b += distribution_a;
 
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
-    distribution_a.add(test_distribution_200.data[i]);
+      Eigen::Matrix<float,2,1> data;
+      data[0] = static_cast<float>(test_distribution_200.data[i][0]);
+      data[1] = static_cast<float>(test_distribution_200.data[i][1]);
+      distribution_a.add(data);
   }
 
   EXPECT_NEAR((distribution_a.getMean() - distribution_b.getMean()).norm(), 0.0, tolerance);
@@ -273,15 +335,21 @@ TEST(Test_cslibs_math, testDistributionAddition)
   EXPECT_NEAR((distribution_a.getEigenVectors() - distribution_b.getEigenVectors()).norm(), 0.0, tolerance);
 
   auto test = [tolerance](const cslibs_math::TestDistribution<2> &t) {
-    cs::Distribution<double,2> wa;
-    cs::Distribution<double,2> wb;
+    cs::Distribution<float,2> wa;
+    cs::Distribution<float,2> wb;
 
     const std::size_t middle = t.data.size() / 2 + 1;
     for(std::size_t i = 0 ; i < middle ; ++i) {
-      wa.add(t.data[i]);
+        Eigen::Matrix<float,2,1> data;
+        data[0] = static_cast<float>(t.data[i][0]);
+        data[1] = static_cast<float>(t.data[i][1]);
+        wa.add(data);
     }
     for(std::size_t i = middle ; i < t.data.size() ; ++i) {
-      wb.add(t.data[i]);
+        Eigen::Matrix<float,2,1> data;
+        data[0] = static_cast<float>(t.data[i][0]);
+        data[1] = static_cast<float>(t.data[i][1]);
+        wb.add(data);
     }
 
     wa += wb;
@@ -305,17 +373,17 @@ TEST(Test_cslibs_math, testDistributionAddition)
 
 TEST(Test_cslibs_math, testWeightedDistribution)
 {
-  cs::WeightedDistribution<double,2> wd;
+  cs::WeightedDistribution<float,2> wd;
   for(std::size_t i = 0 ; i < 10 ; ++i) {
-    wd.add(Eigen::Vector2d(i,i), 0.5);
+    wd.add(Eigen::Vector2f(i,i), 0.5);
   }
 
-  Eigen::Vector2d mean = wd.getMean();
+  Eigen::Vector2f mean = wd.getMean();
   EXPECT_NEAR(4.5, mean(0), 1e-6);
   EXPECT_NEAR(4.5, mean(1), 1e-6);
 
   for(std::size_t i = 0 ; i < 10 ; ++i) {
-    wd.add(Eigen::Vector2d(i,i), 1.0);
+    wd.add(Eigen::Vector2f(i,i), 1.0);
   }
 
   mean = wd.getMean();
@@ -323,14 +391,14 @@ TEST(Test_cslibs_math, testWeightedDistribution)
   EXPECT_NEAR(4.5, mean(1), 1e-6);
 
   for(std::size_t i = 0 ; i < 10 ; ++i) {
-    wd.add(Eigen::Vector2d(2,2), 1.0);
+    wd.add(Eigen::Vector2f(2,2), 1.0);
   }
 
   mean = wd.getMean();
   EXPECT_NEAR(3.5, mean(0), 1e-6);
   EXPECT_NEAR(3.5, mean(1), 1e-6);
 
-  cs::WeightedDistribution<double,2> wdc = wd;
+  cs::WeightedDistribution<float,2> wdc = wd;
   wdc += wd;
   mean = wdc.getMean();
   EXPECT_NEAR(3.5, mean(0), 1e-6);
@@ -338,7 +406,7 @@ TEST(Test_cslibs_math, testWeightedDistribution)
 
   wdc = wd;
   for(std::size_t i = 0 ; i < 10 ; ++i) {
-    wdc.add(Eigen::Vector2d(8,8), 0.75);
+    wdc.add(Eigen::Vector2f(8,8), 0.75);
   }
   wdc += wd;
   mean = wdc.getMean();
@@ -349,26 +417,35 @@ TEST(Test_cslibs_math, testWeightedDistribution)
 
 TEST(Test_cslibs_math, testWeightedDistributionAddition)
 {
-  const double tolerance = 1e-3;
+  const float tolerance = 1e-3;
 
   auto test_addition = [tolerance](const cslibs_math::TestDistribution<2> &t) {
-    cs::WeightedDistribution<double,2> wa;
-    cs::WeightedDistribution<double,2> wb;
-    cs::WeightedDistribution<double,2> wc;
-    cs::WeightedDistribution<double,2> wd;
+    cs::WeightedDistribution<float,2> wa;
+    cs::WeightedDistribution<float,2> wb;
+    cs::WeightedDistribution<float,2> wc;
+    cs::WeightedDistribution<float,2> wd;
 
     const std::size_t middle = t.data.size() / 2 + 1;
     for(std::size_t i = 0 ; i < middle ; ++i) {
-      wa.add(t.data[i], 1.0);
-      wc.add(t.data[i], 1.0);
+        Eigen::Matrix<float,2,1> data;
+        data[0] = static_cast<float>(t.data[i][0]);
+        data[1] = static_cast<float>(t.data[i][1]);
+        wa.add(data, 1.0);
+        wc.add(data, 1.0);
     }
     for(std::size_t i = middle ; i < t.data.size() ; ++i) {
-      wb.add(t.data[i], 1.0);
-      wc.add(t.data[i], 1.0);
+        Eigen::Matrix<float,2,1> data;
+        data[0] = static_cast<float>(t.data[i][0]);
+        data[1] = static_cast<float>(t.data[i][1]);
+        wb.add(data, 1.0);
+        wc.add(data, 1.0);
     }
 
     for(std::size_t i = t.data.size() ; i > 0 ; --i) {
-      wd.add(t.data[i-1], 1.0);
+        Eigen::Matrix<float,2,1> data;
+        data[0] = static_cast<float>(t.data[i-1][0]);
+        data[1] = static_cast<float>(t.data[i-1][1]);
+        wd.add(data, 1.0);
     }
 
     wa += wb;
@@ -397,11 +474,14 @@ TEST(Test_cslibs_math, testWeightedDistributionAddition)
   };
 
   auto test_scale = [tolerance](const cslibs_math::TestDistribution<2> &t) {
-    cs::WeightedDistribution<double,2> w;
+    cs::WeightedDistribution<float,2> w;
 
-    const double weight = 1.0 / (t.data.size() + 1.0);
+    const float weight = 1.0 / (t.data.size() + 1.0);
     for(std::size_t i = 0 ; i < t.data.size() ; ++i) {
-      w.add(t.data[i], weight);
+        Eigen::Matrix<float,2,1> data;
+        data[0] = static_cast<float>(t.data[i][0]);
+        data[1] = static_cast<float>(t.data[i][1]);
+        w.add(data, weight);
     }
 
     auto mean = w.getMean();

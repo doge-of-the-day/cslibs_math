@@ -61,6 +61,11 @@ cslibs_math_add_unit_test_ros(distribution
     LIBS yaml-cpp ${Boost_LIBRARIES} ${catkin_LIBRARIES}
 )
 
+cslibs_math_add_unit_test_ros(distribution_float
+    LAUNCH test/test_distribution_float.test
+    SRCS test/test_node_distribution_float.cpp
+    LIBS yaml-cpp ${Boost_LIBRARIES} ${catkin_LIBRARIES}
+)
 
 add_executable(hausdorff
     test/hausdorff.cpp
