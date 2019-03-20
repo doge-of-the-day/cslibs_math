@@ -1,5 +1,5 @@
-#ifndef CSLIBS_MATH_3D_AMANTIDIS_HPP
-#define CSLIBS_MATH_3D_AMANTIDIS_HPP
+#ifndef CSLIBS_MATH_3D_AMANATIDES_HPP
+#define CSLIBS_MATH_3D_AMANATIDES_HPP
 
 #include <memory>
 #include <array>
@@ -11,16 +11,16 @@
 namespace cslibs_math_3d {
 namespace algorithms {
 template <typename Tp = double>
-class EIGEN_ALIGN16 Amantidis
+class EIGEN_ALIGN16 Amanatides
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using Ptr           = std::shared_ptr<Amantidis<Tp>>;
+    using Ptr           = std::shared_ptr<Amanatides<Tp>>;
 
     using index_t       = std::array<int, 3>;
     using delta_t       = std::array<Tp, 3>;
 
-    inline Amantidis() :
+    inline Amanatides() :
         index_{{0, 0, 0}},
         end_{{0, 0, 0}},
         delta_{{Tp(), Tp(), Tp()}},
@@ -28,7 +28,7 @@ public:
     {
     }
 
-    inline explicit Amantidis(const Point3<Tp> &start,
+    inline explicit Amanatides(const Point3<Tp> &start,
                               const Point3<Tp> &end,
                               const Tp          resolution) :
         index_{{static_cast<int>(std::floor(start(0) / resolution)),
@@ -55,7 +55,7 @@ public:
         max_[2]        = dz ? (std::ceil(static_cast<Tp>(index_[2]) + static_cast<Tp>(step_[2]) * 0.5) * resolution - start(2)) / d(2) : dmax;
     }
 
-    inline virtual ~Amantidis()
+    inline virtual ~Amanatides()
     {
     }
 
@@ -79,7 +79,7 @@ public:
         return index_;
     }
 
-    inline Amantidis& operator++()
+    inline Amanatides& operator++()
     {
         std::size_t dim =  max_[0] < max_[1] ?
                           (max_[0] < max_[2] ? 0ul : 2ul) :
@@ -96,7 +96,7 @@ public:
     }
 
 private:
-    inline Amantidis &iterate(const std::size_t dim)
+    inline Amanatides &iterate(const std::size_t dim)
     {
         max_[dim]   += delta_[dim];
         index_[dim] += step_[dim];
@@ -112,4 +112,4 @@ private:
 }
 }
 
-#endif // CSLIBS_MATH_3D_AMANTIDIS_HPP
+#endif // CSLIBS_MATH_3D_AMANATIDES_HPP

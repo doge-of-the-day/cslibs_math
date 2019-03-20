@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 
 #include <cslibs_math_2d/linear/vector.hpp>
-#include <cslibs_math_2d/algorithms/amantidis.hpp>
+#include <cslibs_math_2d/algorithms/amanatides.hpp>
 #include <cslibs_math_2d/algorithms/bresenham.hpp>
 #include <cslibs_math/utility/tiny_time.hpp>
 
 const std::size_t ITERATIONS = 1000000;
 
-TEST( Test_cslibs_math_2d, testAmantidisDryrun)
+TEST( Test_cslibs_math_2d, testAmanatidesDryrun)
 {
     auto test = [](const cslibs_math_2d::Point2d &p0,
                    const cslibs_math_2d::Point2d &p1)
     {
-        cslibs_math_2d::algorithms::Amantidis<double> a0(p0, p1, 1.0);
+        cslibs_math_2d::algorithms::Amanatides<double> a0(p0, p1, 1.0);
 
         while(!a0.done()) {
             std::cout << "[" << a0.x() << "," << a0.y() << "]";
@@ -28,12 +28,12 @@ TEST( Test_cslibs_math_2d, testAmantidisDryrun)
 }
 
 
-TEST( Test_cslibs_math_2d, testAmantidisRuntime)
+TEST( Test_cslibs_math_2d, testAmanatidesRuntime)
 {
     auto exec =  [](const cslibs_math_2d::Point2d &p0,
                     const cslibs_math_2d::Point2d &p1)
     {
-        cslibs_math_2d::algorithms::Amantidis<double> a0(p0, p1, 1.0);
+        cslibs_math_2d::algorithms::Amanatides<double> a0(p0, p1, 1.0);
         while(!a0.done()) {
             ++a0;
         }
@@ -78,7 +78,7 @@ TEST( Test_cslibs_math_2d, testBresenhamRuntime)
     auto exec =  [](const cslibs_math_2d::Point2d &p0,
                     const cslibs_math_2d::Point2d &p1)
     {
-        cslibs_math_2d::algorithms::Amantidis<double> a0(p0, p1, 1.0);
+        cslibs_math_2d::algorithms::Amanatides<double> a0(p0, p1, 1.0);
         while(!a0.done()) {
             ++a0;
         }
