@@ -17,7 +17,7 @@ public:
     using index_t       = std::array<int, 2>;
 
     inline Bresenham() :
-        start_{{0,0}},
+        index_{{0,0}},
         end_{{0,0}}
     {
     }
@@ -35,22 +35,21 @@ public:
 
     inline explicit Bresenham(const index_t &start,
                               const index_t &end) :
-        start_(start),
+        index_(start),
         end_(end),
         steep_(std::abs(end[1] - start[1]) > std::abs(end[0] - start[0])),
         error_(0)
     {
         if (steep_) {
-            std::swap(start_[0], start_[1]);
+            std::swap(index_[0], index_[1]);
             std::swap(end_[0], end_[1]);
         }
-        index_       = start_;
 
-        delta_[0]    = std::abs(end_[0] - start_[0]);
-        delta_[1]    = std::abs(end_[1] - start_[1]);
+        delta_[0]    = std::abs(end_[0] - index_[0]);
+        delta_[1]    = std::abs(end_[1] - index_[1]);
 
-        step_[0] = start_[0] < end_[0] ? 1 : -1;
-        step_[1] = start_[1] < end_[1] ? 1 : -1;
+        step_[0] = index_[0] < end_[0] ? 1 : -1;
+        step_[1] = index_[1] < end_[1] ? 1 : -1;
     }
 
     inline virtual ~Bresenham()
@@ -77,18 +76,6 @@ public:
         return done() ? *this : iterate();
     }
 
-    inline int distance2() const
-    {
-        auto sq = [](const int d) { return d*d;};
-        return sq(index_[0] - end_[0]) + sq(index_[1] - end_[1]);
-    }
-
-    inline int traversed2() const
-    {
-        auto sq = [](const int d) { return d*d;};
-        return sq(index_[0] - start_[0]) + sq(index_[1] - start_[1]);
-    }
-
     inline bool done() const
     {
         return index_[0] == end_[0] && index_[1] == end_[1];
@@ -106,9 +93,8 @@ private:
         return *this;
     }
 
-    index_t start_;
-    index_t end_;
     index_t index_;
+    index_t end_;
     index_t step_;
     index_t delta_;
 

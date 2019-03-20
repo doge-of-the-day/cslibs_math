@@ -19,45 +19,40 @@ public:
 
     using index_t       = std::array<int, 3>;
     using delta_t       = std::array<Tp, 3>;
-    using delta_mask_t  = std::array<bool, 3>;
 
     inline Amantidis() :
-        start_{{0, 0, 0}},
-        end_{{0, 0, 0}},
         index_{{0, 0, 0}},
+        end_{{0, 0, 0}},
         delta_{{Tp(), Tp(), Tp()}},
         max_{{Tp(), Tp(), Tp()}}
     {
     }
 
-    template <typename T>
-    inline explicit Amantidis(const Point3<T> &start,
-                              const Point3<T> &end,
-                              const T           resolution) :
-        start_{{static_cast<int>(std::floor(start(0) / resolution)),
+    inline explicit Amantidis(const Point3<Tp> &start,
+                              const Point3<Tp> &end,
+                              const Tp          resolution) :
+        index_{{static_cast<int>(std::floor(start(0) / resolution)),
                 static_cast<int>(std::floor(start(1) / resolution)),
                 static_cast<int>(std::floor(start(2) / resolution))}},
         end_{{static_cast<int>(std::floor(end(0) / resolution)),
               static_cast<int>(std::floor(end(1) / resolution)),
-              static_cast<int>(std::floor(end(2) / resolution))}},
-        index_(start_),
-        delta_{{Tp(), Tp(), Tp()}},
-        max_{{Tp(), Tp(), Tp()}}
+              static_cast<int>(std::floor(end(2) / resolution))}}
     {
-        const Point3<T> d = end - start;
-        const static T dmax =  std::numeric_limits<T>::max();
-        const bool dx = cslibs_math::common::neq(d(0), T());
-        const bool dy = cslibs_math::common::neq(d(1), T());
-        const bool dz = cslibs_math::common::neq(d(2), T());
-        step_[0]       = d(0) >= Tp() ? 1 : -1;
-        step_[1]       = d(1) >= Tp() ? 1 : -1;
-        step_[2]       = d(2) >= Tp() ? 1 : -1;
-        delta_[0]      = dx ? resolution / d(0) * step_[0] : dmax;
-        delta_[1]      = dy ? resolution / d(1) * step_[1] : dmax;
-        delta_[2]      = dz ? resolution / d(2) * step_[2] : dmax;
-        max_[0]        = dx ? ((start_[0] + step_[0]) * resolution - start(0)) / d(0) : dmax;
-        max_[1]        = dy ? ((start_[1] + step_[1]) * resolution - start(1)) / d(1) : dmax;
-        max_[2]        = dz ? ((start_[2] + step_[2]) * resolution - start(2)) / d(2) : dmax;
+        Point3<Tp> d = (end - start).normalized();
+
+        const static T dmax =  std::numeric_limits<Tp>::max();
+        step_[0]       = d(0) > 0 ? 1 : (d(0) < 0 ? -1 : 0);
+        step_[1]       = d(1) > 0 ? 1 : (d(1) < 0 ? -1 : 0);
+        step_[2]       = d(2) > 0 ? 1 : (d(2) < 0 ? -1 : 0);
+        const bool dx  = (step_[0] != 0);
+        const bool dy  = (step_[1] != 0);
+        const bool dz  = (step_[2] != 0);
+        delta_[0]      = dx ? resolution / std::fabs(d(0)) : dmax;
+        delta_[1]      = dy ? resolution / std::fabs(d(1)) : dmax;
+        delta_[2]      = dz ? resolution / std::fabs(d(2)) : dmax;
+        max_[0]        = dx ? (std::ceil(static_cast<Tp>(index_[0]) + static_cast<Tp>(step_[0]) * 0.5) * resolution - start(0)) / d(0) : dmax;
+        max_[1]        = dy ? (std::ceil(static_cast<Tp>(index_[1]) + static_cast<Tp>(step_[1]) * 0.5) * resolution - start(1)) / d(1) : dmax;
+        max_[2]        = dz ? (std::ceil(static_cast<Tp>(index_[2]) + static_cast<Tp>(step_[2]) * 0.5) * resolution - start(2)) / d(2) : dmax;
     }
 
     inline virtual ~Amantidis()
@@ -93,19 +88,11 @@ public:
         return done() ? *this : iterate(dim);
     }
 
-    inline int length2() const
-    {
-        auto sq = [](const int d) { return d*d;};
-        return sq(index_[0] - end_[0]) +
-               sq(index_[1] - end_[1]) +
-               sq(index_[2] - end_[2]);
-    }
-
     inline bool done() const
     {
-        return index_[0] == end_[0] &&
-               index_[1] == end_[1] &&
-               index_[2] == end_[2];
+        return (index_[0] == end_[0] &&
+                index_[1] == end_[1] &&
+                index_[2] == end_[2]);
     }
 
 private:
@@ -116,9 +103,8 @@ private:
         return *this;
     }
 
-    index_t start_;
-    index_t end_;
     index_t index_;
+    index_t end_;
     index_t step_;
     delta_t delta_;
     delta_t max_;

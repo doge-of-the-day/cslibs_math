@@ -19,9 +19,8 @@ public:
     using done_t        = bool (Bresenham::*)();
 
     inline Bresenham() :
-        start_{{0,0,0}},
-        end_  {{0,0,0}},
         index_{{0,0,0}},
+        end_  {{0,0,0}},
         delta_abs_{{0,0,0}},
         iteration_(0)
     {
@@ -42,18 +41,17 @@ public:
 
     inline explicit Bresenham(const index_t &start,
                               const index_t &end) :
-        start_(start),
+        index_(start),
         end_(end),
-        index_(start_),
         error_{{0,0}},
         iteration_(0)
     {
-        delta_             = end_ - start_;
+        delta_             = end_ - index_;
         delta_abs_         = std::abs(delta_);
         delta_abs_times_2_ = delta_abs_ * 2;
-        step_              = std::compare(start_, end_);
+        step_              = std::compare(index_, end_);
 
-        if(delta_abs_[0] >= delta_abs_[1] && delta_abs_[0] >= delta_abs_[2]) {
+        if (delta_abs_[0] >= delta_abs_[1] && delta_abs_[0] >= delta_abs_[2]) {
             iterate_ = &Bresenham::iterateDx;
             done_    = &Bresenham::doneDx;
             error_[0] = delta_abs_times_2_[1] - delta_abs_[0];
@@ -98,14 +96,6 @@ public:
     inline Bresenham& operator++()
     {
         return (this->*done_)() ? *this : (this->*iterate_)();
-    }
-
-    inline int length2() const
-    {
-        auto sq = [](const int d) { return d*d;};
-        return sq(index_[0] - end_[0]) +
-               sq(index_[1] - end_[1]) +
-               sq(index_[2] - end_[2]);
     }
 
     inline bool done() const
@@ -177,9 +167,8 @@ private:
         return iteration_ >= delta_abs_[2];
     }
 
-    index_t         start_;
-    index_t         end_;
     index_t         index_;
+    index_t         end_;
     index_t         step_;
     index_t         delta_;
     index_t         delta_abs_;

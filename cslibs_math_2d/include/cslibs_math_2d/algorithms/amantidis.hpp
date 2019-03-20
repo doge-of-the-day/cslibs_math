@@ -19,39 +19,34 @@ public:
 
     using index_t       = std::array<int, 2>;
     using delta_t       = std::array<Tp, 2>;
-    using delta_mask_t  = std::array<bool, 2>;
 
     inline Amantidis() :
-        start_{{0,0}},
-        end_{{0,0}},
         index_{{0,0}},
+        end_{{0,0}},
         delta_{{Tp(), Tp()}},
         max_{{Tp(), Tp()}}
     {
     }
 
-    template <typename T>
-    inline explicit Amantidis(const Point2<T> &start,
-                              const Point2<T> &end,
-                              const T           resolution) :
-        start_{{static_cast<int>(std::floor(start(0) / resolution)),
-                static_cast<int>(std::floor(start(1) / resolution))}},
+    inline explicit Amantidis(const Point2<Tp> &start,
+                              const Point2<Tp> &end,
+                              const Tp resolution) :
+        index_{{static_cast<int>(std::floor(start(0) / resolution)),
+               static_cast<int>(std::floor(start(1) / resolution))}},
         end_{{static_cast<int>(std::floor(end(0) / resolution)),
-              static_cast<int>(std::floor(end(1) / resolution))}},
-        index_(start_),
-        delta_{{Tp(), Tp()}},
-        max_{{Tp(), Tp()}}
+              static_cast<int>(std::floor(end(1) / resolution))}}
     {
-        const Point2<T> d = end - start;
-        const static T dmax = std::numeric_limits<T>::max();
-        const bool dx = cslibs_math::common::neq(d(0), Tp());
-        const bool dy = cslibs_math::common::neq(d(1), Tp());
-        step_[0]       = d(0) >= Tp() ? 1 : -1;
-        step_[1]       = d(1) >= Tp() ? 1 : -1;
-        delta_[0]      = dx ? resolution / d(0) * step_[0] : dmax;
-        delta_[1]      = dy ? resolution / d(1) * step_[1] : dmax;
-        max_[0]        = dx ? ((start_[0] + step_[0]) * resolution - start(0)) / d(0) : dmax;
-        max_[1]        = dy ? ((start_[1] + step_[1]) * resolution - start(1)) / d(1) : dmax;
+        Point2<Tp> d = (end - start).normalized();
+
+        const static Tp dmax = std::numeric_limits<Tp>::max();
+        step_[0]       = d(0) > 0 ? 1 : (d(0) < 0 ? -1 : 0);
+        step_[1]       = d(1) > 0 ? 1 : (d(1) < 0 ? -1 : 0);
+        const bool dx  = (step_[0] != 0);
+        const bool dy  = (step_[1] != 0);
+        delta_[0]      = dx ? resolution / std::fabs(d(0)) : dmax;
+        delta_[1]      = dy ? resolution / std::fabs(d(1)) : dmax;
+        max_[0]        = dx ? (std::ceil(static_cast<Tp>(index_[0]) + static_cast<Tp>(step_[0]) * 0.5) * resolution - start(0)) / d(0) : dmax;
+        max_[1]        = dy ? (std::ceil(static_cast<Tp>(index_[1]) + static_cast<Tp>(step_[1]) * 0.5) * resolution - start(1)) / d(1) : dmax;
     }
 
     inline virtual ~Amantidis()
@@ -78,15 +73,9 @@ public:
         return done() ? *this : iterate(max_[0] < max_[1] ? 0ul : 1ul);
     }
 
-    inline int length2() const
-    {
-        auto sq = [](const int d) { return d*d;};
-        return sq(index_[0] - end_[0]) + sq(index_[1] - end_[1]);
-    }
-
     inline bool done() const
     {
-        return index_[0] == end_[0] && index_[1] == end_[1];
+        return (index_[0] == end_[0] && index_[1] == end_[1]);
     }
 
 private:
@@ -97,12 +86,11 @@ private:
         return *this;
     }
 
-    index_t     start_;
-    index_t     end_;
-    index_t     index_;
-    index_t     step_;
-    delta_t     delta_;
-    delta_t     max_;
+    index_t index_;
+    index_t end_;
+    index_t step_;
+    delta_t delta_;
+    delta_t max_;
 };
 }
 }
