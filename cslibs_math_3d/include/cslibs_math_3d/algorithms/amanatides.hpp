@@ -29,8 +29,8 @@ public:
     }
 
     inline explicit Amanatides(const Point3<Tp> &start,
-                              const Point3<Tp> &end,
-                              const Tp          resolution) :
+                               const Point3<Tp> &end,
+                               const Tp          resolution) :
         index_{{static_cast<int>(std::floor(start(0) / resolution)),
                 static_cast<int>(std::floor(start(1) / resolution)),
                 static_cast<int>(std::floor(start(2) / resolution))}},
