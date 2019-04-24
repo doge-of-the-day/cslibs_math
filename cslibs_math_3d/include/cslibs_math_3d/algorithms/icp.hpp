@@ -231,26 +231,26 @@ inline void apply(const src_iterator_t &src_begin,
         // Eigen::Matrix<T, 3, 1> T = dst_mean.data() - R * src_mean.data();
         Eigen::Quaternion<T> qe(R);
 
-        Quaternion    q(qe.x(), qe.y(), qe.z(), qe.w());
+        Quaterniond   q(qe.x(), qe.y(), qe.z(), qe.w());
         Transform3<T> dt(dst_mean - q * src_mean,
                          q);
         transform *= dt;
 
         if(dt.translation().length2() < trans_eps ||
-                sq(q.angle(Quaternion())) < rot_eps) {
+                sq(q.angle(Quaterniond())) < rot_eps) {
             r.iterations()  = i;
-            r.termination() = Result::EPS;
+            r.termination() = Result<T>::EPS;
             return;
         }
     }
 
     r.iterations() = params.maxIterations();
-    r.termination() = Result::ITERATIONS;
+    r.termination() = Result<T>::ITERATIONS;
 }
 
 template <typename T>
-inline void apply(const Pointcloud3<T>::ConstPtr &src,
-                  const Pointcloud3<T>::ConstPtr &dst,
+inline void apply(const typename Pointcloud3<T>::ConstPtr &src,
+                  const typename Pointcloud3<T>::ConstPtr &dst,
                   const Parameters<T> &params,
                   Result<T> &r)
 {

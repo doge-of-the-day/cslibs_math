@@ -1,6 +1,9 @@
 #ifndef COLOR_HPP
 #define COLOR_HPP
+
+#include <stdlib.h>
 #include <utility>
+
 namespace cslibs_math {
 namespace color{
 template <typename T>

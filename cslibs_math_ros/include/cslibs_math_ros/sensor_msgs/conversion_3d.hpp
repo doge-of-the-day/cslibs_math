@@ -43,22 +43,24 @@ inline void from(const typename cslibs_math_3d::Pointcloud3<T>::Ptr &src,
     dst.height       = 1;
     dst.is_dense     = false;
     dst.is_bigendian = false;
-    dst.point_step   = 3 * sizeof(float);
-    dst.row_step     = static_cast<uint32_t>(dst.point_step * src->size());
 
-    // fields x y z intensity
-    dst.fields.resize(3);
-    dst.fields[0].name = "x";
-    dst.fields[1].name = "y";
-    dst.fields[2].name = "z";
 
-    std::vector<float> tmp;
-    for(const auto &p : *src) {
-      for(std::size_t i = 0 ; i < 3 ; ++i)
-        tmp.emplace_back(static_cast<float>(p(i)));
+    ::sensor_msgs::PointCloud2Modifier modifier(dst);
+    modifier.setPointCloud2FieldsByString(1,"xyz");
+    modifier.resize(src->size());
+
+    ::sensor_msgs::PointCloud2Iterator<float> iter_x(dst, "x");
+    ::sensor_msgs::PointCloud2Iterator<float> iter_y(dst, "y");
+    ::sensor_msgs::PointCloud2Iterator<float> iter_z(dst, "z");
+
+    for (const auto &p : *src) {
+        *iter_x = static_cast<float>(p(0));
+        *iter_y = static_cast<float>(p(1));
+        *iter_z = static_cast<float>(p(2));
+        ++iter_x;
+        ++iter_y;
+        ++iter_z;
     }
-    // data
-    memcpy(&dst.data[0], &tmp[0], dst.row_step);
 }
 
 template <typename T>
