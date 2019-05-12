@@ -1,5 +1,7 @@
 #include <cslibs_math/statistics/distribution.hpp>
+#include <cslibs_math/statistics/stable_distribution.hpp>
 #include <cslibs_math/statistics/weighted_distribution.hpp>
+#include <cslibs_math/statistics/stable_weighted_distribution.hpp>
 
 #include <gtest/gtest.h>
 #include <ros/ros.h>
@@ -15,29 +17,43 @@ namespace cs = cslibs_math::statistics;
 TEST(Test_cslibs_math, testDistributionInsertion)
 {
   cs::Distribution<double,2> distribution;
-  EXPECT_EQ(0, distribution.getN());
+  cs::StableDistribution<double, 2> stable_distribution;
+  EXPECT_EQ(0ul, distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
+    EXPECT_EQ(i, stable_distribution.getN());
     distribution.add(test_distribution_200.data[i]);
+    stable_distribution.add(test_distribution_200.data[i]);
   }
   EXPECT_EQ(test_distribution_200.data.size(), distribution.getN());
+  EXPECT_EQ(test_distribution_200.data.size(), stable_distribution.getN());
+
 
   distribution.reset();
-  EXPECT_EQ(0, distribution.getN());
+  stable_distribution.reset();
+  EXPECT_EQ(0ul, distribution.getN());
+  EXPECT_EQ(0ul, stable_distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
+    EXPECT_EQ(i, stable_distribution.getN());
     distribution.add(test_distribution_500.data[i]);
+    stable_distribution.add(test_distribution_500.data[i]);
   }
   EXPECT_EQ(test_distribution_500.data.size(), distribution.getN());
+  EXPECT_EQ(test_distribution_500.data.size(), stable_distribution.getN());
 
   distribution.reset();
-  EXPECT_EQ(0, distribution.getN());
+  stable_distribution.reset();
+  EXPECT_EQ(0ul, distribution.getN());
+  EXPECT_EQ(0ul, stable_distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
-    EXPECT_EQ(i, distribution.getN());
-    distribution.add(test_distribution_5000.data[i]);
+      EXPECT_EQ(i, distribution.getN());
+      EXPECT_EQ(i, stable_distribution.getN());
+      distribution.add(test_distribution_5000.data[i]);
+      stable_distribution.add(test_distribution_5000.data[i]);
   }
   EXPECT_EQ(test_distribution_5000.data.size(), distribution.getN());
-
+  EXPECT_EQ(test_distribution_5000.data.size(), stable_distribution.getN());
 }
 
 TEST(Test_cslibs_math, testDistributionMean)
@@ -45,33 +61,53 @@ TEST(Test_cslibs_math, testDistributionMean)
   const double tolerance = 1e-3;
 
   cs::Distribution<double,2> distribution;
+  cs::StableDistribution<double,2> stable_distribution;
+
   Eigen::Vector2d mean;
+  Eigen::Vector2d stable_mean;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution.add(test_distribution_200.data[i]);
+    stable_distribution.add(test_distribution_200.data[i]);
   }
 
   mean = distribution.getMean();
+  stable_mean = stable_distribution.getMean();
 
   EXPECT_NEAR(test_distribution_200.mean(0), mean(0), tolerance);
   EXPECT_NEAR(test_distribution_200.mean(1), mean(1), tolerance);
+  EXPECT_NEAR(test_distribution_200.mean(0), stable_mean(0), tolerance);
+  EXPECT_NEAR(test_distribution_200.mean(1), stable_mean(1), tolerance);
 
   distribution.reset();
+  stable_distribution.reset();
+
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
     distribution.add(test_distribution_500.data[i]);
+    stable_distribution.add(test_distribution_500.data[i]);
   }
 
   mean = distribution.getMean();
+  stable_mean = stable_distribution.getMean();
   EXPECT_NEAR(test_distribution_500.mean(0), mean(0), tolerance);
   EXPECT_NEAR(test_distribution_500.mean(1), mean(1), tolerance);
+  EXPECT_NEAR(test_distribution_500.mean(0), stable_mean(0), tolerance);
+  EXPECT_NEAR(test_distribution_500.mean(1), stable_mean(1), tolerance);
+
 
   distribution.reset();
+  stable_distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
     distribution.add(test_distribution_5000.data[i]);
+    stable_distribution.add(test_distribution_5000.data[i]);
   }
 
   mean = distribution.getMean();
+  stable_mean = stable_distribution.getMean();
   EXPECT_NEAR(test_distribution_5000.mean(0), mean(0), tolerance);
   EXPECT_NEAR(test_distribution_5000.mean(1), mean(1), tolerance);
+  EXPECT_NEAR(test_distribution_5000.mean(0), stable_mean(0), tolerance);
+  EXPECT_NEAR(test_distribution_5000.mean(1), stable_mean(1), tolerance);
+
 }
 
 TEST(Test_cslibs_math, testDistributionCovariance)
@@ -79,39 +115,64 @@ TEST(Test_cslibs_math, testDistributionCovariance)
   const double tolerance = 1e-3;
 
   cs::Distribution<double,2> distribution;
+  cs::StableDistribution<double,2> stable_distribution;
+
   Eigen::Matrix2d cov;
+  Eigen::Matrix2d stable_cov;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
     distribution.add(test_distribution_200.data[i]);
+    stable_distribution.add(test_distribution_200.data[i]);
   }
 
   cov = distribution.getCovariance();
+  stable_cov = stable_distribution.getCovariance();
 
   EXPECT_NEAR(test_distribution_200.covariance(0,0), cov(0,0), tolerance);
   EXPECT_NEAR(test_distribution_200.covariance(0,1), cov(0,1), tolerance);
   EXPECT_NEAR(test_distribution_200.covariance(1,0), cov(1,0), tolerance);
   EXPECT_NEAR(test_distribution_200.covariance(1,1), cov(1,1), tolerance);
+  EXPECT_NEAR(test_distribution_200.covariance(0,0), stable_cov(0,0), tolerance);
+  EXPECT_NEAR(test_distribution_200.covariance(0,1), stable_cov(0,1), tolerance);
+  EXPECT_NEAR(test_distribution_200.covariance(1,0), stable_cov(1,0), tolerance);
+  EXPECT_NEAR(test_distribution_200.covariance(1,1), stable_cov(1,1), tolerance);
+
 
   distribution.reset();
+  stable_distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
     distribution.add(test_distribution_500.data[i]);
+    stable_distribution.add(test_distribution_500.data[i]);
   }
 
   cov = distribution.getCovariance();
+  stable_cov = stable_distribution.getCovariance();
   EXPECT_NEAR(test_distribution_500.covariance(0,0), cov(0,0), tolerance);
   EXPECT_NEAR(test_distribution_500.covariance(0,1), cov(0,1), tolerance);
   EXPECT_NEAR(test_distribution_500.covariance(1,0), cov(1,0), tolerance);
   EXPECT_NEAR(test_distribution_500.covariance(1,1), cov(1,1), tolerance);
+  EXPECT_NEAR(test_distribution_500.covariance(0,0), stable_cov(0,0), tolerance);
+  EXPECT_NEAR(test_distribution_500.covariance(0,1), stable_cov(0,1), tolerance);
+  EXPECT_NEAR(test_distribution_500.covariance(1,0), stable_cov(1,0), tolerance);
+  EXPECT_NEAR(test_distribution_500.covariance(1,1), stable_cov(1,1), tolerance);
 
   distribution.reset();
+  stable_distribution.reset();
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
     distribution.add(test_distribution_5000.data[i]);
+    stable_distribution.add(test_distribution_5000.data[i]);
   }
 
   cov = distribution.getCovariance();
+  stable_cov = stable_distribution.getCovariance();
   EXPECT_NEAR(test_distribution_5000.covariance(0,0), cov(0,0), tolerance);
   EXPECT_NEAR(test_distribution_5000.covariance(0,1), cov(0,1), tolerance);
   EXPECT_NEAR(test_distribution_5000.covariance(1,0), cov(1,0), tolerance);
   EXPECT_NEAR(test_distribution_5000.covariance(1,1), cov(1,1), tolerance);
+  EXPECT_NEAR(test_distribution_5000.covariance(0,0), stable_cov(0,0), tolerance);
+  EXPECT_NEAR(test_distribution_5000.covariance(0,1), stable_cov(0,1), tolerance);
+  EXPECT_NEAR(test_distribution_5000.covariance(1,0), stable_cov(1,0), tolerance);
+  EXPECT_NEAR(test_distribution_5000.covariance(1,1), stable_cov(1,1), tolerance);
+
 }
 
 TEST(Test_cslibs_math, testDistributionEigenValues)
@@ -306,56 +367,80 @@ TEST(Test_cslibs_math, testDistributionAddition)
 TEST(Test_cslibs_math, testWeightedDistribution)
 {
   cs::WeightedDistribution<double,2> wd;
+  cs::StableWeightedDistribution<double, 2> swd;
   for(std::size_t i = 0 ; i < 10 ; ++i) {
     wd.add(Eigen::Vector2d(i,i), 0.5);
+    swd.add(Eigen::Vector2d(i,i), 0.5);
   }
 
-  Eigen::Vector2d mean = wd.getMean();
+  auto mean = wd.getMean();
+  auto stable_mean = swd.getMean();
   EXPECT_NEAR(4.5, mean(0), 1e-6);
   EXPECT_NEAR(4.5, mean(1), 1e-6);
+  EXPECT_NEAR(4.5, stable_mean(0), 1e-6);
+  EXPECT_NEAR(4.5, stable_mean(1), 1e-6);
 
   for(std::size_t i = 0 ; i < 10 ; ++i) {
     wd.add(Eigen::Vector2d(i,i), 1.0);
+    swd.add(Eigen::Vector2d(i,i), 1.0);
   }
 
   mean = wd.getMean();
+  stable_mean = swd.getMean();
+
   EXPECT_NEAR(4.5, mean(0), 1e-6);
   EXPECT_NEAR(4.5, mean(1), 1e-6);
+  EXPECT_NEAR(4.5, stable_mean(0), 1e-6);
+  EXPECT_NEAR(4.5, stable_mean(1), 1e-6);
 
   for(std::size_t i = 0 ; i < 10 ; ++i) {
     wd.add(Eigen::Vector2d(2,2), 1.0);
+    swd.add(Eigen::Vector2d(2,2), 1.0);
   }
 
   mean = wd.getMean();
+  stable_mean = swd.getMean();
   EXPECT_NEAR(3.5, mean(0), 1e-6);
   EXPECT_NEAR(3.5, mean(1), 1e-6);
+  EXPECT_NEAR(3.5, stable_mean(0), 1e-6);
+  EXPECT_NEAR(3.5, stable_mean(1), 1e-6);
+
 
   cs::WeightedDistribution<double,2> wdc = wd;
+  cs::StableWeightedDistribution<double, 2> swdc = swd;
   wdc += wd;
+  swdc += swd;
   mean = wdc.getMean();
+  stable_mean = swdc.getMean();
   EXPECT_NEAR(3.5, mean(0), 1e-6);
   EXPECT_NEAR(3.5, mean(1), 1e-6);
+  EXPECT_NEAR(3.5, stable_mean(0), 1e-6);
+  EXPECT_NEAR(3.5, stable_mean(1), 1e-6);
 
   wdc = wd;
+  swdc = swd;
   for(std::size_t i = 0 ; i < 10 ; ++i) {
     wdc.add(Eigen::Vector2d(8,8), 0.75);
+    swdc.add(Eigen::Vector2d(8,8), 0.75);
   }
   wdc += wd;
+  swdc += swd;
   mean = wdc.getMean();
+  stable_mean = swdc.getMean();
   EXPECT_NEAR(4.086956521739131, mean(0), 1e-6);
   EXPECT_NEAR(4.086956521739131, mean(1), 1e-6);
-
+  EXPECT_NEAR(4.086956521739131, stable_mean(0), 1e-6);
+  EXPECT_NEAR(4.086956521739131, stable_mean(1), 1e-6);
 }
 
-TEST(Test_cslibs_math, testWeightedDistributionAddition)
+template<class Distribution>
+void testWeightedDistributionAddition(const cslibs_math::TestDistribution<2> &t,
+                                      const double tolerance = 1e-3)
 {
-  const double tolerance = 1e-3;
-
-  auto test_addition = [tolerance](const cslibs_math::TestDistribution<2> &t) {
-    cs::WeightedDistribution<double,2> wa;
-    cs::WeightedDistribution<double,2> wb;
-    cs::WeightedDistribution<double,2> wc;
-    cs::WeightedDistribution<double,2> wd;
+    Distribution wa;
+    Distribution wb;
+    Distribution wc;
+    Distribution wd;
 
     const std::size_t middle = t.data.size() / 2 + 1;
     for(std::size_t i = 0 ; i < middle ; ++i) {
@@ -392,12 +477,13 @@ TEST(Test_cslibs_math, testWeightedDistributionAddition)
     EXPECT_NEAR(cov1(0,1), cov(0,1), tolerance);
     EXPECT_NEAR(cov1(1,0), cov(1,0), tolerance);
     EXPECT_NEAR(cov1(1,1), cov(1,1), tolerance);
+}
 
-
-  };
-
-  auto test_scale = [tolerance](const cslibs_math::TestDistribution<2> &t) {
-    cs::WeightedDistribution<double,2> w;
+template<class Distribution>
+void testWeightedDistributionScale(const cslibs_math::TestDistribution<2> &t,
+                                   const double tolerance = 1e-3)
+{
+    Distribution w;
 
     const double weight = 1.0 / (t.data.size() + 1.0);
     for(std::size_t i = 0 ; i < t.data.size() ; ++i) {
@@ -413,17 +499,25 @@ TEST(Test_cslibs_math, testWeightedDistributionAddition)
     EXPECT_NEAR(t.covariance(0,1), cov(0,1), tolerance);
     EXPECT_NEAR(t.covariance(1,0), cov(1,0), tolerance);
     EXPECT_NEAR(t.covariance(1,1), cov(1,1), tolerance);
-  };
+}
 
 
-  test_addition(test_distribution_200);
-  test_addition(test_distribution_500);
-  test_addition(test_distribution_5000);
+TEST(Test_cslibs_math, testWeightedDistributionAddition)
+{
+  testWeightedDistributionAddition<cs::WeightedDistribution<double,2>>(test_distribution_200);
+  testWeightedDistributionAddition<cs::WeightedDistribution<double,2>>(test_distribution_500);
+  testWeightedDistributionAddition<cs::WeightedDistribution<double,2>>(test_distribution_5000);
+  testWeightedDistributionAddition<cs::StableWeightedDistribution<double,2>>(test_distribution_200);
+  testWeightedDistributionAddition<cs::StableWeightedDistribution<double,2>>(test_distribution_500);
+  testWeightedDistributionAddition<cs::StableWeightedDistribution<double,2>>(test_distribution_5000);
 
-  test_scale(test_distribution_200);
-  test_scale(test_distribution_500);
-  test_scale(test_distribution_5000);
 
+  testWeightedDistributionScale<cs::WeightedDistribution<double,2>>(test_distribution_200);
+  testWeightedDistributionScale<cs::WeightedDistribution<double,2>>(test_distribution_500);
+  testWeightedDistributionScale<cs::WeightedDistribution<double,2>>(test_distribution_5000);
+  testWeightedDistributionScale<cs::StableWeightedDistribution<double,2>>(test_distribution_200);
+  testWeightedDistributionScale<cs::StableWeightedDistribution<double,2>>(test_distribution_500);
+  testWeightedDistributionScale<cs::StableWeightedDistribution<double,2>>(test_distribution_5000);
 }
 
 

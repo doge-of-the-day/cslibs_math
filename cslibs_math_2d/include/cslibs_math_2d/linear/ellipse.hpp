@@ -123,7 +123,7 @@ protected:
             result(row,2) = p(0) * p (1);
             result(row,3) = p(0);
             result(row,4) = p(1);
-            result(row,5) = utility::traits<T>::One;
+            result(row,5) = cslibs_math::utility::traits<T>::One;
             ++row;
         }
         return result;
@@ -139,7 +139,7 @@ protected:
             xi(2,0) = p(0) * p(1);
             xi(3,0) = p(0);
             xi(4,0) = p(1);
-            xi(5,0) = utility::traits<T>::One;
+            xi(5,0) = cslibs_math::utility::traits<T>::One;
             res += xi * xi.transpose();
         }
         res /= points.size();
@@ -161,19 +161,19 @@ protected:
         }
         Eigen::Matrix<T,3,3> M0;
         M0(0,0) = F;
-        M0(0,1) = utility::traits<T>::Half*D;
-        M0(0,2) = utility::traits<T>::Half*E;
-        M0(1,0) = utility::traits<T>::Half*D;
+        M0(0,1) = cslibs_math::utility::traits<T>::Half*D;
+        M0(0,2) = cslibs_math::utility::traits<T>::Half*E;
+        M0(1,0) = cslibs_math::utility::traits<T>::Half*D;
         M0(1,1) = A;
-        M0(1,2) = utility::traits<T>::Half*B;
-        M0(2,0) = utility::traits<T>::Half*E;
-        M0(2,1) = utility::traits<T>::Half*B;
+        M0(1,2) = cslibs_math::utility::traits<T>::Half*B;
+        M0(2,0) = cslibs_math::utility::traits<T>::Half*E;
+        M0(2,1) = cslibs_math::utility::traits<T>::Half*B;
         M0(2,2) = C;
 
         Eigen::Matrix<T,2,2> M;
         M(0,0) = A;
-        M(0,1) = utility::traits<T>::Half*B;
-        M(1,0) = utility::traits<T>::Half*B;
+        M(0,1) = cslibs_math::utility::traits<T>::Half*B;
+        M(1,0) = cslibs_math::utility::traits<T>::Half*B;
         M(1,1) = C;
 
         T detM0 = M0.determinant();
@@ -198,7 +198,7 @@ protected:
             T cy = (B*D -2*A*E)/(4*A*C -B*B);
             T t = (A-C)/B;
             T alpha = std::atan(1/t);
-            alpha *= utility::traits<T>::Half;
+            alpha *= cslibs_math::utility::traits<T>::Half;
 
             solution = Ellipse<T>(a,b,cx,cy,alpha);
 

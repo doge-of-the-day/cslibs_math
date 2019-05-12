@@ -40,7 +40,7 @@ public:
     {
         Point3<Tp> d = (end - start).normalized();
 
-        const static T dmax =  std::numeric_limits<Tp>::max();
+        const static Tp dmax =  std::numeric_limits<Tp>::max();
         step_[0]       = d(0) > 0 ? 1 : (d(0) < 0 ? -1 : 0);
         step_[1]       = d(1) > 0 ? 1 : (d(1) < 0 ? -1 : 0);
         step_[2]       = d(2) > 0 ? 1 : (d(2) < 0 ? -1 : 0);
