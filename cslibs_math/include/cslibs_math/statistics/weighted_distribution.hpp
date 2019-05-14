@@ -29,7 +29,6 @@ public:
 
     static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(utility::traits<T>::Two * M_PI);
 
-
     WeightedDistribution() :
         sample_count_(0),
         mean_(sample_t::Zero()),

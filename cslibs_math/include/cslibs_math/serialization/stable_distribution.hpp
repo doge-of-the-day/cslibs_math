@@ -1,7 +1,7 @@
-#ifndef CSLIBS_MATH_SERIALIZATION_DISTRIBUTION_HPP
-#define CSLIBS_MATH_SERIALIZATION_DISTRIBUTION_HPP
+#ifndef CSLIBS_MATH_SERIALIZATION_STABLE_DISTRIBUTION_HPP
+#define CSLIBS_MATH_SERIALIZATION_STABLE_DISTRIBUTION_HPP
 
-#include <cslibs_math/statistics/distribution.hpp>
+#include <cslibs_math/statistics/stable_distribution.hpp>
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -15,8 +15,8 @@ template <template <typename, std::size_t, std::size_t> class distribution_class
 struct binary;
 
 template <typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
-struct binary<cslibs_math::statistics::Distribution, T, Dim, lambda_ratio_exponent> {
-    using distribution_t    = cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>;
+struct binary<cslibs_math::statistics::StableDistribution, T, Dim, lambda_ratio_exponent> {
+    using distribution_t    = cslibs_math::statistics::StableDistribution<T, Dim, lambda_ratio_exponent>;
     using sample_t          = typename distribution_t::sample_t;
     using correlated_t      = typename distribution_t::covariance_t;
 
@@ -26,7 +26,7 @@ struct binary<cslibs_math::statistics::Distribution, T, Dim, lambda_ratio_expone
                                    distribution_t &distribution)
     {
         sample_t     mean;
-        correlated_t corr;
+        correlated_t s;
 
         std::size_t  n = io<std::size_t>::read(in);
 
@@ -35,10 +35,10 @@ struct binary<cslibs_math::statistics::Distribution, T, Dim, lambda_ratio_expone
 
         for(std::size_t i = 0 ; i < Dim; ++i) {
             for(std::size_t j = 0 ; j < Dim ; ++j) {
-                corr(i,j) = io<T>::read(in);
+                s(i,j) = io<T>::read(in);
             }
         }
-        distribution = distribution_t(n, mean, corr);
+        distribution = distribution_t(n, mean, s);
 
         return size;
     }
@@ -61,7 +61,7 @@ struct binary<cslibs_math::statistics::Distribution, T, Dim, lambda_ratio_expone
                               std::ofstream &out)
     {
         const sample_t      mean = distribution.getMean();
-        const correlated_t  corr = distribution.getCorrelated();
+        const correlated_t  s    = distribution.getScatter();
         const std::size_t   n    = distribution.getN();
 
         io<std::size_t>::write(n, out);
@@ -71,7 +71,7 @@ struct binary<cslibs_math::statistics::Distribution, T, Dim, lambda_ratio_expone
 
         for(std::size_t i = 0 ; i < Dim; ++i) {
             for(std::size_t j = 0 ; j < Dim ; ++j) {
-                io<T>::write(corr(i,j), out);
+                io<T>::write(s(i,j), out);
             }
         }
     }
@@ -81,12 +81,12 @@ struct binary<cslibs_math::statistics::Distribution, T, Dim, lambda_ratio_expone
 
 namespace YAML {
 template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>>
+struct convert<cslibs_math::statistics::StableDistribution<T, Dim, lambda_ratio_exponent>>
 {
-    using sample_t     = typename cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>::sample_t;
-    using covariance_t = typename cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>::covariance_t;
+    using sample_t     = typename cslibs_math::statistics::StableDistribution<T, Dim, lambda_ratio_exponent>::sample_t;
+    using covariance_t = typename cslibs_math::statistics::StableDistribution<T, Dim, lambda_ratio_exponent>::covariance_t;
 
-    static Node encode(const cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent> &rhs)
+    static Node encode(const cslibs_math::statistics::StableDistribution<T, Dim, lambda_ratio_exponent> &rhs)
     {
         Node n;
         n.push_back(rhs.getN());
@@ -95,15 +95,15 @@ struct convert<cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_expone
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             n.push_back(mean(i));
 
-        covariance_t correlated = rhs.getCorrelated();
+        covariance_t s = rhs.getS();
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             for (std::size_t j = 0 ; j < Dim ; ++ j)
-                n.push_back(correlated(i, j));
+                n.push_back(s(i, j));
 
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::StableDistribution<T, Dim, lambda_ratio_exponent> &rhs)
     {
         if (!n.IsSequence() || n.size() != (1 + Dim + Dim * Dim))
             return false;
@@ -115,20 +115,20 @@ struct convert<cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_expone
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             mean(i) = n[p++].as<T>();
 
-        covariance_t correlated(covariance_t::Zero());
+        covariance_t s(covariance_t::Zero());
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             for (std::size_t j = 0 ; j < Dim ; ++ j)
-                correlated(i, j) = n[p++].as<T>();
+                s(i, j) = n[p++].as<T>();
 
-        rhs = cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>(num, mean, correlated);
+        rhs = cslibs_math::statistics::StableDistribution<T, Dim, lambda_ratio_exponent>(num, mean, s);
         return true;
     }
 };
 
 template<typename T, std::size_t lambda_ratio_exponent>
-struct convert<cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent>>
+struct convert<cslibs_math::statistics::StableDistribution<T, 1, lambda_ratio_exponent>>
 {
-    static Node encode(const cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent> &rhs)
+    static Node encode(const cslibs_math::statistics::StableDistribution<T, 1, lambda_ratio_exponent> &rhs)
     {
         Node n;
         n.push_back(rhs.getN());
@@ -138,16 +138,16 @@ struct convert<cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent
         return n;
     }
 
-    static bool decode(const Node& n, cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent> &rhs)
+    static bool decode(const Node& n, cslibs_math::statistics::StableDistribution<T, 1, lambda_ratio_exponent> &rhs)
     {
         if(!n.IsSequence() || n.size() != 3)
             return false;
 
-        rhs = cslibs_math::statistics::Distribution<T, 1, lambda_ratio_exponent>(
+        rhs = cslibs_math::statistics::StableDistribution<T, 1, lambda_ratio_exponent>(
                     n[0].as<std::size_t>(), n[1].as<T>(), n[2].as<T>());
         return true;
     }
 };
 }
 
-#endif // CSLIBS_MATH_SERIALIZATION_DISTRIBUTION_HPP
+#endif // CSLIBS_MATH_SERIALIZATION_STABLE_DISTRIBUTION_HPP

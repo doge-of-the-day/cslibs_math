@@ -32,9 +32,8 @@ public:
 
     inline StableDistribution() :
         mean_(sample_t::Zero()),
-        S_(covariance_t::Zero()),
-        n_(1),
-        n_1_(0),
+        scatter_(covariance_t::Zero()),
+        n_(0),
         covariance_(covariance_t::Zero()),
         information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
@@ -45,11 +44,27 @@ public:
     {
     }
 
+    inline StableDistribution(
+            std::size_t  n,
+            sample_t     mean,
+            covariance_t scatter) :
+        mean_(mean),
+        scatter_(scatter),
+        n_(n),
+        covariance_(covariance_t::Zero()),
+        information_matrix_(covariance_t::Zero()),
+        eigen_values_(eigen_values_t::Zero()),
+        eigen_vectors_(eigen_vectors_t::Zero()),
+        determinant_(T()),  // zero initialization
+        dirty_(true),
+        dirty_eigenvalues_(true)
+    {
+    }
+
     inline StableDistribution(const StableDistribution &other) :
         mean_(other.mean_),
-        S_(other.S_),
+        scatter_(other.scatter_),
         n_(other.n_),
-        n_1_(other.n_1_),
         covariance_(other.covariance_),
         information_matrix_(other.information_matrix_),
         eigen_values_(other.eigen_values_),
@@ -63,9 +78,8 @@ public:
     inline StableDistribution& operator=(const StableDistribution &other)
     {
         mean_                 = other.mean_;
-        S_                    = other.S_;
+        scatter_              = other.scatter_;
         n_                    = other.n_;
-        n_1_                  = other.n_1_;
 
         covariance_           = other.covariance_;
         information_matrix_   = other.information_matrix_;
@@ -81,9 +95,8 @@ public:
     inline StableDistribution(StableDistribution &&other)
     {
         mean_                 = std::move(other.mean_);
-        S_                    = std::move(other.S_);
+        scatter_              = std::move(other.scatter_);
         n_                    = other.n_;
-        n_1_                  = other.n_1_;
 
         covariance_           = std::move(other.covariance_);
         information_matrix_   = std::move(other.information_matrix_);
@@ -98,9 +111,8 @@ public:
     inline StableDistribution& operator=(StableDistribution &&other)
     {
         mean_                 = std::move(other.mean_);
-        S_                    = std::move(other.S_);
+        scatter_              = std::move(other.scatter_);
         n_                    = other.n_;
-        n_1_                  = other.n_1_;
 
         covariance_           = std::move(other.covariance_);
         information_matrix_   = std::move(other.information_matrix_);
@@ -116,9 +128,8 @@ public:
     inline void reset()
     {
         mean_               = sample_t::Zero();
-        S_                  = covariance_t::Zero();
-        n_                  = 1;
-        n_1_                = 0;
+        scatter_            = covariance_t::Zero();
+        n_                  = 0;
 
         covariance_         = covariance_t::Zero();
         information_matrix_ = covariance_t::Zero();
@@ -133,12 +144,12 @@ public:
     /// Modification
     inline void add(const sample_t &p)
     {
-        const auto mean = mean_;
-        mean_ = (mean_ * static_cast<T>(n_1_) + p) / static_cast<T>(n_);
-        S_ = S_ + (p - mean_).eval() * (p - mean).transpose();
-        ++n_;
-        ++n_1_;
-        dirty_ = true;
+        const sample_t _mean = mean_;
+        const std::size_t _n = n_+1;
+        mean_     = (mean_ * static_cast<T>(n_) + p) / static_cast<T>(_n);
+        scatter_ += (p - _mean) * (p - mean_).transpose();
+        n_        = _n;
+        dirty_    = true;
         dirty_eigenvalues_ = true;
     }
 
@@ -150,24 +161,24 @@ public:
 
     inline StableDistribution& operator += (const StableDistribution &other)
     {
-        const std::size_t _n = n_1_ + other.n_1_;
-        mean_       = (mean_ * static_cast<T>(n_1_) + other.mean_ * static_cast<T>(other.n_1_)) / static_cast<T>(_n);
-        S_          = S_ + other.S_;
-        n_1_        = _n;
-        n_          = _n + 1;
-        dirty_      = true;
+        const std::size_t _n = n_ + other.n_;
+        const auto dmean = mean_ - other.mean_;
+        mean_     = (mean_ * static_cast<T>(n_) + other.mean_ * static_cast<T>(other.n_)) / static_cast<T>(_n);
+        scatter_ += other.scatter_ + static_cast<T>(n_ * other.n_)/static_cast<T>(_n) * dmean * dmean.transpose();
+        n_        = _n;
+        dirty_    = true;
         dirty_eigenvalues_ = true;
         return *this;
     }
 
     inline bool valid() const
     {
-        return n_1_ > Dim;
+        return n_ > Dim;
     }
 
     inline std::size_t getN() const
     {
-        return n_1_;
+        return n_;
     }
 
     inline sample_t getMean() const
@@ -180,9 +191,9 @@ public:
         _mean = sample_t(mean_);
     }
 
-    inline covariance_t getS() const
+    inline covariance_t getScatter() const
     {
-        return S_;
+        return scatter_;
     }
 
     inline covariance_t getCovariance() const
@@ -193,9 +204,9 @@ public:
         return (dirty_ && valid()) ? update_return_covariance() : covariance_;
     }
 
-    inline void getS(covariance_t &s) const
+    inline void getScatter(covariance_t &s) const
     {
-        s = covariance_t(S_);
+        s = covariance_t(scatter_);
     }
 
     inline void getCovariance(covariance_t &covariance) const
@@ -329,9 +340,8 @@ public:
 
 private:
     sample_t                     mean_;
-    covariance_t                 S_;
-    std::size_t                  n_;            /// actual amount of points
-    std::size_t                  n_1_;          /// for computation
+    covariance_t                 scatter_;
+    std::size_t                  n_;
 
     mutable covariance_t         covariance_;
     mutable covariance_t         information_matrix_;
@@ -344,13 +354,15 @@ private:
 
     inline void update() const
     {
-        const T scale = T(1) / static_cast<T>(n_1_ - 1);
+        const T scale = T(1) / static_cast<T>(n_ - 1);
+        covariance_ = scale * scatter_;
+        /*
         for (std::size_t i = 0 ; i < Dim ; ++i) {
             for (std::size_t j = i ; j < Dim ; ++j) {
-                covariance_(i, j) = S_(i,j) * scale;
+                covariance_(i, j) = scale * scatter_(i,j);
                 covariance_(j, i) = covariance_(i, j);
             }
-        }
+        }*/
 
         LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
@@ -386,9 +398,8 @@ public:
 
     inline StableDistribution() :
         mean_(T()),
-        squared_(T()),
-        n_(1),
-        n_1_(0),
+        scatter_(T()),
+        n_(0),
         variance_(T()),
         standard_deviation_(T()),
         dirty_(false)
@@ -398,11 +409,10 @@ public:
     inline StableDistribution(
             std::size_t n,
             T           mean,
-            T           squared) :
+            T           scatter) :
         mean_(mean),
-        squared_(squared),
-        n_(n + 1),
-        n_1_(n),
+        scatter_(scatter),
+        n_(n),
         variance_(T()),
         standard_deviation_(T()),
         dirty_(true)
@@ -416,9 +426,8 @@ public:
     inline void reset()
     {
         mean_               = T();
-        squared_            = T();
-        n_                  = 1;
-        n_1_                = 0;
+        scatter_            = T();
+        n_                  = 0;
         variance_           = T();
         standard_deviation_ = T();
         dirty_              = false;
@@ -426,42 +435,38 @@ public:
 
     inline void add(const T s)
     {
-        mean_    = (mean_ * static_cast<T>(n_1_) + s) / static_cast<T>(n_);
-        squared_ = (squared_ * static_cast<T>(n_1_) + s*s) / static_cast<T>(n_);
-        ++n_;
-        ++n_1_;
-        dirty_   = true;
+        const T _mean = mean_;
+        const std::size_t _n = n_+1;
+        mean_     = (mean_ * static_cast<T>(n_) + s) / static_cast<T>(_n);
+        scatter_ += (s - _mean) * (s - mean_);
+        n_        = _n;
+        dirty_    = true;
     }
 
     inline StableDistribution & operator += (const T s)
     {
-        mean_    = (mean_ * static_cast<T>(n_1_) + s) / static_cast<T>(n_);
-        squared_ = (squared_ * static_cast<T>(n_1_) + s*s) / static_cast<T>(n_);
-        ++n_;
-        ++n_1_;
-        dirty_   = true;
+        add(s);
         return *this;
     }
 
     inline StableDistribution & operator += (const StableDistribution &other)
     {
-        const std::size_t _n = n_1_ + other.n_1_;
-        mean_    = (mean_ * static_cast<T>(n_1_) + other.mean_ * static_cast<T>(other.n_1_)) / static_cast<T>(_n);
-        squared_ = (squared_ * static_cast<T>(n_1_) + other.squared_ * static_cast<T>(other.n_1_)) / static_cast<T>(_n);
-        n_1_     = _n;
-        n_       = _n + 1;
-        dirty_   = true;
+        const std::size_t _n = n_ + other.n_;
+        mean_     = (mean_ * static_cast<T>(n_) + other.mean_ * static_cast<T>(other.n_)) / static_cast<T>(_n);
+        scatter_ += other.scatter_;
+        n_        = _n;
+        dirty_    = true;
         return *this;
     }
 
     inline bool valid() const
     {
-        return n_1_ > 1;
+        return n_ > 1;
     }
 
     inline std::size_t getN() const
     {
-        return n_1_;
+        return n_;
     }
 
     inline T getMean() const
@@ -469,9 +474,9 @@ public:
         return mean_;
     }
 
-    inline T getSquared() const
+    inline T getScatter() const
     {
-        return squared_;
+        return scatter_;
     }
 
     inline T getVariance() const
@@ -518,9 +523,8 @@ public:
 
 private:
     T               mean_;
-    T               squared_;
+    T               scatter_;
     std::size_t     n_;
-    std::size_t     n_1_;
 
     mutable T       variance_;
     mutable T       standard_deviation_;
@@ -529,8 +533,7 @@ private:
 
     inline void update() const
     {
-        const T scale = static_cast<T>(n_1_) / static_cast<T>(n_1_ - 1);
-        variance_ = (squared_ - mean_ * mean_) * scale;
+        variance_ = scatter_ / static_cast<T>(n_ - 1);
         standard_deviation_ = std::sqrt(variance_);
         dirty_ = false;
     }

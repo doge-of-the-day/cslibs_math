@@ -29,11 +29,10 @@ public:
 
     static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(utility::traits<T>::Two * M_PI);
 
-
     StableWeightedDistribution() :
         sample_count_(0),
         mean_(sample_t::Zero()),
-        S_(covariance_t::Zero()),
+        scatter_(covariance_t::Zero()),
         W_(T()),
         W_sq_(T()),
         covariance_(covariance_t::Zero()),
@@ -50,10 +49,10 @@ public:
                                       T            w,
                                       T            w_sq,
                                       sample_t     mean,
-                                      covariance_t correlated) :
+                                      covariance_t scatter) :
         sample_count_(sample_count),
         mean_(mean),
-        S_(correlated),
+        scatter_(scatter),
         W_(w),
         W_sq_(w_sq),
         covariance_(covariance_t::Zero()),
@@ -62,14 +61,14 @@ public:
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(T()),
         dirty_(true),
-        dirty_eigenvalues_(false)
+        dirty_eigenvalues_(true)
     {
     }
 
     StableWeightedDistribution(const StableWeightedDistribution &other)  :
         sample_count_(other.sample_count_),
         mean_(other.mean_),
-        S_(other.S_),
+        scatter_(other.scatter_),
         W_(other.W_),
         W_sq_(other.W_sq_),
         covariance_(other.covariance_),
@@ -86,7 +85,7 @@ public:
     {
         sample_count_           = other.sample_count_;
         mean_                   = other.mean_;
-        S_                      = other.S_;
+        scatter_                = other.scatter_;
         W_                      = other.W_;
         W_sq_                   = other.W_sq_;
 
@@ -104,7 +103,7 @@ public:
     StableWeightedDistribution(StableWeightedDistribution &&other) :
         sample_count_(other.sample_count_),
         mean_(std::move(other.mean_)),
-        S_(std::move(other.S_)),
+        scatter_(std::move(other.scatter_)),
         W_(other.W_),
         W_sq_(other.W_sq_),
         covariance_(std::move(other.covariance_)),
@@ -121,7 +120,7 @@ public:
     {
         sample_count_           = other.sample_count_;
         mean_                   = std::move(other.mean_);
-        S_                      = std::move(other.S_);
+        scatter_                = std::move(other.scatter_);
         W_                      = other.W_;
         W_sq_                   = other.W_sq_;
 
@@ -140,7 +139,7 @@ public:
     {
         sample_count_       = 0;
         mean_               = sample_t::Zero();
-        S_         = covariance_t::Zero();
+        scatter_            = covariance_t::Zero();
         W_                  = T();
         W_sq_               = T();
 
@@ -164,19 +163,18 @@ public:
         const auto mean = mean_;
         W_ += w;
         mean_ += w / W_ * (p - mean_).eval();
-        S_ = (W_ - w) / W * S_ + w * (p - mean_).eval() * (p - mean).transpose();
+        scatter_ = (W_ - w) / W * scatter_ + w * (p - mean_).eval() * (p - mean).transpose();
         ++sample_count_;
         W_sq_ +=  w*w;
         dirty_ =  true;
         dirty_eigenvalues_ = true;
     }
 
-
     inline StableWeightedDistribution& operator += (const StableWeightedDistribution &other)
     {
         const T _W = W_ + other.W_;
         mean_ = (mean_ * W_ + other.mean_ * other.W_) / _W;
-        S_ = S_ + other.S_;
+        scatter_ += other.scatter_;
         W_ = _W;
         W_sq_ += other.W_sq_;
         sample_count_ += other.sample_count_;
@@ -216,9 +214,9 @@ public:
         mean = sample_t(mean_);
     }
 
-    inline covariance_t getCorrelated() const
+    inline covariance_t getScatter() const
     {
-        return S_;
+        return scatter_;
     }
 
     inline covariance_t getCovariance() const
@@ -355,7 +353,7 @@ public:
 private:
     std::size_t               sample_count_;
     sample_t                  mean_;
-    covariance_t              S_;
+    covariance_t              scatter_;
     T                         W_;
     T                         W_sq_;
 
@@ -371,12 +369,14 @@ private:
     inline void update() const
     {
         const T scale = T(1.0) / (W_ - W_sq_ / W_);
+        covariance_ = scale * scatter_;
+        /*
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
-                covariance_(i, j) = S_(i,j) * scale;
+                covariance_(i, j) = scale * scatter_(i,j);
                 covariance_(j, i) =  covariance_(i, j);
             }
-        }
+        }*/
 
         LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
@@ -414,7 +414,7 @@ public:
     inline StableWeightedDistribution() :
         sample_count_(0),
         mean_(T()),
-        squared_(T()),
+        scatter_(T()),
         W_(T()),
         W_sq_(T()),
         variance_(T()),
@@ -427,10 +427,10 @@ public:
                                       T           w,
                                       T           w_sq,
                                       T           mean,
-                                      T           squared) :
+                                      T           scatter) :
         sample_count_(sample_count),
         mean_(mean),
-        squared_(squared),
+        scatter_(scatter),
         W_(w),
         W_sq_(w_sq),
         variance_(T()),
@@ -447,7 +447,7 @@ public:
     {
         sample_count_       = 0;
         mean_               = T();
-        squared_            = T();
+        scatter_            = T();
         variance_           = T();
         W_                  = T();
         W_sq_               = T();
@@ -458,8 +458,9 @@ public:
     inline void add(const T s, const T w)
     {
         const T _W = W_ + w;
+        const auto mean = mean_;
         mean_    = (mean_ * W_ + s * w) / _W;
-        squared_ = (squared_ * W_ + s*s * w) / _W;
+        scatter_ = (_W - w) / W_ * scatter_ + w * (s-mean_) * (s-mean);//(scatter_ * W_ + s*s * w) / _W;
         W_       = _W;
         W_sq_   += w*w;
         ++sample_count_;
@@ -470,7 +471,8 @@ public:
     {
         const T _W = W_ + other.W_;
         mean_    = (mean_ * W_ + other.mean_ * other.W_) / _W;
-        squared_ = (squared_ * W_ +  other.squared_ * other.W_) / _W;
+        scatter_ += other.scatter_;
+        //squared_ = (squared_ * W_ +  other.squared_ * other.W_) / _W;
         W_       = _W;
         W_sq_   += other.W_sq_;
         sample_count_ += other.sample_count_;
@@ -548,7 +550,7 @@ public:
 private:
     std::size_t     sample_count_;
     T               mean_;
-    T               squared_;
+    T               scatter_;
     T               W_;
     T               W_sq_;
 
@@ -560,7 +562,7 @@ private:
     inline void update() const
     {
         const T scale = W_ / (W_ - W_sq_ / W_);
-        variance_ = (squared_ - mean_ * mean_) * scale;
+        variance_ = scatter_ * scale;//(squared_ - mean_ * mean_) * scale;
         standard_deviation_ = std::sqrt(variance_);
         dirty_ = false;
     }
