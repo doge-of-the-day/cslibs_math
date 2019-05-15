@@ -452,8 +452,9 @@ public:
     inline StableDistribution & operator += (const StableDistribution &other)
     {
         const std::size_t _n = n_ + other.n_;
+        const auto dmean = mean_ - other.mean_;
         mean_     = (mean_ * static_cast<T>(n_) + other.mean_ * static_cast<T>(other.n_)) / static_cast<T>(_n);
-        scatter_ += other.scatter_;
+        scatter_ += other.scatter_ + static_cast<T>(n_ * other.n_)/static_cast<T>(_n) * dmean * dmean;
         n_        = _n;
         dirty_    = true;
         return *this;

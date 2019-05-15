@@ -177,12 +177,12 @@ public:
     inline WeightedDistribution& operator += (const WeightedDistribution &other)
     {
         const T _W = W_ + other.W_;
-        mean_ = (mean_ * W_ + other.mean_ * other.W_) / _W;
-        correlated_ = (correlated_ * W_ +  other.correlated_ * other.W_) / _W;
-        W_ = _W;
-        W_sq_ += other.W_sq_;
+        mean_          = (mean_ * W_ + other.mean_ * other.W_) / _W;
+        correlated_    = (correlated_ * W_ +  other.correlated_ * other.W_) / _W;
+        W_             = _W;
+        W_sq_         += other.W_sq_;
         sample_count_ += other.sample_count_;
-        dirty_ = true;
+        dirty_         = true;
         dirty_eigenvalues_ = true;
         return *this;
     }

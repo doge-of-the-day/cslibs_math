@@ -32,8 +32,7 @@ public:
     inline Distribution() :
         mean_(sample_t::Zero()),
         correlated_(covariance_t::Zero()),
-        n_(1),
-        n_1_(0),
+        n_(0),
         covariance_(covariance_t::Zero()),
         information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
@@ -50,8 +49,7 @@ public:
             covariance_t correlated) :
         mean_(mean),
         correlated_(correlated),
-        n_(n + 1),
-        n_1_(n),
+        n_(n),
         covariance_(covariance_t::Zero()),
         information_matrix_(covariance_t::Zero()),
         eigen_values_(eigen_values_t::Zero()),
@@ -66,7 +64,6 @@ public:
         mean_(other.mean_),
         correlated_(other.correlated_),
         n_(other.n_),
-        n_1_(other.n_1_),
         covariance_(other.covariance_),
         information_matrix_(other.information_matrix_),
         eigen_values_(other.eigen_values_),
@@ -82,7 +79,6 @@ public:
         mean_                 = other.mean_;
         correlated_           = other.correlated_;
         n_                    = other.n_;
-        n_1_                  = other.n_1_;
 
         covariance_           = other.covariance_;
         information_matrix_   = other.information_matrix_;
@@ -100,7 +96,6 @@ public:
         mean_                 = std::move(other.mean_);
         correlated_           = std::move(other.correlated_);
         n_                    = other.n_;
-        n_1_                  = other.n_1_;
 
         covariance_           = std::move(other.covariance_);
         information_matrix_   = std::move(other.information_matrix_);
@@ -117,7 +112,6 @@ public:
         mean_                 = std::move(other.mean_);
         correlated_           = std::move(other.correlated_);
         n_                    = other.n_;
-        n_1_                  = other.n_1_;
 
         covariance_           = std::move(other.covariance_);
         information_matrix_   = std::move(other.information_matrix_);
@@ -134,8 +128,7 @@ public:
     {
         mean_               = sample_t::Zero();
         correlated_         = covariance_t::Zero();
-        n_                  = 1;
-        n_1_                = 0;
+        n_                  = 0;
 
         covariance_         = covariance_t::Zero();
         information_matrix_ = covariance_t::Zero();
@@ -150,14 +143,14 @@ public:
     /// Modification
     inline void add(const sample_t &p)
     {
-        mean_ = (mean_ * static_cast<T>(n_1_) + p) / static_cast<T>(n_);
+        const std::size_t _n = n_+1;
+        mean_ = (mean_ * static_cast<T>(n_) + p) / static_cast<T>(_n);
         for (std::size_t i = 0 ; i < Dim ; ++i) {
             for (std::size_t j = i ; j < Dim ; ++j) {
-                correlated_(i, j) = (correlated_(i, j) * static_cast<T>(n_1_) + p(i) * p(j)) / static_cast<T>(n_);
+                correlated_(i, j) = (correlated_(i, j) * static_cast<T>(n_) + p(i) * p(j)) / static_cast<T>(_n);
             }
         }
-        ++n_;
-        ++n_1_;
+        n_ = _n;
         dirty_ = true;
         dirty_eigenvalues_ = true;
     }
@@ -170,11 +163,10 @@ public:
 
     inline Distribution& operator += (const Distribution &other)
     {
-        const std::size_t _n = n_1_ + other.n_1_;
-        mean_       = (mean_ * static_cast<T>(n_1_) + other.mean_ * static_cast<T>(other.n_1_)) / static_cast<T>(_n);
-        correlated_ = (correlated_ * static_cast<T>(n_1_) + other.correlated_ * static_cast<T>(other.n_1_)) / static_cast<T>(_n);
-        n_1_        = _n;
-        n_          = _n + 1;
+        const std::size_t _n = n_ + other.n_;
+        mean_       = (mean_ * static_cast<T>(n_) + other.mean_ * static_cast<T>(other.n_)) / static_cast<T>(_n);
+        correlated_ = (correlated_ * static_cast<T>(n_) + other.correlated_ * static_cast<T>(other.n_)) / static_cast<T>(_n);
+        n_          = _n;
         dirty_      = true;
         dirty_eigenvalues_ = true;
         return *this;
@@ -182,12 +174,12 @@ public:
 
     inline bool valid() const
     {
-        return n_1_ > Dim;
+        return n_ > Dim;
     }
 
     inline std::size_t getN() const
     {
-        return n_1_;
+        return n_;
     }
 
     inline sample_t getMean() const
@@ -350,8 +342,7 @@ public:
 private:
     sample_t                     mean_;
     covariance_t                 correlated_;
-    std::size_t                  n_;            /// actual amount of points
-    std::size_t                  n_1_;          /// for computation
+    std::size_t                  n_;
 
     mutable covariance_t         covariance_;
     mutable covariance_t         information_matrix_;
@@ -364,7 +355,7 @@ private:
 
     inline void update() const
     {
-        const T scale = static_cast<T>(n_1_) / static_cast<T>(n_1_ - 1);
+        const T scale = static_cast<T>(n_) / static_cast<T>(n_ - 1);
         for (std::size_t i = 0 ; i < Dim ; ++i) {
             for (std::size_t j = i ; j < Dim ; ++j) {
                 covariance_(i, j) = (correlated_(i, j) - (mean_(i) * mean_(j))) * scale;
@@ -407,8 +398,7 @@ public:
     inline Distribution() :
         mean_(T()),
         squared_(T()),
-        n_(1),
-        n_1_(0),
+        n_(0),
         variance_(T()),
         standard_deviation_(T()),
         dirty_(false)
@@ -421,8 +411,7 @@ public:
             T           squared) :
         mean_(mean),
         squared_(squared),
-        n_(n + 1),
-        n_1_(n),
+        n_(n),
         variance_(T()),
         standard_deviation_(T()),
         dirty_(true)
@@ -437,8 +426,7 @@ public:
     {
         mean_               = T();
         squared_            = T();
-        n_                  = 1;
-        n_1_                = 0;
+        n_                  = 0;
         variance_           = T();
         standard_deviation_ = T();
         dirty_              = false;
@@ -446,42 +434,37 @@ public:
 
     inline void add(const T s)
     {
-        mean_    = (mean_ * static_cast<T>(n_1_) + s) / static_cast<T>(n_);
-        squared_ = (squared_ * static_cast<T>(n_1_) + s*s) / static_cast<T>(n_);
-        ++n_;
-        ++n_1_;
+        const std::size_t _n = n_+1;
+        mean_    = (mean_ * static_cast<T>(n_) + s) / static_cast<T>(_n);
+        squared_ = (squared_ * static_cast<T>(n_) + s*s) / static_cast<T>(_n);
+        n_       = _n;
         dirty_   = true;
     }
 
     inline Distribution & operator += (const T s)
     {
-        mean_    = (mean_ * static_cast<T>(n_1_) + s) / static_cast<T>(n_);
-        squared_ = (squared_ * static_cast<T>(n_1_) + s*s) / static_cast<T>(n_);
-        ++n_;
-        ++n_1_;
-        dirty_   = true;
+        add(s);
         return *this;
     }
 
     inline Distribution & operator += (const Distribution &other)
     {
-        const std::size_t _n = n_1_ + other.n_1_;
-        mean_    = (mean_ * static_cast<T>(n_1_) + other.mean_ * static_cast<T>(other.n_1_)) / static_cast<T>(_n);
-        squared_ = (squared_ * static_cast<T>(n_1_) + other.squared_ * static_cast<T>(other.n_1_)) / static_cast<T>(_n);
-        n_1_     = _n;
-        n_       = _n + 1;
+        const std::size_t _n = n_ + other.n_;
+        mean_    = (mean_ * static_cast<T>(n_) + other.mean_ * static_cast<T>(other.n_)) / static_cast<T>(_n);
+        squared_ = (squared_ * static_cast<T>(n_) + other.squared_ * static_cast<T>(other.n_)) / static_cast<T>(_n);
+        n_       = _n;
         dirty_   = true;
         return *this;
     }
 
     inline bool valid() const
     {
-        return n_1_ > 1;
+        return n_ > 1;
     }
 
     inline std::size_t getN() const
     {
-        return n_1_;
+        return n_;
     }
 
     inline T getMean() const
@@ -540,7 +523,6 @@ private:
     T               mean_;
     T               squared_;
     std::size_t     n_;
-    std::size_t     n_1_;
 
     mutable T       variance_;
     mutable T       standard_deviation_;
@@ -549,7 +531,7 @@ private:
 
     inline void update() const
     {
-        const T scale = static_cast<T>(n_1_) / static_cast<T>(n_1_ - 1);
+        const T scale = static_cast<T>(n_) / static_cast<T>(n_ - 1);
         variance_ = (squared_ - mean_ * mean_) * scale;
         standard_deviation_ = std::sqrt(variance_);
         dirty_ = false;

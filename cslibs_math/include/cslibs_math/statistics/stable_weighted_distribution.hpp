@@ -159,26 +159,27 @@ public:
         if (w <= T())
             return;
 
-        const auto W = W_;
+        const T _W = W_ + w;
         const auto mean = mean_;
-        W_ += w;
-        mean_ += w / W_ * (p - mean_).eval();
-        scatter_ = (W_ - w) / W * scatter_ + w * (p - mean_).eval() * (p - mean).transpose();
+        mean_     = (mean_ * W_ + p * w) / _W;
+        scatter_ += w * (p-mean) * (p-mean_).transpose();
+        W_        = _W;
+        W_sq_    += w*w;
         ++sample_count_;
-        W_sq_ +=  w*w;
-        dirty_ =  true;
+        dirty_    = true;
         dirty_eigenvalues_ = true;
     }
 
     inline StableWeightedDistribution& operator += (const StableWeightedDistribution &other)
     {
         const T _W = W_ + other.W_;
-        mean_ = (mean_ * W_ + other.mean_ * other.W_) / _W;
-        scatter_ += other.scatter_;
-        W_ = _W;
-        W_sq_ += other.W_sq_;
+        const auto dmean = mean_ - other.mean_;
+        mean_          = (mean_ * W_ + other.mean_ * other.W_) / _W;
+        scatter_      += other.scatter_ + (W_ * other.W_)/_W * dmean * dmean.transpose();
+        W_             = _W;
+        W_sq_         += other.W_sq_;
         sample_count_ += other.sample_count_;
-        dirty_ = true;
+        dirty_         = true;
         dirty_eigenvalues_ = true;
         return *this;
     }
@@ -459,24 +460,24 @@ public:
     {
         const T _W = W_ + w;
         const auto mean = mean_;
-        mean_    = (mean_ * W_ + s * w) / _W;
-        scatter_ = (_W - w) / W_ * scatter_ + w * (s-mean_) * (s-mean);//(scatter_ * W_ + s*s * w) / _W;
-        W_       = _W;
-        W_sq_   += w*w;
+        mean_     = (mean_ * W_ + s * w) / _W;
+        scatter_ += w * (s-mean) * (s-mean_);
+        W_        = _W;
+        W_sq_    += w*w;
         ++sample_count_;
-        dirty_ = true;
+        dirty_    = true;
     }
 
     inline StableWeightedDistribution & operator += (const StableWeightedDistribution &other)
     {
         const T _W = W_ + other.W_;
-        mean_    = (mean_ * W_ + other.mean_ * other.W_) / _W;
-        scatter_ += other.scatter_;
-        //squared_ = (squared_ * W_ +  other.squared_ * other.W_) / _W;
-        W_       = _W;
-        W_sq_   += other.W_sq_;
+        const auto dmean = mean_ - other.mean_;
+        mean_          = (mean_ * W_ + other.mean_ * other.W_) / _W;
+        scatter_      += other.scatter_ + (W_ * other.W_)/_W * dmean * dmean;
+        W_             = _W;
+        W_sq_         += other.W_sq_;
         sample_count_ += other.sample_count_;
-        dirty_ = true;
+        dirty_         = true;
         return *this;
     }
 
@@ -561,7 +562,7 @@ private:
 
     inline void update() const
     {
-        const T scale = W_ / (W_ - W_sq_ / W_);
+        const T scale = T(1) / (W_ - W_sq_ / W_);
         variance_ = scatter_ * scale;//(squared_ - mean_ * mean_) * scale;
         standard_deviation_ = std::sqrt(variance_);
         dirty_ = false;
