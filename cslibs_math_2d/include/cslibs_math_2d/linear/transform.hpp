@@ -3,7 +3,6 @@
 
 #include <cslibs_math_2d/linear/vector.hpp>
 #include <cslibs_math/common/angle.hpp>
-#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math_2d
 {
@@ -26,7 +25,7 @@ public:
         translation_(T(), T()),
         yaw_(T()),
         sin_(T()),
-        cos_(cslibs_math::utility::traits<T>::One)
+        cos_(T(1.0))
     {
     }
 
@@ -51,7 +50,7 @@ public:
         translation_(x, y),
         yaw_(T()),
         sin_(T()),
-        cos_(cslibs_math::utility::traits<T>::One)
+        cos_(T(1.0))
     {
     }
 
@@ -59,7 +58,7 @@ public:
         translation_(translation),
         yaw_(T()),
         sin_(T()),
-        cos_(cslibs_math::utility::traits<T>::One)
+        cos_(T(1.0))
     {
     }
 
@@ -225,7 +224,7 @@ public:
         return Eigen::Matrix<T,3,1>(translation_(0), translation_(1), yaw_);
     }
 
-    inline Eigen::Matrix<T,2,2> getEigenRotation() const
+    inline Eigen::Matrix<T,2,2> rotation() const
     {
         Eigen::Matrix<T,2,2> rot;
         rot(0,0) =  cos_;
@@ -259,10 +258,10 @@ public:
         if (ratio == T())
             return *this;
 
-        if (ratio == cslibs_math::utility::traits<T>::One)
+        if (ratio == T(1.0))
             return other;
 
-        const T ratio_inverse = cslibs_math::utility::traits<T>::One - ratio;
+        const T ratio_inverse = T(1.0) - ratio;
         const Vector2<T> translation = translation_ * ratio_inverse + other.translation_ * ratio;
         const T yaw = cslibs_math::common::angle::normalize(yaw_ + ratio * cslibs_math::common::angle::normalize(other.yaw_ - yaw_));
         return Transform2(translation, yaw);
