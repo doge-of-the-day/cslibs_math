@@ -4,7 +4,6 @@
 #include <cslibs_math_3d/linear/quaternion.hpp>
 #include <cslibs_math_3d/linear/vector.hpp>
 #include <cslibs_math/common/angle.hpp>
-#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math_3d {
 template <typename T>
@@ -268,11 +267,11 @@ public:
         if (ratio == T()) {
             return *this;
         }
-        if (ratio == cslibs_math::utility::traits<T>::One) {
+        if (ratio == T(1.0)) {
             return other;
         }
 
-        const  T ratio_inverse = cslibs_math::utility::traits<T>::One - ratio;
+        const  T ratio_inverse = 1.0 - ratio;
         const  translation_t translation = translation_ * ratio_inverse + other.translation_ * ratio;
         const  rotation_t    rotation    = rotation_.interpolate(other.rotation_, ratio);
         return Transform3(translation, rotation);

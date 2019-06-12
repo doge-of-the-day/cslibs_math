@@ -4,8 +4,6 @@
 #include <cmath>
 #include <complex>
 
-#include <cslibs_math/utility/traits.hpp>
-
 namespace cslibs_math {
 namespace common {
 namespace angle {
@@ -17,8 +15,8 @@ namespace angle {
 template <typename T>
 inline T normalize(const T angle)
 {
-    static const T _2_M_PI = utility::traits<T>::Two * static_cast<T>(M_PI);
-    static const T _1_2_M_PI = utility::traits<T>::One / _2_M_PI;
+    static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
+    static const T _1_2_M_PI = 1.0 / _2_M_PI;
     return angle - _2_M_PI * floor((angle + M_PI) * _1_2_M_PI);
 }
 
@@ -30,8 +28,8 @@ inline T normalize(const T angle)
 template <typename T>
 inline T normalize2Pi(const T angle)
 {
-    static const T _2_M_PI = utility::traits<T>::Two * static_cast<T>(M_PI);
-    static const T _1_2_M_PI = utility::traits<T>::One / _2_M_PI;
+    static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
+    static const T _1_2_M_PI = 1.0 / _2_M_PI;
     return angle - _2_M_PI * floor(angle * _1_2_M_PI);
 }
 
@@ -44,13 +42,13 @@ inline T normalize2Pi(const T angle)
 template <typename T>
 inline T difference(T a, T b)
 {
-    static const T _2_M_PI = utility::traits<T>::Two * static_cast<T>(M_PI);
+    static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
     auto norm = [](T v) { return std::atan2(std::sin(v), std::cos(v)); };
     a = norm(a);
     b = norm(b);
 
     T d1 = a - b;
-    T d2 = (_2_M_PI - std::fabs(d1)) * (d1 > T() ? -utility::traits<T>::One : utility::traits<T>::One);
+    T d2 = (_2_M_PI - std::fabs(d1)) * (d1 > 0 ? -1 : 1);
     return std::fabs(d1) < std::fabs(d2) ? d1 : d2;
 }
 
@@ -104,4 +102,4 @@ inline T fromComplex(const std::complex<T> &complex)
 }
 }
 
-#endif /* CSLIBS_MATH_ANGLE_HPP */
+#endif // CSLIBS_MATH_ANGLE_HPP

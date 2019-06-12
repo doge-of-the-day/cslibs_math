@@ -2,21 +2,20 @@
 #define CSLIBS_MATH_SQRT_HPP
 
 #include <limits>
-#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math {
 namespace common {
 template <typename T>
 constexpr T sqrtNewtonRaphson(T x, T curr, T prev)
 {
-    return curr == prev ? curr : sqrtNewtonRaphson(x, utility::traits<T>::Half * (curr + x / curr), curr);
+    return curr == prev ? curr : sqrtNewtonRaphson(x, 0.5 * (curr + x / curr), curr);
 }
 
 template <typename T>
 constexpr T sqrt(T x)
 {
-    return x >= T() && x < std::numeric_limits<T>::infinity() ?
-        sqrtNewtonRaphson(x, x, T()) : std::numeric_limits<T>::quiet_NaN();
+    return x >= 0 && x < std::numeric_limits<T>::infinity() ?
+        sqrtNewtonRaphson(x, x, 0) : std::numeric_limits<T>::quiet_NaN();
 }
 }
 }

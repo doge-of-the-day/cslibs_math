@@ -2,7 +2,6 @@
 #define CSLIBS_MATH_3D_POINT_3D_HPP
 
 #include <cslibs_math/color/color.hpp>
-#include <cslibs_math/utility/traits.hpp>
 #include <cslibs_math_3d/linear/vector.hpp>
 
 namespace cslibs_math_3d {
@@ -23,7 +22,7 @@ public:
     using type_t  = T;
 
     inline PointRGB3():
-        a_(cslibs_math::utility::traits<T>::One)
+        a_(1.0)
     {
     }
 
@@ -51,7 +50,7 @@ public:
 
     inline PointRGB3(const point_t &pos) :
         point_(pos),
-        a_(cslibs_math::utility::traits<T>::One)
+        a_(1.0)
     {
     }
 

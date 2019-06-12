@@ -4,20 +4,18 @@
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigen>
 
-#include <cslibs_math/utility/traits.hpp>
-
 namespace cslibs_math {
 namespace statistics {
 
 template<typename T, std::size_t exp>
 struct LambdaRatio
 {
-    constexpr const static T value = utility::traits<T>::Tenth * LambdaRatio<T, exp - 1ul>::value;
+    constexpr const static T value = 0.1 * LambdaRatio<T, exp - 1ul>::value;
 };
 template<typename T>
 struct LambdaRatio<T, 0ul>
 {
-    constexpr const static T value = utility::traits<T>::One;
+    constexpr const static T value = 1.0;
 };
 
 template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>

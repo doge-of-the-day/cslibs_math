@@ -6,7 +6,6 @@
 #include <eigen3/Eigen/Core>
 
 #include <cslibs_math/common/angle.hpp>
-#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math {
 namespace statistics {
@@ -114,7 +113,7 @@ public:
 
     inline T getCovariance() const
     {
-        return -utility::traits<T>::Two * std::log(std::hypot(complex_mean_(0), complex_mean_(1)));
+        return -2.0 * std::log(std::hypot(complex_mean_(0), complex_mean_(1)));
     }
 
 private:

@@ -5,7 +5,6 @@
 #include <eigen3/Eigen/Dense>
 
 #include <cslibs_math_3d/linear/vector.hpp>
-#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math_3d {
 template <typename T>
@@ -17,13 +16,13 @@ public:
     static Quaternion fromAngleAxis(const Vector3<T>& angle_axis)
     {
 
-        auto scale = cslibs_math::utility::traits<T>::Half;
-        auto w = cslibs_math::utility::traits<T>::One;
+        auto scale = 0.5;
+        auto w = 1.0;
         if (angle_axis.length2() > 1e-8)
         {
             const auto norm = angle_axis.length();
-            scale = std::sin(norm * cslibs_math::utility::traits<T>::Half) / norm;
-            w = std::cos(norm * cslibs_math::utility::traits<T>::Half);
+            scale = std::sin(norm * 0.5) / norm;
+            w = std::cos(norm * 0.5);
         }
 
         const auto xyz = angle_axis * scale;
@@ -36,14 +35,14 @@ public:
     }
 
     inline Quaternion() :
-        data_{T(), T(), T(), cslibs_math::utility::traits<T>::One}
+        data_{T(), T(), T(), 1.0}
     {
     }
 
     inline Quaternion(const T yaw) :
-        data_{T(), T(), T(), cslibs_math::utility::traits<T>::One}
+        data_{T(), T(), T(), 1.0}
     {
-        const T yaw_2 = yaw * cslibs_math::utility::traits<T>::Half;
+        const T yaw_2 = yaw * 0.5;
         data_[2] = sin(yaw_2);
         data_[3] = cos(yaw_2);
     }
@@ -63,12 +62,12 @@ public:
 
     inline Quaternion(const T angle, const Vector3<T>& axis)
     {
-        T sa = std::sin(cslibs_math::utility::traits<T>::Half * angle);
+        T sa = std::sin(0.5 * angle);
         T norm = axis.length();
         data_[0] = sa * axis(0) / norm;
         data_[1] = sa * axis(1) / norm;
         data_[2] = sa * axis(2) / norm;
-        data_[3] = std::cos(cslibs_math::utility::traits<T>::Half * angle);
+        data_[3] = std::cos(0.5 * angle);
     }
 
     inline Quaternion(const Quaternion &other)
@@ -95,9 +94,9 @@ public:
 
     inline void setRPY(const T roll, const T pitch, const T yaw)
     {
-        const T roll_2    = roll  * cslibs_math::utility::traits<T>::Half;
-        const T pitch_2   = pitch * cslibs_math::utility::traits<T>::Half;
-        const T yaw_2     = yaw   * cslibs_math::utility::traits<T>::Half;
+        const T roll_2    = roll  * 0.5;
+        const T pitch_2   = pitch * 0.5;
+        const T yaw_2     = yaw   * 0.5;
         const T cos_roll  = std::cos(roll_2);
         const T sin_roll  = std::sin(roll_2);
         const T cos_pitch = std::cos(pitch_2);
@@ -113,7 +112,7 @@ public:
 
     inline void setRoll(const T roll)
     {
-        const T roll_2 = roll * cslibs_math::utility::traits<T>::Half;
+        const T roll_2 = roll * 0.5;
         data_[0] = std::sin(roll_2);
         data_[1] = T();
         data_[2] = T();
@@ -122,7 +121,7 @@ public:
 
     inline void setPitch(const T pitch)
     {
-        const T pitch_2 = pitch * cslibs_math::utility::traits<T>::Half;
+        const T pitch_2 = pitch * 0.5;
         data_[0] = T();
         data_[1] = std::sin(pitch_2);
         data_[2] = T();
@@ -131,7 +130,7 @@ public:
 
     inline void setYaw(const T yaw)
     {
-        const T yaw_2 = yaw * cslibs_math::utility::traits<T>::Half;
+        const T yaw_2 = yaw * 0.5;
         data_[0] = T();
         data_[1] = T();
         data_[2] = std::sin(yaw_2);
@@ -215,30 +214,28 @@ public:
 
     inline T angle() const
     {
-        return cslibs_math::utility::traits<T>::Two * std::acos(data_[3]);
+        return 2.0 * std::acos(data_[3]);
     }
 
     inline T roll() const
     {
-        const T sin_roll = cslibs_math::utility::traits<T>::Two * (data_[3] * data_[0] + data_[1] * data_[2]);
-        const T cos_roll = cslibs_math::utility::traits<T>::One -
-                cslibs_math::utility::traits<T>::Two * (data_[0] * data_[0] + data_[1] * data_[1]);
+        const T sin_roll = 2.0 * (data_[3] * data_[0] + data_[1] * data_[2]);
+        const T cos_roll = 1.0 - 2.0 * (data_[0] * data_[0] + data_[1] * data_[1]);
         return std::atan2(sin_roll, cos_roll);
     }
 
     inline T pitch() const
     {
-        const T sin_pitch = cslibs_math::utility::traits<T>::Two * (data_[3]  * data_[1] - data_[2]  * data_[0] );
-        return std::abs(sin_pitch) >= cslibs_math::utility::traits<T>::One ?
-                    std::copysign(M_PI / cslibs_math::utility::traits<T>::Two, sin_pitch) :
+        const T sin_pitch = 2.0 * (data_[3]  * data_[1] - data_[2]  * data_[0] );
+        return std::abs(sin_pitch) >= 1 ?
+                    std::copysign(M_PI / 2.0, sin_pitch) :
                     std::asin(sin_pitch);
     }
 
     inline T yaw() const
     {
-        const T sin_yaw = cslibs_math::utility::traits<T>::Two * (data_[3]  * data_[2]  + data_[0]  * data_[1] );
-        const T cos_yaw = cslibs_math::utility::traits<T>::One -
-                cslibs_math::utility::traits<T>::Two * (data_[1]  * data_[1]  + data_[2] * data_[2]);
+        const T sin_yaw = 2.0 * (data_[3]  * data_[2]  + data_[0]  * data_[1] );
+        const T cos_yaw = 1.0 - 2.0 * (data_[1]  * data_[1]  + data_[2] * data_[2]);
         return std::atan2(sin_yaw, cos_yaw);
     }
 
@@ -280,8 +277,8 @@ public:
         const T d = dot(data_, other.data_);
         const T theta = d < 0 ? std::acos(dot(data_, (-other).data_) / s) : std::acos(d / s);
         if (theta != T()) {
-            const T scale = cslibs_math::utility::traits<T>::One / std::sin(theta);
-            const T s0 = std::sin((cslibs_math::utility::traits<T>::One - ratio) * theta);
+            const T scale = 1.0 / std::sin(theta);
+            const T s0 = std::sin((1.0 - ratio) * theta);
             const T s1 = std::sin(ratio * theta);
             return d < 0 ? Quaternion((data_[0] * s0 - other.data_[0] * s1) * scale,
                     (data_[1] * s0 - other.data_[1] * s1) * scale,
@@ -316,9 +313,8 @@ public:
             normed = -normed;
         const auto xyz = Vector3<T>(normed.x(), normed.y(), normed.z());
 
-        const auto angle = cslibs_math::utility::traits<T>::Two * std::atan2(xyz.length(), normed.w());
-        const auto scale = angle < 1e-7 ? cslibs_math::utility::traits<T>::Two :
-                                          angle / std::sin(angle * cslibs_math::utility::traits<T>::Half);
+        const auto angle = 2.0 * std::atan2(xyz.length(), normed.w());
+        const auto scale = angle < 1e-7 ? 2.0 : angle / std::sin(angle * 0.5);
         return xyz * scale;
     }
 
@@ -342,7 +338,7 @@ private:
 
     static inline void normalize(const data_t &a, data_t &a_normalized)
     {
-        const T n = cslibs_math::utility::traits<T>::One / std::sqrt(dot(a, a));
+        const T n = 1.0 / std::sqrt(dot(a, a));
         a_normalized[0] = a[0] * n;
         a_normalized[1] = a[1] * n;
         a_normalized[2] = a[2] * n;
@@ -351,7 +347,7 @@ private:
 
     static inline void invert(const data_t &a, data_t &a_inverted)
     {
-        const T n = cslibs_math::utility::traits<T>::One / dot(a,a);
+        const T n = 1.0 / dot(a,a);
         a_inverted[0] = -a[0] * n;
         a_inverted[1] = -a[1] * n;
         a_inverted[2] = -a[2] * n;

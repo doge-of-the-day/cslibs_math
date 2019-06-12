@@ -2,7 +2,6 @@
 #define CSLIBS_MATH_DIV_HPP
 
 #include <type_traits>
-#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math {
 namespace common {
@@ -13,7 +12,7 @@ T div(const T a, const T b)
 
     assert(b > T());
     const T d = a / b;
-    return a < utility::traits<T>::One ? (d*b != a ? d - utility::traits<T>::One : d) : d;
+    return a < 1 ? (d*b != a ? d - 1 : d) : d;
 }
 }
 }

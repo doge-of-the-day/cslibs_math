@@ -10,7 +10,6 @@
 
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
 #include <cslibs_math/common/sqrt.hpp>
-#include <cslibs_math/utility/traits.hpp>
 
 namespace cslibs_math {
 namespace statistics {
@@ -27,7 +26,7 @@ public:
     using eigen_values_t      = Eigen::Matrix<T, Dim, 1>;
     using eigen_vectors_t     = Eigen::Matrix<T, Dim, Dim>;
 
-    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(utility::traits<T>::Two * M_PI);
+    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
     WeightedDistribution() :
         sample_count_(0),
@@ -293,7 +292,7 @@ public:
     {
         auto update_return = [this](){
             if (dirty_) update();
-            return utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
+            return 1.0  / (determinant_ * sqrt_2_M_PI);
         };
         return valid() ? update_return() : T();
     }
@@ -303,9 +302,9 @@ public:
         auto update_sample = [this, &p]() {
             if (dirty_) update();
             const sample_t q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+            const T exponent = - 0.5 * static_cast<T>(
                         static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
-            const T denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
+            const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
         return valid() ? update_sample() : T();
@@ -317,9 +316,9 @@ public:
         auto update_sample = [this, &p, &q]() {
             if (dirty_) update();
             q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+            const T exponent = - 0.5 * static_cast<T>(
                         static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
-            const T denominator = utility::traits<T>::One / (determinant_ * sqrt_2_M_PI);
+            const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
             return denominator * std::exp(exponent);
         };
         return valid() ? update_sample() : T();
@@ -330,7 +329,7 @@ public:
         auto update_sample = [this, &p]() {
             if (dirty_) update();
             const sample_t q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+            const T exponent = - 0.5 * static_cast<T>(
                         static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             return std::exp(exponent);
         };
@@ -343,7 +342,7 @@ public:
         auto update_sample = [this, &p, &q]() {
             if (dirty_) update();
             q = p - mean_;
-            const T exponent = - utility::traits<T>::Half * static_cast<T>(
+            const T exponent = - 0.5 * static_cast<T>(
                         static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
             return std::exp(exponent);
         };
@@ -411,7 +410,7 @@ public:
     using allocator_t = Eigen::aligned_allocator<WeightedDistribution<T, 1, lambda_ratio_exponent>>;
     using Ptr         = std::shared_ptr<WeightedDistribution<T, 1, lambda_ratio_exponent>> ;
 
-    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(utility::traits<T>::Two * M_PI);
+    static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
 
     inline WeightedDistribution() :
         sample_count_(0),
@@ -525,9 +524,9 @@ public:
     {
         auto update_sample = [this, &s]() {
             if (dirty_) update();
-            const T d = utility::traits<T>::Two * variance_;
+            const T d = 2.0 * variance_;
             const T x = s - mean_;
-            return std::exp(-utility::traits<T>::Half * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
+            return std::exp(-0.5 * x * x / d) / (sqrt_2_M_PI * standard_deviation_);
         };
         return valid() ? update_sample() : T();
     }
@@ -536,9 +535,9 @@ public:
     {
         auto update_sample = [this, &s]() {
             if (dirty_) update();
-            const T d = utility::traits<T>::Two * variance_;
+            const T d = 2.0 * variance_;
             const T x = s - mean_;
-            return std::exp(-utility::traits<T>::Half * x * x / d);
+            return std::exp(-0.5 * x * x / d);
         };
         return valid() ? update_sample() : T();
     }

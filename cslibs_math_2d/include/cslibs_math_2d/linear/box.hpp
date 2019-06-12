@@ -2,9 +2,7 @@
 #define CSLIBS_MATH_2D_BOX_2D_HPP
 
 #include <cslibs_math_2d/linear/line.hpp>
-
 #include <cslibs_math/common/equal.hpp>
-#include <cslibs_math/utility/traits.hpp>
 
 #include <limits>
 #include <set>
@@ -104,7 +102,7 @@ public:
         const auto d = p1 - p0;
 
         T t0 = T();
-        T t1 = cslibs_math::utility::traits<T>::One;
+        T t1 = 1.0;
 
         auto clip = [] (const T p, const T q,
                         T &t0, T &t1)
@@ -148,7 +146,7 @@ public:
         const auto d = p1 - p0;
 
         T t0 = T();
-        T t1 = cslibs_math::utility::traits<T>::One;
+        T t1 = 1.0;
 
         auto clip = [] (const T p, const T q,
                         T &t0, T &t1)
