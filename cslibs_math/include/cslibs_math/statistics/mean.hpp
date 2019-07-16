@@ -17,30 +17,27 @@ public:
 
     inline Mean() :
         mean_(Eigen::Matrix<T, Dim, 1>::Zero()),
-        n_(1),
-        n_1(0)
+        n_(0)
     {
     }
 
     inline Mean(const Mean &other) :
         mean_(other.mean_),
-        n_(other.n_),
-        n_1(other.n_1)
+        n_(other.n_)
     {
     }
 
     inline Mean(Mean &&other) :
         mean_(std::move(other.mean_)),
-        n_(other.n_),
-        n_1(other.n_1)
+        n_(other.n_)
     {
     }
 
     inline void add(const sample_t &sample)
     {
-        mean_ = (mean_ * static_cast<T>(n_1) + sample) / static_cast<T>(n_);
-        ++n_;
-        ++n_1;
+        const std::size_t _n = n_+1;
+        mean_ = (mean_ * static_cast<T>(n_) + sample) / static_cast<T>(_n);
+        n_    = _n;
     }
 
     inline sample_t get() const
@@ -48,10 +45,14 @@ public:
         return mean_;
     }
 
+    inline std::size_t getN() const
+    {
+        return n_;
+    }
+
 private:
     sample_t    mean_;
     std::size_t n_;
-    std::size_t n_1;
 };
 
 template<typename T>
@@ -63,16 +64,15 @@ public:
 
     Mean() :
         mean_(T()),
-        n_(1),
-        n_1(0)
+        n_(0)
     {
     }
 
     inline void add(const T &sample)
     {
-        mean_ = (mean_ * static_cast<T>(n_1) + sample) / static_cast<T>(n_);
-        ++n_;
-        ++n_1;
+        const std::size_t _n = n_+1;
+        mean_ = (mean_ * static_cast<T>(n_) + sample) / static_cast<T>(_n);
+        n_    = _n;
     }
 
     inline T get() const
@@ -80,10 +80,14 @@ public:
         return mean_;
     }
 
+    inline std::size_t getN() const
+    {
+        return n_;
+    }
+
 private:
     T mean_;
     std::size_t n_;
-    std::size_t n_1;
 };
 }
 }
