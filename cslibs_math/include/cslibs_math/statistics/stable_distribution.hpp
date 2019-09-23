@@ -236,9 +236,9 @@ public:
     inline eigen_values_t getEigenValues(const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
-            updateEigenvalues(); return abs ? eigen_values_.cwiseAbs() : eigen_values_;
+            updateEigenvalues(); return abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_;
         };
-        return (dirty_eigenvalues_ && valid()) ?  update_return_eigen() : (abs ? eigen_values_.cwiseAbs() : eigen_values_);
+        return (dirty_eigenvalues_ && valid()) ?  update_return_eigen() : (abs ? eigen_values_t(eigen_values_.cwiseAbs()) : eigen_values_);
     }
 
     inline void getEigenValues(eigen_values_t &eigen_values,
