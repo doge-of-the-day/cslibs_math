@@ -15,8 +15,6 @@ public:
 
     using index_t       = std::array<int, 3>;
     using error_t       = std::array<int, 2>;
-    using interation_t  = Bresenham& (Bresenham::*)() ;
-    using done_t        = bool (Bresenham::*)();
 
     inline Bresenham() :
         index_{{0,0,0}},

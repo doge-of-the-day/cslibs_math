@@ -58,12 +58,12 @@ public:
 
     inline int x() const
     {
-        return (steep_ ? index_[1] : index_[0]);
+        return steep_ ? index_[1] : index_[0];
     }
 
     inline int y() const
     {
-        return (steep_ ? index_[0] : index_[1]);
+        return steep_ ? index_[0] : index_[1];
     }
 
     inline index_t operator()() const

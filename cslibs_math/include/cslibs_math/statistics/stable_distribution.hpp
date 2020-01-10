@@ -44,6 +44,21 @@ public:
     }
 
     inline StableDistribution(
+            const sample_t& mean) :
+        mean_(mean),
+        scatter_(covariance_t::Zero()),
+        n_(1),
+        covariance_(covariance_t::Zero()),
+        information_matrix_(covariance_t::Zero()),
+        eigen_values_(eigen_values_t::Zero()),
+        eigen_vectors_(eigen_vectors_t::Zero()),
+        determinant_(T()),  // zero initialization
+        dirty_(true),
+        dirty_eigenvalues_(true)
+    {
+    }
+
+    inline StableDistribution(
             std::size_t  n,
             sample_t     mean,
             covariance_t scatter) :
