@@ -402,7 +402,7 @@ private:
 };
 
 template<typename T, std::size_t lambda_ratio_exponent>
-class StableWeightedDistribution<T, 1, lambda_ratio_exponent>
+class EIGEN_ALIGN16 StableWeightedDistribution<T, 1, lambda_ratio_exponent>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
