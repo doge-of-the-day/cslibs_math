@@ -18,7 +18,8 @@ inline cslibs_time::TimeFrame from(const ::sensor_msgs::PointCloud2ConstPtr &src
 
 template <typename T>
 inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
-                 typename cslibs_math_3d::Pointcloud3<T>::Ptr &dst)
+                 typename cslibs_math_3d::Pointcloud3<T>::Ptr &dst,
+                 const std::array<T,2> &range_limits = {{0.0, std::numeric_limits<T>::max()}})
 {
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
@@ -28,7 +29,8 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
     for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
         if (!std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z)) {
             cslibs_math_3d::Point3<T> p(*iter_x, *iter_y, *iter_z);
-            if (p.isNormal())
+            const T range = p.length();
+            if (p.isNormal() && range >= range_limits[0] && range <= range_limits[1])
                 dst->insert(p);
         }
     }
@@ -65,7 +67,8 @@ inline void from(const typename cslibs_math_3d::Pointcloud3<T>::Ptr &src,
 
 template <typename T>
 inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
-                 typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &dst)
+                 typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &dst,
+                 const std::array<T,2> &range_limits = {{0.0, std::numeric_limits<T>::max()}})
 {
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
     ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
@@ -83,7 +86,8 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
                                            static_cast<float>(*iter_g)/256.0f,
                                            static_cast<float>(*iter_b)/256.0f);
             cslibs_math_3d::PointRGB3<T> point(p, static_cast<float>(*iter_a)/256.0, c);
-            if (p.isNormal())
+            const T range = point.getPoint().length();
+            if (p.isNormal() && range >= range_limits[0] && range <= range_limits[1])
                 dst->insert(point);
         }
     }
