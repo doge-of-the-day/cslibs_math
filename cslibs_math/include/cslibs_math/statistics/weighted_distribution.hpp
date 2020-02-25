@@ -349,8 +349,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const WeightedDistribution&)
+    inline void merge(const WeightedDistribution &other)
     {
+        *this += other;
     }
 
 private:
@@ -542,8 +543,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const WeightedDistribution&)
+    inline void merge(const WeightedDistribution &other)
     {
+        *this += other;
     }
 
 private:

@@ -346,8 +346,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const StableWeightedDistribution&)
-    {
+    inline void merge(const StableWeightedDistribution &other)
+    {        
+        *this += other;
     }
 
 private:
@@ -543,8 +544,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const StableWeightedDistribution&)
+    inline void merge(const StableWeightedDistribution &other)
     {
+        *this += other;
     }
 
 private:

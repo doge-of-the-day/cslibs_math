@@ -334,8 +334,9 @@ public:
         return sampleNonNormalized(getMean());
     }
 
-    inline void merge(const Distribution&)
+    inline void merge(const Distribution &other)
     {
+        *this += other;
     }
 
 private:
@@ -514,8 +515,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const Distribution&)
+    inline void merge(const Distribution &other)
     {
+        *this += other;
     }
 
 private:
