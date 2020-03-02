@@ -37,10 +37,13 @@ public:
                             static_cast<int>(std::floor(p1(1) / resolution))}});
 
         // estimate min/max
-        min_[0] = std::min(index_[0],end[0]);
-        min_[1] = std::min(index_[1],end[1]);
-        max_[0] = std::max(index_[0],end[0]);
-        max_[1] = std::max(index_[1],end[1]);
+        auto minmax = [this,end](const std::size_t &i) {
+            const auto& p = std::minmax(index_[i],end[i]);
+            min_[i] = p.first;
+            max_[i] = p.second;
+        };
+        for (std::size_t i=0; i<2; ++i)
+            minmax(i);
 
         // Bresenham delta and steps
         step_      = std::compare(index_, end);

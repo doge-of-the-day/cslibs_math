@@ -15,7 +15,6 @@ public:
 
     static Quaternion fromAngleAxis(const Vector3<T>& angle_axis)
     {
-
         auto scale = 0.5;
         auto w = 1.0;
         if (angle_axis.length2() > 1e-8)

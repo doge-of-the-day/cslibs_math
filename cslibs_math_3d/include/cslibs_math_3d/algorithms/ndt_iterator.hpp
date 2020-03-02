@@ -40,12 +40,13 @@ public:
                             static_cast<int>(std::floor(p1(2) / resolution))}});
 
         // estimate min/max
-        min_[0] = std::min(index_[0],end[0]);
-        min_[1] = std::min(index_[1],end[1]);
-        min_[2] = std::min(index_[2],end[2]);
-        max_[0] = std::max(index_[0],end[0]);
-        max_[1] = std::max(index_[1],end[1]);
-        max_[2] = std::max(index_[2],end[2]);
+        auto minmax = [this,end](const std::size_t &i) {
+            const auto& p = std::minmax(index_[i],end[i]);
+            min_[i] = p.first;
+            max_[i] = p.second;
+        };
+        for (std::size_t i=0; i<3; ++i)
+            minmax(i);
 
         // Bresenham delta and steps
         step_      = std::compare(index_, end);
@@ -64,18 +65,7 @@ public:
             error_[1]  = (0.5 - std::fmod(p0(0),resolution)) * error_inc_[1]
                          + std::fmod(p0(2),resolution) - 0.5;
             error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
-/*
-            error_[0] += error_inc_[0];
-            error_[1] += error_inc_[1];
-            index_[0] += step_[0];
-            while (error_[0] > 0) {
-                index_[1] += step_[1];
-                --error_[0];
-            }
-            while (error_[1] > 0) {
-                index_[2] += step_[2];
-                --error_[1];
-            }*/
+
             iterate_   = &NDTIterator::iterateDx;
             iteration_ = (std::abs(end[0] - index_[0]) - 2) >> 1;
 
@@ -90,18 +80,7 @@ public:
             error_[1]  = (0.5 - std::fmod(p0(1),resolution)) * error_inc_[1]
                          + std::fmod(p0(2),resolution) - 0.5;
             error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
-/*
-            error_[0] += error_inc_[0];
-            error_[1] += error_inc_[1];
-            index_[1] += step_[1];
-            while (error_[0] > 0) {
-                index_[0] += step_[0];
-                --error_[0];
-            }
-            while (error_[1] > 0) {
-                index_[2] += step_[2];
-                --error_[1];
-            }*/
+
             iterate_   = &NDTIterator::iterateDy;
             iteration_ = (std::abs(end[1] - index_[1]) - 2) >> 1;
 
@@ -116,18 +95,7 @@ public:
             error_[1]  = (0.5 - std::fmod(p0(2),resolution)) * error_inc_[1]
                          + std::fmod(p0(1),resolution) - 0.5;
             error_[1] += (step_[1] > 0) ? -0.5 : 0.5;
-/*
-            error_[0] += error_inc_[0];
-            error_[1] += error_inc_[1];
-            index_[2] += step_[2];
-            while (error_[0] > 0) {
-                index_[0] += step_[0];
-                --error_[0];
-            }
-            while (error_[1] > 0) {
-                index_[1] += step_[1];
-                --error_[1];
-            }*/
+
             iterate_   = &NDTIterator::iterateDz;
             iteration_ = (std::abs(end[2] - index_[2]) - 2) >> 1;
 

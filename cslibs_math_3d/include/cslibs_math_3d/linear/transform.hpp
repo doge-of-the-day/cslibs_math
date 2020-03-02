@@ -17,10 +17,7 @@ public:
     using translation_t     = Vector3<T>;
     using rotation_t        = Quaternion<T>;
 
-    inline Transform3()
-    {
-    }
-
+    inline Transform3() = default;
     static inline Transform3 identity()
     {
         return Transform3();
