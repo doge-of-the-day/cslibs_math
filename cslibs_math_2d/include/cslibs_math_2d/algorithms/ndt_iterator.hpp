@@ -44,6 +44,10 @@ public:
         };
         for (std::size_t i=0; i<2; ++i)
             minmax(i);
+//        min_[0] = std::min(index_[0],end[0]);
+//        max_[0] = std::max(index_[0],end[0]);
+//        min_[1] = std::min(index_[1],end[1]);
+//        max_[1] = std::max(index_[1],end[1]);
 
         // Bresenham delta and steps
         step_      = std::compare(index_, end);
@@ -61,8 +65,13 @@ public:
             iterate_   = &NDTIterator::iterateDx;
             iteration_ = (std::abs(end[0] - index_[0]) - 2) >> 1;
 
-            min_[0] = std::min(index_[0],end[0]-1);
-            max_[0] = std::max(index_[0],end[0]-1);
+            if (index_[0] < end[0])
+                --max_[0];
+            else
+                ++min_[0];
+ //           minmax(0,index_[0],end[0]-1);
+//            min_[0] = std::min(index_[0],end[0]-1);
+//            max_[0] = std::max(index_[0],end[0]-1);
         } else {
             error_inc_ = dx/dy;
             error_     = (0.5 - std::fmod(p0(1),resolution)) * error_inc_
@@ -72,8 +81,13 @@ public:
             iterate_   = &NDTIterator::iterateDy;
             iteration_ = (std::abs(end[1] - index_[1]) - 2) >> 1;
 
-            min_[1] = std::min(index_[1],end[1]-1);
-            max_[1] = std::max(index_[1],end[1]-1);
+            if (index_[1] < end[1])
+                --max_[1];
+            else
+                ++min_[1];
+//            minmax(1,index_[1],end[1]-1);
+//            min_[1] = std::min(index_[1],end[1]-1);
+//            max_[1] = std::max(index_[1],end[1]-1);
         }
 
         // two steps at once

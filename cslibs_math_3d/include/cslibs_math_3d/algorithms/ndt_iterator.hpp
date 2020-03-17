@@ -69,8 +69,12 @@ public:
             iterate_   = &NDTIterator::iterateDx;
             iteration_ = (std::abs(end[0] - index_[0]) - 2) >> 1;
 
-            min_[0] = std::min(index_[0],end[0]-1);
-            max_[0] = std::max(index_[0],end[0]-1);
+            if (index_[0] < end[0])
+                --max_[0];
+            else
+                ++min_[0];
+//            min_[0] = std::min(index_[0],end[0]-1);
+//            max_[0] = std::max(index_[0],end[0]-1);
         } else if (dy > dx && dy > dz) {
             error_inc_[0] = dx/dy;
             error_inc_[1] = dz/dy;
@@ -84,8 +88,12 @@ public:
             iterate_   = &NDTIterator::iterateDy;
             iteration_ = (std::abs(end[1] - index_[1]) - 2) >> 1;
 
-            min_[1] = std::min(index_[1],end[1]-1);
-            max_[1] = std::max(index_[1],end[1]-1);
+            if (index_[1] < end[1])
+                --max_[1];
+            else
+                ++min_[1];
+//            min_[1] = std::min(index_[1],end[1]-1);
+//            max_[1] = std::max(index_[1],end[1]-1);
         } else {
             error_inc_[0] = dx/dz;
             error_inc_[1] = dy/dz;
@@ -99,8 +107,12 @@ public:
             iterate_   = &NDTIterator::iterateDz;
             iteration_ = (std::abs(end[2] - index_[2]) - 2) >> 1;
 
-            min_[2] = std::min(index_[2],end[2]-1);
-            max_[2] = std::max(index_[2],end[2]-1);
+            if (index_[2] < end[2])
+                --max_[2];
+            else
+                ++min_[2];
+//            min_[2] = std::min(index_[2],end[2]-1);
+//            max_[2] = std::max(index_[2],end[2]-1);
         }
 
         // two steps at once
