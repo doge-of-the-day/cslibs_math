@@ -30,15 +30,18 @@ struct binary<cslibs_math::statistics::StableDistribution, T, Dim, lambda_ratio_
 
         std::size_t  n = io<std::size_t>::read(in);
 
-        for(std::size_t i = 0 ; i < Dim ; ++i)
-            mean(i) = io<T>::read(in);
+        if (n > 0) { // data only exists if n > 0
+            for(std::size_t i = 0 ; i < Dim ; ++i)
+                mean(i) = io<T>::read(in);
 
-        for(std::size_t i = 0 ; i < Dim; ++i) {
-            for(std::size_t j = 0 ; j < Dim ; ++j) {
-                s(i,j) = io<T>::read(in);
+            for(std::size_t i = 0 ; i < Dim; ++i) {
+                for(std::size_t j = 0 ; j < Dim ; ++j) {
+                    s(i,j) = io<T>::read(in);
+                }
             }
-        }
-        distribution = distribution_t(n, mean, s);
+            distribution = distribution_t(n, mean, s);
+        } else
+            distribution = distribution_t();
 
         return size;
     }
@@ -46,7 +49,7 @@ struct binary<cslibs_math::statistics::StableDistribution, T, Dim, lambda_ratio_
     inline static void  write(std::ofstream &out)
     {
         io<std::size_t>::write(0, out);
-
+/*
         for(std::size_t i = 0 ; i < Dim ; ++i)
             io<T>::write(0.0, out);
 
@@ -54,7 +57,7 @@ struct binary<cslibs_math::statistics::StableDistribution, T, Dim, lambda_ratio_
             for(std::size_t j = 0 ; j < Dim ; ++j) {
                 io<T>::write(0.0, out);
             }
-        }
+        }*/
     }
 
     inline static void  write(const distribution_t &distribution,
