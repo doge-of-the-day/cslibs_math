@@ -102,6 +102,20 @@ std::ostream & operator << (std::ostream &__out, const std::array<_Tp, _Nm> &__a
 
 namespace std {
 template<typename _Tp, std::size_t _Nm>
+std::string to_string(const std::array<_Tp, _Nm> &__arr)
+{
+    std::string result = "[";
+    if(_Nm != 0ul) {
+        for(std::size_t i = 0 ; i < _Nm-1 ; ++i) {
+           result += __arr[i] + ",";
+        }
+        result += __arr.back();
+    }
+    result += "]";
+    return result;
+}
+
+template<typename _Tp, std::size_t _Nm>
 std::array<_Tp, _Nm> min(const std::array<_Tp, _Nm> &__one,
                          const std::array<_Tp, _Nm> &__two)
 {
@@ -120,6 +134,7 @@ std::array<_Tp, _Nm> max(const std::array<_Tp, _Nm> &__one,
         arr[i] = std::max(__one[i], __two[i]);
     return arr;
 }
+
 template<typename _Tp, std::size_t _Nm>
 std::array<_Tp, _Nm> abs(const std::array<_Tp, _Nm> &__one)
 {
@@ -128,6 +143,7 @@ std::array<_Tp, _Nm> abs(const std::array<_Tp, _Nm> &__one)
         arr[i] = std::abs(__one[i]);
     return arr;
 }
+
 template<typename _Tp, std::size_t _Nm>
 std::array<int, _Nm> compare(const std::array<_Tp, _Nm> &__one,
                              const std::array<_Tp, _Nm> &__two)

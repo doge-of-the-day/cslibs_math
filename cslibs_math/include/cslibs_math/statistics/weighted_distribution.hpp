@@ -153,7 +153,7 @@ public:
     }
 
     /// Modification
-    inline void add(const sample_t &p, const T w)
+    inline void add(const sample_t &p, const T w = static_cast<T>(1.0))
     {
         if (w <= T())
             return;
