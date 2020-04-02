@@ -40,24 +40,16 @@ struct binary<cslibs_math::statistics::StableDistribution, T, Dim, lambda_ratio_
                 }
             }
             distribution = distribution_t(n, mean, s);
-        } else
-            distribution = distribution_t();
+            return size;
+        }
 
-        return size;
+        distribution = distribution_t();
+        return sizeof(std::size_t);
     }
 
     inline static void  write(std::ofstream &out)
     {
         io<std::size_t>::write(0, out);
-/*
-        for(std::size_t i = 0 ; i < Dim ; ++i)
-            io<T>::write(0.0, out);
-
-        for(std::size_t i = 0 ; i < Dim; ++i) {
-            for(std::size_t j = 0 ; j < Dim ; ++j) {
-                io<T>::write(0.0, out);
-            }
-        }*/
     }
 
     inline static void  write(const distribution_t &distribution,
