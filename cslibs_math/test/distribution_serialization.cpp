@@ -60,14 +60,14 @@ struct TestDimension {
             // tests
             EXPECT_EQ(d.getN(), d_converted.getN());
             for (std::size_t i = 0 ; i < Dim ; ++ i) {
-                EXPECT_NEAR(d.getMean()(i), d_converted.getMean()(i), 1e-9);
+                EXPECT_NEAR(d.getMean()(i), d_converted.getMean()(i), 1e-6);
                 for (std::size_t j = 0 ; j < Dim ; ++ j) {
-                    EXPECT_NEAR(d.getCorrelated()(i, j),        d_converted.getCorrelated()(i, j),        1e-9);
-                    EXPECT_NEAR(d.getCovariance()(i, j),        d_converted.getCovariance()(i, j),        1e-9);
-                    EXPECT_NEAR(d.getInformationMatrix()(i, j), d_converted.getInformationMatrix()(i, j), 1e-9);
+                    EXPECT_NEAR(d.getCorrelated()(i, j),        d_converted.getCorrelated()(i, j),        1e-6);
+                    EXPECT_NEAR(d.getCovariance()(i, j),        d_converted.getCovariance()(i, j),        1e-6);
+                    EXPECT_NEAR(d.getInformationMatrix()(i, j), d_converted.getInformationMatrix()(i, j), 1e-6);
                 }
             }
-            EXPECT_NEAR(d.denominator(), d_converted.denominator(), 1e-9);
+            EXPECT_NEAR(d.denominator(), d_converted.denominator(), 1e-6);
         }
     }
 };
@@ -93,9 +93,9 @@ struct TestDimension<1> {
 
             // tests
             EXPECT_EQ(d.getN(),                   d_converted.getN());
-            EXPECT_NEAR(d.getMean(),              d_converted.getMean(),              1e-9);
-            EXPECT_NEAR(d.getVariance(),          d_converted.getVariance(),          1e-9);
-            EXPECT_NEAR(d.getStandardDeviation(), d_converted.getStandardDeviation(), 1e-9);
+            EXPECT_NEAR(d.getMean(),              d_converted.getMean(),              1e-6);
+            EXPECT_NEAR(d.getVariance(),          d_converted.getVariance(),          1e-6);
+            EXPECT_NEAR(d.getStandardDeviation(), d_converted.getStandardDeviation(), 1e-6);
         }
     }
 };

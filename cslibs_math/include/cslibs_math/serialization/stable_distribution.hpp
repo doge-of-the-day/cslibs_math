@@ -25,12 +25,12 @@ struct binary<cslibs_math::statistics::StableDistribution, T, Dim, lambda_ratio_
     inline static std::size_t read(std::ifstream  &in,
                                    distribution_t &distribution)
     {
-        sample_t     mean;
-        correlated_t s;
-
         std::size_t  n = io<std::size_t>::read(in);
 
         if (n > 0) { // data only exists if n > 0
+            sample_t     mean;
+            correlated_t s;
+
             for(std::size_t i = 0 ; i < Dim ; ++i)
                 mean(i) = io<T>::read(in);
 
@@ -47,26 +47,28 @@ struct binary<cslibs_math::statistics::StableDistribution, T, Dim, lambda_ratio_
         return sizeof(std::size_t);
     }
 
-    inline static void  write(std::ofstream &out)
+    inline static void write(std::ofstream &out)
     {
         io<std::size_t>::write(0, out);
     }
 
-    inline static void  write(const distribution_t &distribution,
-                              std::ofstream &out)
+    inline static void write(const distribution_t &distribution,
+                             std::ofstream &out)
     {
-        const sample_t      mean = distribution.getMean();
-        const correlated_t  s    = distribution.getScatter();
-        const std::size_t   n    = distribution.getN();
-
+        const std::size_t&  n    = distribution.getN();
         io<std::size_t>::write(n, out);
 
-        for(std::size_t i = 0 ; i < Dim ; ++i)
-            io<T>::write(mean(i), out);
+        if (n > 0) {
+            const sample_t&     mean = distribution.getMean();
+            const correlated_t& s    = distribution.getScatter();
 
-        for(std::size_t i = 0 ; i < Dim; ++i) {
-            for(std::size_t j = 0 ; j < Dim ; ++j) {
-                io<T>::write(s(i,j), out);
+            for(std::size_t i = 0 ; i < Dim ; ++i)
+                io<T>::write(mean(i), out);
+
+            for(std::size_t i = 0 ; i < Dim; ++i) {
+                for(std::size_t j = 0 ; j < Dim ; ++j) {
+                    io<T>::write(s(i,j), out);
+                }
             }
         }
     }

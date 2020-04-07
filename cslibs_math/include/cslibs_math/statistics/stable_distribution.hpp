@@ -211,7 +211,7 @@ public:
                 update();
 
             Eigen::EigenSolver<covariance_t> solver;
-            solver.compute(information_matrix_.inverse());
+            solver.compute(information_matrix_.inverse().eval());
             eigen_vectors = solver.eigenvectors().real();
             eigen_values  = abs ? eigen_values_t(solver.eigenvalues().real().cwiseAbs()) : solver.eigenvalues().real();
             return true;
@@ -269,7 +269,7 @@ private:
         const T scale = T(1) / static_cast<T>(n_ - 1);
         information_matrix_ = scale * scatter_;
 
-        information_matrix_ = information_matrix_.inverse();
+        information_matrix_ = information_matrix_.inverse().eval();
     }
 };
 
