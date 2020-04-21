@@ -22,53 +22,78 @@ catkin_package(
                     cslibs_math_show_headers.cmake
                     cslibs_math_add_unit_test_gtest.cmake)
 
-include_directories(
-   include
-   ${Eigen3_INCLUDE_DIR}
-   ${catkin_INCLUDE_DIRS}
+set(INCLUDE_DIRS
+    include
+    ${Eigen3_INCLUDE_DIR}
+    ${catkin_INCLUDE_DIRS}
 )
 
 cslibs_math_show_headers()
 
 cslibs_math_add_unit_test_gtest(mod
-    SRCS test/mod.cpp
+    INCLUDE_DIRS
+        ${INCLUDE_DIRS}
+    SOURCE_FILES
+        test/mod.cpp
 )
 
 cslibs_math_add_unit_test_gtest(div
-    SRCS test/div.cpp
+    INCLUDE_DIRS
+        ${INCLUDE_DIRS}
+    SOURCE_FILES
+        test/div.cpp
 )
 
 cslibs_math_add_unit_test_gtest(array
-    SRCS test/array.cpp
+    INCLUDE_DIRS
+        ${INCLUDE_DIRS}
+    SOURCE_FILES
+        test/array.cpp
 )
 
 cslibs_math_add_unit_test_gtest(random
-    SRCS test/random.cpp
+    INCLUDE_DIRS
+        ${INCLUDE_DIRS}
+    SOURCE_FILES
+        test/random.cpp
 )
 
 cslibs_math_add_unit_test_gtest(sqrt
-    SRCS test/sqrt.cpp
+    INCLUDE_DIRS
+        ${INCLUDE_DIRS}
+    SOURCE_FILES
+        test/sqrt.cpp
 )
 
 cslibs_math_add_unit_test_gtest(distribution_serialization
-    SRCS test/distribution_serialization.cpp
-    LIBS yaml-cpp
+    INCLUDE_DIRS
+        ${INCLUDE_DIRS}
+    SOURCE_FILES
+        test/distribution_serialization.cpp
+    LINK_LIBRARIES
+        yaml-cpp
 )
 
 cslibs_math_add_unit_test_ros(distribution
-    LAUNCH test/test_distribution.test
-    SRCS test/test_node_distribution.cpp
-    LIBS yaml-cpp ${Boost_LIBRARIES} ${catkin_LIBRARIES}
+    LAUNCH_FILES
+        test/test_distribution.test
+    SOURCE_FILES
+        test/test_node_distribution.cpp
+    LINK_LIBRARIES
+        yaml-cpp
+        ${Boost_LIBRARIES}
+        ${catkin_LIBRARIES}
 )
 
 cslibs_math_add_unit_test_ros(distribution_float
-    LAUNCH test/test_distribution_float.test
-    SRCS test/test_node_distribution_float.cpp
-    LIBS yaml-cpp ${Boost_LIBRARIES} ${catkin_LIBRARIES}
-)
-
-add_executable(hausdorff
-    test/hausdorff.cpp
+    LAUNCH_FILES
+        test/test_distribution_float.test
+    SOURCE_FILES
+        test/test_node_distribution_float.cpp
+    LINK_LIBRARIES
+        yaml-cpp
+        ${Boost_LIBRARIES}
+        ${catkin_LIBRARIES}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
