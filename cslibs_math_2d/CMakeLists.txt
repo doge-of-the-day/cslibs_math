@@ -1,52 +1,63 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(cslibs_math_2d)
 
-add_definitions(-std=c++11)
-
 find_package(catkin REQUIRED COMPONENTS
     cslibs_math
 )
 
-find_package(Eigen3 REQUIRED)
-find_package(tf                    QUIET)
-find_package(cslibs_boost_geometry QUIET)
-
 catkin_package(
-    INCLUDE_DIRS    include
-    CATKIN_DEPENDS  cslibs_math
-)
-
-include_directories(
-    ${sensors_msgs_INCLUDE_DIRS}
-    ${tf_INCLUDE_DIRS}
-    ${cslibs_boost_geometry_INCLUDE_DIRS}
-    ${Eigen3_INCLUDE_DIR}
-    ${catkin_INCLUDE_DIRS}
-    include
+    INCLUDE_DIRS
+        include
+    CATKIN_DEPENDS
+        cslibs_math
 )
 
 cslibs_math_2d_show_headers()
 
-#### test
+set(TARGET_INCLUDE_DIRS
+    include
+    ${catkin_INCLUDE_DIRS}
+)
+
+find_package(tf QUIET)
 if(${tf_FOUND})
-    cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_transform
-        SRCS test/transform.cpp
+    cslibs_math_2d_add_unit_test_gtest(transform
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+            ${tf_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/transform.cpp
+        LINK_LIBRARIES
     )
-    cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_vector
-        SRCS test/vector.cpp
-    )
-    cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_ray_tracing
-        SRCS test/ray_tracing.cpp
+    cslibs_math_2d_add_unit_test_gtest(vector
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+            ${tf_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/vector.cpp
     )
 endif()
 
-cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_ellipse
-    SRCS test/ellipse_test.cpp
+cslibs_math_2d_add_unit_test_gtest(ray_tracing
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        test/ray_tracing.cpp
+)
+
+cslibs_math_2d_add_unit_test_gtest(ellipse
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        test/ellipse_test.cpp
 )
 
 
-cslibs_math_2d_add_unit_test_gtest(${PROJECT_NAME}_test_box
-    SRCS test/box.cpp
+cslibs_math_2d_add_unit_test_gtest(box
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        test/box.cpp
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/

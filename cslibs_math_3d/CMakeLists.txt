@@ -5,35 +5,39 @@ find_package(catkin REQUIRED COMPONENTS
     cslibs_math
 )
 
-find_package(Eigen3 REQUIRED)
-find_package(tf                    QUIET)
-find_package(sensor_msgs           QUIET)
-
 catkin_package(
-    INCLUDE_DIRS    include
-    CATKIN_DEPENDS  cslibs_math
-)
-
-include_directories(
-    ${Eigen3_INCLUDE_DIR}
-    ${sensors_msgs_INCLUDE_DIRS}
-    ${tf_INCLUDE_DIRS}
-    ${catkin_INCLUDE_DIRS}
-    include
+    INCLUDE_DIRS
+        include
+    CATKIN_DEPENDS
+        cslibs_math
 )
 
 cslibs_math_3d_show_headers()
 
-#### test
+find_package(tf QUIET)
 if(${tf_FOUND})
-    cslibs_math_3d_add_unit_test_gtest(${PROJECT_NAME}_test_quaternion
-        SRCS test/quaternion.cpp
+    set(TARGET_INCLUDE_DIRS
+        include
+        ${catkin_INCLUDE_DIRS}
+        ${tf_INCLUDE_DIRS}
     )
-    cslibs_math_3d_add_unit_test_gtest(${PROJECT_NAME}_test_transform
-        SRCS test/transform.cpp
+    cslibs_math_3d_add_unit_test_gtest(quaternion
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/quaternion.cpp
     )
-    cslibs_math_3d_add_unit_test_gtest(${PROJECT_NAME}_test_ray_tracing
-        SRCS test/ray_tracing.cpp
+    cslibs_math_3d_add_unit_test_gtest(transform
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/transform.cpp
+    )
+    cslibs_math_3d_add_unit_test_gtest(ray_tracing
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/ray_tracing.cpp
     )
 endif()
 

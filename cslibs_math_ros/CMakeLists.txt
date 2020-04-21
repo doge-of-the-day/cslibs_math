@@ -14,15 +14,21 @@ find_package(sensor_msgs    QUIET)
 find_package(geometry_msgs  QUIET)
 
 catkin_package(
-    INCLUDE_DIRS    include
+    INCLUDE_DIRS
+        include
+    DEPENDS
+        cslibs_math
+        cslibs_math_2d
+        cslibs_math_3d
+        cslibs_time
+        tf
 )
 
 include_directories(
-    ${Eigen3_INCLUDE_DIR}
+    include
     ${roscpp_INCLUDE_DIRS}
     ${sensors_msgs_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
-    include
 )
 
 cslibs_math_ros_show_headers()
