@@ -17,6 +17,12 @@ set(TARGET_INCLUDE_DIRS
     ${catkin_INCLUDE_DIRS}
 )
 
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME}
+    INTERFACE
+        ${TARGET_INCLUDE_DIRS}
+)
+
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
     set(TARGET_COMPILE_DEFINITIONS
         -Wall -WError -Ofast -ffastmath

@@ -24,11 +24,17 @@ catkin_package(
         tf
 )
 
-include_directories(
+set(TARGET_INCLUDE_DIRS
     include
     ${roscpp_INCLUDE_DIRS}
     ${sensors_msgs_INCLUDE_DIRS}
     ${catkin_INCLUDE_DIRS}
+)
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME}
+    INTERFACE
+        ${TARGET_INCLUDE_DIRS}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
