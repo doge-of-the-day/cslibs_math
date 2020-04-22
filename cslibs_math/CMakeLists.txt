@@ -14,7 +14,6 @@ find_package(catkin REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 catkin_package(
-<<<<<<< HEAD
     INCLUDE_DIRS
         include
     CFG_EXTRAS
@@ -25,13 +24,6 @@ catkin_package(
     DEPENDS
         Eigen3
 )
-=======
-    INCLUDE_DIRS    include
-    CFG_EXTRAS      cslibs_math_extras.cmake
-                    cslibs_math_enable_c++11.cmake
-                    cslibs_math_show_headers.cmake
-                    cslibs_math_add_unit_test_gtest.cmake)
->>>>>>> origin/refac_2020
 
 include_directories(
     SYSTEM
