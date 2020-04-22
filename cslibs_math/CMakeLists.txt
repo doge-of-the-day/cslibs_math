@@ -22,13 +22,15 @@ catkin_package(
         EIGEN3
 )
 
-include_directories(
-    SYSTEM
-       ${Eigen3_INCLUDE_DIR}
-)
-
 set(TARGET_INCLUDE_DIRS
     include
+    ${Eigen3_INCLUDE_DIR}
+)
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME}
+    INTERFACE
+        ${TARGET_INCLUDE_DIRS}
 )
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
