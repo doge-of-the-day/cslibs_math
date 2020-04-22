@@ -34,13 +34,13 @@ public:
         scatter_(covariance_t::Zero()),
         W_(T()),
         W_sq_(T()),
-        covariance_(covariance_t::Zero()),
-        information_matrix_(covariance_t::Zero()),
+//        covariance_(covariance_t::Zero()),
+        information_matrix_(covariance_t::Zero())/*,
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(T()),
         dirty_(false),
-        dirty_eigenvalues_(false)
+        dirty_eigenvalues_(false)*/
     {
     }
 
@@ -54,13 +54,13 @@ public:
         scatter_(scatter),
         W_(w),
         W_sq_(w_sq),
-        covariance_(covariance_t::Zero()),
-        information_matrix_(covariance_t::Zero()),
+//        covariance_(covariance_t::Zero()),
+        information_matrix_(covariance_t::Zero())/*,
         eigen_values_(eigen_values_t::Zero()),
         eigen_vectors_(eigen_vectors_t::Zero()),
         determinant_(T()),
         dirty_(true),
-        dirty_eigenvalues_(true)
+        dirty_eigenvalues_(true)*/
     {
     }
 
@@ -70,13 +70,13 @@ public:
         scatter_(other.scatter_),
         W_(other.W_),
         W_sq_(other.W_sq_),
-        covariance_(other.covariance_),
-        information_matrix_(other.information_matrix_),
+//        covariance_(other.covariance_),
+        information_matrix_(other.information_matrix_)/*,
         eigen_values_(other.eigen_values_),
         eigen_vectors_(other.eigen_vectors_),
         determinant_(other.determinant_),
         dirty_(other.dirty_),
-        dirty_eigenvalues_(other.dirty_eigenvalues_)
+        dirty_eigenvalues_(other.dirty_eigenvalues_)*/
     {
     }
 
@@ -88,14 +88,14 @@ public:
         W_                      = other.W_;
         W_sq_                   = other.W_sq_;
 
-        covariance_             = other.covariance_;
+//        covariance_             = other.covariance_;
         information_matrix_     = other.information_matrix_;
-        eigen_values_           = other.eigen_values_;
-        eigen_vectors_          = other.eigen_vectors_;
-        determinant_            = other.determinant_;
+//        eigen_values_           = other.eigen_values_;
+//        eigen_vectors_          = other.eigen_vectors_;
+//        determinant_            = other.determinant_;
 
-        dirty_                  = other.dirty_;
-        dirty_eigenvalues_      = other.dirty_eigenvalues_;
+//        dirty_                  = other.dirty_;
+//        dirty_eigenvalues_      = other.dirty_eigenvalues_;
         return *this;
     }
 
@@ -105,13 +105,13 @@ public:
         scatter_(std::move(other.scatter_)),
         W_(other.W_),
         W_sq_(other.W_sq_),
-        covariance_(std::move(other.covariance_)),
-        information_matrix_(std::move(other.information_matrix_)),
-        eigen_values_(std::move(other.eigen_values_)),
-        eigen_vectors_(std::move(other.eigen_vectors_)),
-        determinant_(other.determinant_),
-        dirty_(other.dirty_),
-        dirty_eigenvalues_(other.dirty_eigenvalues_)
+//        covariance_(std::move(other.covariance_)),
+        information_matrix_(std::move(other.information_matrix_))//,
+ //       eigen_values_(std::move(other.eigen_values_)),
+ //       eigen_vectors_(std::move(other.eigen_vectors_)),
+//        determinant_(other.determinant_),
+//        dirty_(other.dirty_),
+//        dirty_eigenvalues_(other.dirty_eigenvalues_)
     {
     }
 
@@ -123,14 +123,14 @@ public:
         W_                      = other.W_;
         W_sq_                   = other.W_sq_;
 
-        covariance_             = std::move(other.covariance_);
+//        covariance_             = std::move(other.covariance_);
         information_matrix_     = std::move(other.information_matrix_);
-        eigen_values_           = std::move(other.eigen_values_);
-        eigen_vectors_          = std::move(other.eigen_vectors_);
-        determinant_            = other.determinant_;
+//        eigen_values_           = std::move(other.eigen_values_);
+//        eigen_vectors_          = std::move(other.eigen_vectors_);
+//        determinant_            = other.determinant_;
 
-        dirty_                  = other.dirty_;
-        dirty_eigenvalues_      = other.dirty_eigenvalues_;
+//        dirty_                  = other.dirty_;
+//        dirty_eigenvalues_      = other.dirty_eigenvalues_;
         return *this;
     }
 
@@ -142,18 +142,18 @@ public:
         W_                  = T();
         W_sq_               = T();
 
-        covariance_         = covariance_t::Zero();
+//        covariance_         = covariance_t::Zero();
         information_matrix_ = covariance_t::Zero();
-        eigen_vectors_      = eigen_vectors_t::Zero();
+/*        eigen_vectors_      = eigen_vectors_t::Zero();
         eigen_values_       = eigen_values_t::Zero();
         determinant_        = T();
-
-        dirty_              = true;
-        dirty_eigenvalues_  = true;
+*/
+//        dirty_              = true;
+//        dirty_eigenvalues_  = true;
     }
 
     /// Modification
-    inline void add(const sample_t &p, const T w)
+    inline void add(const sample_t &p, const T w = static_cast<T>(1.0))
     {
         if (w <= T())
             return;
@@ -165,8 +165,10 @@ public:
         W_        = _W;
         W_sq_    += w*w;
         ++sample_count_;
-        dirty_    = true;
-        dirty_eigenvalues_ = true;
+
+        information_matrix_ = covariance_t::Zero();
+//        dirty_    = true;
+//        dirty_eigenvalues_ = true;
     }
 
     inline StableWeightedDistribution& operator += (const StableWeightedDistribution &other)
@@ -178,8 +180,10 @@ public:
         W_             = _W;
         W_sq_         += other.W_sq_;
         sample_count_ += other.sample_count_;
-        dirty_         = true;
-        dirty_eigenvalues_ = true;
+
+        information_matrix_ = covariance_t::Zero();
+//        dirty_         = true;
+//        dirty_eigenvalues_ = true;
         return *this;
     }
 
@@ -222,17 +226,17 @@ public:
     inline covariance_t getCovariance() const
     {
         auto update_return_covariance = [this](){
-            update(); return covariance_;
+            update(); return information_matrix_.inverse();
         };
-        return (dirty_ && valid()) ? update_return_covariance() : covariance_;
+        return (dirty() && valid()) ? update_return_covariance() : information_matrix_.inverse();
     }
 
     inline void getCovariance(covariance_t &covariance) const
     {
         auto update_return_covariance = [this](){
-            update(); return covariance_t(covariance_);
+            update(); return covariance_t(information_matrix_.inverse());
         };
-        covariance = (dirty_ && valid()) ? update_return_covariance() : covariance_t(covariance_);
+        covariance = (dirty() && valid()) ? update_return_covariance() : covariance_t(information_matrix_.inverse());
     }
 
     inline covariance_t getInformationMatrix() const
@@ -240,7 +244,7 @@ public:
         auto update_return_information = [this](){
             update(); return information_matrix_;
         };
-        return (dirty_ && valid()) ? update_return_information() : information_matrix_;
+        return (dirty() && valid()) ? update_return_information() : information_matrix_;
     }
 
     inline void getInformationMatrix(covariance_t &information_matrix) const
@@ -248,9 +252,26 @@ public:
         auto update_return_information = [this](){
             update(); return covariance_t(information_matrix_);
         };
-        information_matrix = (dirty_ && valid()) ? update_return_information() : covariance_t(information_matrix_);
+        information_matrix = (dirty() && valid()) ? update_return_information() : covariance_t(information_matrix_);
     }
 
+    inline bool getEigenValuesVectors(eigen_values_t &eigen_values,
+                                      eigen_vectors_t &eigen_vectors,
+                                      const bool abs = false) const
+    {
+        auto update_return_eigen = [this, &eigen_values, &eigen_vectors, &abs]() {
+            if (dirty())
+                update();
+
+            Eigen::EigenSolver<covariance_t> solver;
+            solver.compute(information_matrix_.inverse());
+            eigen_vectors = solver.eigenvectors().real();
+            eigen_values  = abs ? eigen_values_t(solver.eigenvalues().real().cwiseAbs()) : solver.eigenvalues().real();
+            return true;
+        };
+        return valid() ? update_return_eigen() : false;
+    }
+/*
     inline eigen_values_t getEigenValues(const bool abs = false) const
     {
         auto update_return_eigen = [this, abs]() {
@@ -311,7 +332,7 @@ public:
                     sample_t &q) const
     {
         auto update_sample = [this, &p, &q]() {
-            if (dirty_) update();
+            if (dirty()) update();
             q = p - mean_;
             const T exponent = - 0.5 * static_cast<T>(
                         static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
@@ -320,11 +341,11 @@ public:
         };
         return valid() ? update_sample() : T();
     }
-
+*/
     inline T sampleNonNormalized(const sample_t &p) const
     {
         auto update_sample = [this, &p]() {
-            if (dirty_) update();
+            if (dirty()) update();
             const sample_t q = p - mean_;
             const T exponent = - 0.5 * static_cast<T>(
                         static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
@@ -337,7 +358,7 @@ public:
                                  sample_t &q) const
     {
         auto update_sample = [this, &p, &q]() {
-            if (dirty_) update();
+            if (dirty()) update();
             q = p - mean_;
             const T exponent = - 0.5 * static_cast<T>(
                         static_cast<sample_transposed_t>(q.transpose()) * information_matrix_ * q);
@@ -346,8 +367,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const StableWeightedDistribution&)
-    {
+    inline void merge(const StableWeightedDistribution &other)
+    {        
+        *this += other;
     }
 
 private:
@@ -357,19 +379,24 @@ private:
     T                         W_;
     T                         W_sq_;
 
-    mutable covariance_t      covariance_;
+//    mutable covariance_t      covariance_;
     mutable covariance_t      information_matrix_;
-    mutable eigen_values_t    eigen_values_;
+/*    mutable eigen_values_t    eigen_values_;
     mutable eigen_vectors_t   eigen_vectors_;
     mutable T                 determinant_;
+*/
+//    mutable bool              dirty_;
+//    mutable bool              dirty_eigenvalues_;
 
-    mutable bool              dirty_;
-    mutable bool              dirty_eigenvalues_;
+    inline bool dirty() const
+    {
+        return information_matrix_.isZero(0);
+    }
 
     inline void update() const
     {
         const T scale = T(1.0) / (W_ - W_sq_ / W_);
-        covariance_ = scale * scatter_;
+        /*covariance_*/information_matrix_ = scale * scatter_;
         /*
         for(std::size_t i = 0 ; i < Dim ; ++i) {
             for(std::size_t j = i ; j < Dim ; ++j) {
@@ -378,14 +405,14 @@ private:
             }
         }*/
 
-        LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
+        //LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
-        information_matrix_ = covariance_.inverse();
-        determinant_        = covariance_.determinant();
+        information_matrix_ = /*covariance_*/information_matrix_.inverse();
+//        determinant_        = covariance_.determinant();
 
-        dirty_              = false;
+//        dirty_              = false;
     }
-
+/*
     inline void updateEigenvalues() const
     {
         if (dirty_)
@@ -398,11 +425,11 @@ private:
 
         dirty_eigenvalues_ = false;
     }
-
+*/
 };
 
 template<typename T, std::size_t lambda_ratio_exponent>
-class StableWeightedDistribution<T, 1, lambda_ratio_exponent>
+class EIGEN_ALIGN16 StableWeightedDistribution<T, 1, lambda_ratio_exponent>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -543,8 +570,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const StableWeightedDistribution&)
+    inline void merge(const StableWeightedDistribution &other)
     {
+        *this += other;
     }
 
 private:

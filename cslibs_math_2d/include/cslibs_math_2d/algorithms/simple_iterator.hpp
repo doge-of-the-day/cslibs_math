@@ -33,7 +33,7 @@ public:
         end_({{static_cast<int>(std::floor(p1(0) / resolution)),
                static_cast<int>(std::floor(p1(1) / resolution))}}),
         resolution_inv_(1.0/resolution),
-        diff_((p1-p0)),
+        diff_(p1-p0),
         point_(p0)
     {
         N_ = static_cast<int>(diff_.length() * resolution_inv_);
@@ -60,14 +60,14 @@ public:
         if (done())
             return *this;
 
-        index_t i;
+        index_t i = index_;
         do {
-            i = index_;
             point_ += diff_;
-            index_[0] = cslibs_math::common::floor(point_(0) * resolution_inv_);
-            index_[1] = cslibs_math::common::floor(point_(1) * resolution_inv_);
-        } while (i[0] == index_[0] && i[1] == index_[1]);
-        --N_;
+            --N_;
+            i[0] = cslibs_math::common::floor(point_(0) * resolution_inv_);
+            i[1] = cslibs_math::common::floor(point_(1) * resolution_inv_);
+        } while (i == index_);
+        index_ = i;
 
         return *this;
     }

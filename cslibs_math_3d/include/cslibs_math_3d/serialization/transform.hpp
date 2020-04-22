@@ -5,7 +5,51 @@
 #include <cslibs_math_3d/serialization/quaternion.hpp>
 #include <cslibs_math_3d/linear/quaternion.hpp>
 #include <cslibs_math_3d/linear/transform.hpp>
+
 #include <yaml-cpp/yaml.h>
+#include <fstream>
+
+#include <cslibs_math/serialization/binary.hpp>
+
+namespace cslibs_math {
+namespace serialization {
+namespace transform {
+namespace binary {
+
+template <typename T>
+inline static std::size_t read(std::ifstream  &in,
+                               cslibs_math_3d::Transform3<T> &transform)
+{
+    using transform_t = cslibs_math_3d::Transform3<T>;
+
+    T x     = io<T>::read(in);
+    T y     = io<T>::read(in);
+    T z     = io<T>::read(in);
+    T roll  = io<T>::read(in);
+    T pitch = io<T>::read(in);
+    T yaw   = io<T>::read(in);
+
+    transform = transform_t(typename transform_t::translation_t(x,y,z),
+                            typename transform_t::rotation_t(roll,pitch,yaw));
+    return 6ul * sizeof(T);
+}
+
+template <typename T>
+inline static void  write(const cslibs_math_3d::Transform3<T> &transform,
+                          std::ofstream &out)
+{
+    io<T>::write(transform.tx(), out);
+    io<T>::write(transform.ty(), out);
+    io<T>::write(transform.tz(), out);
+    io<T>::write(transform.roll(), out);
+    io<T>::write(transform.pitch(), out);
+    io<T>::write(transform.yaw(), out);
+}
+
+}
+}
+}
+}
 
 namespace YAML {
 template<typename T>

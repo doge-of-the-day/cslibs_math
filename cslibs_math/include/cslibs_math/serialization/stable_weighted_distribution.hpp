@@ -25,22 +25,26 @@ struct binary<cslibs_math::statistics::StableWeightedDistribution, T, Dim, lambd
     inline static std::size_t read(std::ifstream  &in,
                                    distribution_t &distribution)
     {
-        sample_t     mean;
-        correlated_t corr;
-
         std::size_t sc = io<std::size_t>::read(in);
-        T w            = io<T>::read(in);
-        T w_sq         = io<T>::read(in);
 
-        for(std::size_t i = 0 ; i < Dim ; ++i)
-            mean(i) = io<T>::read(in);
+        if (sc > 0) { // data only exists if n > 0
+            T w            = io<T>::read(in);
+            T w_sq         = io<T>::read(in);
 
-        for(std::size_t i = 0 ; i < Dim; ++i) {
-            for(std::size_t j = 0 ; j < Dim ; ++j) {
-                corr(i,j) = io<T>::read(in);
+            sample_t     mean;
+            correlated_t corr;
+
+            for(std::size_t i = 0 ; i < Dim ; ++i)
+                mean(i) = io<T>::read(in);
+
+            for(std::size_t i = 0 ; i < Dim; ++i) {
+                for(std::size_t j = 0 ; j < Dim ; ++j) {
+                    corr(i,j) = io<T>::read(in);
+                }
             }
-        }
-        distribution = distribution_t(sc, w, w_sq, mean, corr);
+            distribution = distribution_t(sc, w, w_sq, mean, corr);
+        } else
+            distribution = distribution_t();
 
         return size;
     }
@@ -48,38 +52,30 @@ struct binary<cslibs_math::statistics::StableWeightedDistribution, T, Dim, lambd
     inline static void write(std::ofstream &out)
     {
         io<std::size_t>::write(0, out);
-        io<T>::write(0, out);
-        io<T>::write(0, out);
-
-        for(std::size_t i = 0 ; i < Dim ; ++i)
-            io<T>::write(0.0, out);
-
-        for(std::size_t i = 0 ; i < Dim; ++i) {
-            for(std::size_t j = 0 ; j < Dim ; ++j) {
-                io<T>::write(0.0, out);
-            }
-        }
     }
 
     inline static void write(const distribution_t &distribution,
                              std::ofstream &out)
     {
-        const sample_t      mean = distribution.getMean();
-        const correlated_t  s    = distribution.getScatter();
-        const std::size_t   sc   = distribution.getSampleCount();
-        const T             w    = distribution.getWeight();
-        const T             w_sq = distribution.getWeightSQ();
-
+        const std::size_t&  sc   = distribution.getSampleCount();
         io<std::size_t>::write(sc, out);
-        io<T>::write(w, out);
-        io<T>::write(w_sq, out);
 
-        for(std::size_t i = 0 ; i < Dim ; ++i)
-            io<T>::write(mean(i), out);
+        if (sc > 0) {
+            const sample_t&     mean = distribution.getMean();
+            const correlated_t& s    = distribution.getScatter();
+            const T&            w    = distribution.getWeight();
+            const T&            w_sq = distribution.getWeightSQ();
 
-        for(std::size_t i = 0 ; i < Dim; ++i) {
-            for(std::size_t j = 0 ; j < Dim ; ++j) {
-                io<T>::write(s(i,j), out);
+            io<T>::write(w, out);
+            io<T>::write(w_sq, out);
+
+            for(std::size_t i = 0 ; i < Dim ; ++i)
+                io<T>::write(mean(i), out);
+
+            for(std::size_t i = 0 ; i < Dim; ++i) {
+                for(std::size_t j = 0 ; j < Dim ; ++j) {
+                    io<T>::write(s(i,j), out);
+                }
             }
         }
     }

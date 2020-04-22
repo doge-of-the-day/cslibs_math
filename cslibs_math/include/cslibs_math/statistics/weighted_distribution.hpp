@@ -153,7 +153,7 @@ public:
     }
 
     /// Modification
-    inline void add(const sample_t &p, const T w)
+    inline void add(const sample_t &p, const T w = static_cast<T>(1.0))
     {
         if (w <= T())
             return;
@@ -349,8 +349,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const WeightedDistribution&)
+    inline void merge(const WeightedDistribution &other)
     {
+        *this += other;
     }
 
 private:
@@ -542,8 +543,9 @@ public:
         return valid() ? update_sample() : T();
     }
 
-    inline void merge(const WeightedDistribution&)
+    inline void merge(const WeightedDistribution &other)
     {
+        *this += other;
     }
 
 private:

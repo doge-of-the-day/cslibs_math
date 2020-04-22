@@ -17,25 +17,37 @@ inline cslibs_time::TimeFrame from(const ::sensor_msgs::PointCloud2ConstPtr &src
 }
 
 template <typename T>
-inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
-                 typename cslibs_math_3d::Pointcloud3<T>::Ptr &dst)
+inline void from(const ::sensor_msgs::PointCloud2 &src,
+                 cslibs_math_3d::Pointcloud3<T> &dst,
+                 const std::array<T,2> &range_limits = {{0.0, std::numeric_limits<T>::max()}})
 {
-    ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
-    ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
-    ::sensor_msgs::PointCloud2ConstIterator<float> iter_z(*src, "z");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(src, "x");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(src, "y");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_z(src, "z");
 
-    dst.reset(new cslibs_math_3d::Pointcloud3<T>);
     for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
         if (!std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z)) {
             cslibs_math_3d::Point3<T> p(*iter_x, *iter_y, *iter_z);
-            if (p.isNormal())
-                dst->insert(p);
+            const T range = p.length();
+            if (p.isNormal() && range >= range_limits[0] && range <= range_limits[1])
+                dst.insert(p);
         }
     }
 }
 
 template <typename T>
-inline void from(const typename cslibs_math_3d::Pointcloud3<T>::Ptr &src,
+inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
+                 typename cslibs_math_3d::Pointcloud3<T>::Ptr &dst,
+                 const std::array<T,2> &range_limits = {{0.0, std::numeric_limits<T>::max()}})
+{
+    if (!src)
+        return;
+    dst.reset(new cslibs_math_3d::Pointcloud3<T>);
+    return from<T>(*src,*dst,range_limits);
+}
+
+template <typename T>
+inline void from(const cslibs_math_3d::Pointcloud3<T> &src,
                  ::sensor_msgs::PointCloud2 &dst)
 {
     // metadata
@@ -44,16 +56,15 @@ inline void from(const typename cslibs_math_3d::Pointcloud3<T>::Ptr &src,
     dst.is_dense     = false;
     dst.is_bigendian = false;
 
-
     ::sensor_msgs::PointCloud2Modifier modifier(dst);
     modifier.setPointCloud2FieldsByString(1,"xyz");
-    modifier.resize(src->size());
+    modifier.resize(src.size());
 
     ::sensor_msgs::PointCloud2Iterator<float> iter_x(dst, "x");
     ::sensor_msgs::PointCloud2Iterator<float> iter_y(dst, "y");
     ::sensor_msgs::PointCloud2Iterator<float> iter_z(dst, "z");
 
-    for (const auto &p : *src) {
+    for (const auto &p : src) {
         *iter_x = static_cast<float>(p(0));
         *iter_y = static_cast<float>(p(1));
         *iter_z = static_cast<float>(p(2));
@@ -64,18 +75,27 @@ inline void from(const typename cslibs_math_3d::Pointcloud3<T>::Ptr &src,
 }
 
 template <typename T>
-inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
-                 typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &dst)
+inline void from(const typename cslibs_math_3d::Pointcloud3<T>::Ptr &src,
+                 ::sensor_msgs::PointCloud2 &dst)
 {
-    ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(*src, "x");
-    ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(*src, "y");
-    ::sensor_msgs::PointCloud2ConstIterator<float> iter_z(*src, "z");
-    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_r(*src, "r");
-    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_g(*src, "g");
-    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_b(*src, "b");
-    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_a(*src, "a");
+    if (!src)
+        return;
+    return from<T>(*src,dst);
+}
 
-    dst.reset(new cslibs_math_3d::PointcloudRGB3<T>);
+template <typename T>
+inline void from(const ::sensor_msgs::PointCloud2 &src,
+                 cslibs_math_3d::PointcloudRGB3<T> &dst,
+                 const std::array<T,2> &range_limits = {{0.0, std::numeric_limits<T>::max()}})
+{
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_x(src, "x");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_y(src, "y");
+    ::sensor_msgs::PointCloud2ConstIterator<float> iter_z(src, "z");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_r(src, "r");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_g(src, "g");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_b(src, "b");
+    ::sensor_msgs::PointCloud2ConstIterator<u_int8_t> iter_a(src, "a");
+
     for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z, ++iter_r, ++iter_g, ++iter_b, ++iter_a) {
         if (!std::isnan(*iter_x) && !std::isnan(*iter_y) && !std::isnan(*iter_z)) {
             cslibs_math_3d::Point3<T> p(*iter_x, *iter_y, *iter_z);
@@ -83,26 +103,37 @@ inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
                                            static_cast<float>(*iter_g)/256.0f,
                                            static_cast<float>(*iter_b)/256.0f);
             cslibs_math_3d::PointRGB3<T> point(p, static_cast<float>(*iter_a)/256.0, c);
-            if (p.isNormal())
-                dst->insert(point);
+            const T range = point.getPoint().length();
+            if (p.isNormal() && range >= range_limits[0] && range <= range_limits[1])
+                dst.insert(point);
         }
     }
 }
 
 template <typename T>
-inline void from(const typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &src,
+inline void from(const ::sensor_msgs::PointCloud2ConstPtr &src,
+                 typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &dst,
+                 const std::array<T,2> &range_limits = {{0.0, std::numeric_limits<T>::max()}})
+{
+    if (!src)
+        return;
+    dst.reset(new cslibs_math_3d::PointcloudRGB3<T>);
+    return from<T>(*src,*dst,range_limits);
+}
+
+template <typename T>
+inline void from(const cslibs_math_3d::PointcloudRGB3<T> &src,
                  ::sensor_msgs::PointCloud2 &dst)
 {
     // metadata
-    dst.width        = src->size();
+    dst.width        = src.size();
     dst.height       = 1;
     dst.is_dense     = false;
     dst.is_bigendian = false;
 
-
     ::sensor_msgs::PointCloud2Modifier modifier(dst);
     modifier.setPointCloud2FieldsByString(2,"xyz","rgba");
-    modifier.resize(src->size());
+    modifier.resize(src.size());
 
     ::sensor_msgs::PointCloud2Iterator<float> iter_x(dst, "x");
     ::sensor_msgs::PointCloud2Iterator<float> iter_y(dst, "y");
@@ -112,7 +143,7 @@ inline void from(const typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &src,
     ::sensor_msgs::PointCloud2Iterator<u_int8_t> iter_b(dst, "b");
     ::sensor_msgs::PointCloud2Iterator<u_int8_t> iter_a(dst, "a");
 
-    for (const auto &p : *src) {
+    for (const auto &p : src) {
         cslibs_math_3d::Point3<T> pos = p.getPoint();
         cslibs_math::color::Color<T> c = p.getColor();
         float a = p.getAlpha();
@@ -131,6 +162,15 @@ inline void from(const typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &src,
         ++iter_b;
         ++iter_a;
     }
+}
+
+template <typename T>
+inline void from(const typename cslibs_math_3d::PointcloudRGB3<T>::Ptr &src,
+                 ::sensor_msgs::PointCloud2 &dst)
+{
+    if (!src)
+        return;
+    return from<T>(*src,dst);
 }
 
 }

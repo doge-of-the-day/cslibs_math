@@ -28,7 +28,7 @@ public:
                          const std::string& source_frame,
                          const ros::Time& time,
                          stamped_2d_t<float>& transform,
-                         const ros::Duration& timeout) override
+                         const ros::Duration& timeout) const override
     {
         ::tf::Transform tf_transform;
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
@@ -42,7 +42,7 @@ public:
                          const std::string& source_frame,
                          const ros::Time& time,
                          stamped_2d_t<double>& transform,
-                         const ros::Duration& timeout) override
+                         const ros::Duration& timeout) const override
     {
         ::tf::Transform tf_transform;
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
@@ -58,7 +58,7 @@ public:
                          const std::string& source_frame,
                          const ros::Time& time,
                          stamped_3d_t<float>& transform,
-                         const ros::Duration& timeout) override
+                         const ros::Duration& timeout) const override
     {
         ::tf::Transform tf_transform;
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
@@ -72,7 +72,7 @@ public:
                          const std::string& source_frame,
                          const ros::Time& time,
                          stamped_3d_t<double>& transform,
-                         const ros::Duration& timeout) override
+                         const ros::Duration& timeout) const override
     {
         ::tf::Transform tf_transform;
         if (!lookupTransform(target_frame, source_frame, time, tf_transform, timeout))
@@ -88,7 +88,7 @@ public:
                          const std::string& source_frame,
                          const ros::Time& time,
                          ::tf::StampedTransform& transform,
-                         const ros::Duration& timeout = {})
+                         const ros::Duration& timeout = {}) const
     {
         assert(!target_frame.empty());
         assert(!source_frame.empty());
@@ -113,7 +113,7 @@ public:
                                 const std::string& source_frame,
                                 const ros::Time& time,
                                 ::tf::Transform& transform,
-                                const ros::Duration& timeout = {})
+                                const ros::Duration& timeout = {}) const
     {
         ::tf::StampedTransform stamped;
         if (!lookupTransform(target_frame, source_frame, time, stamped, timeout))
@@ -125,7 +125,7 @@ public:
 
     bool canTransform(const std::string& target_frame,
                       const std::string& source_frame,
-                      const ros::Time& time) override
+                      const ros::Time& time) const override
     {
         assert(!target_frame.empty());
         assert(!source_frame.empty());
@@ -137,7 +137,7 @@ public:
     bool waitForTransform(const std::string& target_frame,
                           const std::string& source_frame,
                           const ros::Time& time,
-                          const ros::Duration& timeout) override
+                          const ros::Duration& timeout) const override
     {
         assert(!target_frame.empty());
         assert(!source_frame.empty());
@@ -147,7 +147,7 @@ public:
     }
 
 protected:
-    std::mutex              mutex_;
+    mutable std::mutex      mutex_;
     ::tf::TransformListener tf_;
 };
 }

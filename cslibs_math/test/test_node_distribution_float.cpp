@@ -148,6 +148,7 @@ TEST(Test_cslibs_math, testDistributionEigenValues)
 
   cs::StableDistribution<float,2> distribution;
   Eigen::Vector2f eigen_values;
+  Eigen::Matrix2f eigen_vectors;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
       Eigen::Matrix<float,2,1> data;
       data[0] = static_cast<float>(test_distribution_200.data[i][0]);
@@ -155,7 +156,11 @@ TEST(Test_cslibs_math, testDistributionEigenValues)
       distribution.add(data);
   }
 
-  eigen_values = distribution.getEigenValues();
+  //eigen_values = distribution.getEigenValues();
+  bool success;
+  success = distribution.getEigenValuesVectors(eigen_values, eigen_vectors);
+  EXPECT_TRUE(success);
+
 
   EXPECT_NEAR(test_distribution_200.eigen_values(0), eigen_values(0), tolerance);
   EXPECT_NEAR(test_distribution_200.eigen_values(1), eigen_values(1), tolerance);
@@ -168,7 +173,10 @@ TEST(Test_cslibs_math, testDistributionEigenValues)
       distribution.add(data);
   }
 
-  eigen_values = distribution.getEigenValues();
+  //eigen_values = distribution.getEigenValues();
+  success = distribution.getEigenValuesVectors(eigen_values, eigen_vectors);
+  EXPECT_TRUE(success);
+
   EXPECT_NEAR(test_distribution_500.eigen_values(0), eigen_values(1), tolerance);
   EXPECT_NEAR(test_distribution_500.eigen_values(1), eigen_values(0), tolerance);
 
@@ -180,7 +188,10 @@ TEST(Test_cslibs_math, testDistributionEigenValues)
       distribution.add(data);
   }
 
-  eigen_values = distribution.getEigenValues();
+  //eigen_values = distribution.getEigenValues();
+  success = distribution.getEigenValuesVectors(eigen_values, eigen_vectors);
+  EXPECT_TRUE(success);
+
   EXPECT_NEAR(test_distribution_5000.eigen_values(0), eigen_values(0), tolerance);
   EXPECT_NEAR(test_distribution_5000.eigen_values(1), eigen_values(1), tolerance);
 }
@@ -202,6 +213,7 @@ TEST(Test_cslibs_math, testDistributionEigenVectors)
   const float tolerance = 1e-3;
 
   cs::StableDistribution<float,2> distribution;
+  Eigen::Vector2f eigen_values;
   Eigen::Matrix2f eigen_vectors;
   for(std::size_t i = 0 ; i < test_distribution_200.data.size() ; ++i) {
       Eigen::Matrix<float,2,1> data;
@@ -210,7 +222,10 @@ TEST(Test_cslibs_math, testDistributionEigenVectors)
       distribution.add(data);
   }
 
-  eigen_vectors = distribution.getEigenVectors();
+  bool success;
+  success = distribution.getEigenValuesVectors(eigen_values, eigen_vectors);
+  EXPECT_TRUE(success);
+  //eigen_vectors = distribution.getEigenVectors();
 
   Eigen::Vector2f exp_a;
   exp_a[0] = static_cast<float>(test_distribution_200.eigen_vectors.col(0)[0]);
@@ -236,7 +251,9 @@ TEST(Test_cslibs_math, testDistributionEigenVectors)
       distribution.add(data);
   }
 
-  eigen_vectors = distribution.getEigenVectors();
+  success = distribution.getEigenValuesVectors(eigen_values, eigen_vectors);
+  EXPECT_TRUE(success);
+  //eigen_vectors = distribution.getEigenVectors();
 
   exp_a[0] = static_cast<float>(test_distribution_500.eigen_vectors.col(0)[0]);
   exp_a[1] = static_cast<float>(test_distribution_500.eigen_vectors.col(0)[1]);
@@ -262,7 +279,9 @@ TEST(Test_cslibs_math, testDistributionEigenVectors)
       distribution.add(data);
   }
 
-  eigen_vectors = distribution.getEigenVectors();
+  //eigen_vectors = distribution.getEigenVectors();
+  success = distribution.getEigenValuesVectors(eigen_values, eigen_vectors);
+  EXPECT_TRUE(success);
 
   exp_a[0] = static_cast<float>(test_distribution_5000.eigen_vectors.col(0)[0]);
   exp_a[1] = static_cast<float>(test_distribution_5000.eigen_vectors.col(0)[1]);
@@ -298,8 +317,16 @@ TEST(Test_cslibs_math, testDistributionCopy)
   EXPECT_TRUE(distribution_a.getCovariance() == distribution_b.getCovariance());
   EXPECT_TRUE(distribution_a.getInformationMatrix()    == distribution_b.getInformationMatrix());
 
-  EXPECT_TRUE(distribution_a.getEigenValues() == distribution_b.getEigenValues());
-  EXPECT_TRUE(distribution_a.getEigenVectors()   == distribution_b.getEigenVectors());
+  Eigen::Vector2f eigen_values_a, eigen_values_b;
+  Eigen::Matrix2f eigen_vectors_a, eigen_vectors_b;
+  const bool success_a = distribution_a.getEigenValuesVectors(eigen_values_a, eigen_vectors_a);
+  const bool success_b = distribution_b.getEigenValuesVectors(eigen_values_b, eigen_vectors_b);
+  EXPECT_TRUE(success_a);
+  EXPECT_TRUE(success_b);
+  EXPECT_TRUE(eigen_values_a == eigen_values_b);
+  EXPECT_TRUE(eigen_vectors_a == eigen_vectors_b);
+/*  EXPECT_TRUE(distribution_a.getEigenValues() == distribution_b.getEigenValues());
+  EXPECT_TRUE(distribution_a.getEigenVectors()   == distribution_b.getEigenVectors());*/
 }
 
 
@@ -332,8 +359,14 @@ TEST(Test_cslibs_math, testDistributionAddition)
   EXPECT_NEAR((distribution_a.getCovariance() - distribution_b.getCovariance()).norm(), 0.0, tolerance);
   EXPECT_NEAR((distribution_a.getInformationMatrix() - distribution_b.getInformationMatrix()).norm(), 0.0, tolerance);
 
-  EXPECT_NEAR((distribution_a.getEigenValues() - distribution_b.getEigenValues()).norm(), 0.0, tolerance);
-  EXPECT_NEAR((distribution_a.getEigenVectors() - distribution_b.getEigenVectors()).norm(), 0.0, tolerance);
+  Eigen::Vector2f eigen_values_a, eigen_values_b;
+  Eigen::Matrix2f eigen_vectors_a, eigen_vectors_b;
+  const bool success_a = distribution_a.getEigenValuesVectors(eigen_values_a, eigen_vectors_a);
+  const bool success_b = distribution_b.getEigenValuesVectors(eigen_values_b, eigen_vectors_b);
+  EXPECT_TRUE(success_a);
+  EXPECT_TRUE(success_b);
+  EXPECT_NEAR((eigen_values_a - eigen_values_b).norm(), 0.0, tolerance);
+  EXPECT_NEAR((eigen_vectors_a - eigen_vectors_b).norm(), 0.0, tolerance);
 
   auto test = [tolerance](const cslibs_math::TestDistribution<2> &t) {
     cs::StableDistribution<float,2> wa;

@@ -26,18 +26,18 @@ public:
                                  const std::string& source_frame,
                                  const ros::Time& time,
                                  stamped_2d_t<float>& transform,
-                                 const ros::Duration& timeout) = 0;
+                                 const ros::Duration& timeout) const = 0;
     virtual bool lookupTransform(const std::string& target_frame,
                                  const std::string& source_frame,
                                  const ros::Time& time,
                                  stamped_2d_t<double>& transform,
-                                 const ros::Duration& timeout) = 0;
+                                 const ros::Duration& timeout) const = 0;
 
     template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_2d_t<T>& transform)
+                         stamped_2d_t<T>& transform) const
     {
         return lookupTransform(target_frame, source_frame, time, transform, {});
     }
@@ -47,7 +47,7 @@ public:
                          const std::string& source_frame,
                          const ros::Time& time,
                          cslibs_math_2d::Transform2<T>& transform,
-                         const ros::Duration& timeout = {})
+                         const ros::Duration& timeout = {}) const
     {
         stamped_2d_t<T> stamped;
         if (!lookupTransform(target_frame, source_frame, time, stamped, timeout))
@@ -62,18 +62,18 @@ public:
                                  const std::string& source_frame,
                                  const ros::Time& time,
                                  stamped_3d_t<float>& transform,
-                                 const ros::Duration& timeout) = 0;
+                                 const ros::Duration& timeout) const = 0;
     virtual bool lookupTransform(const std::string& target_frame,
                                  const std::string& source_frame,
                                  const ros::Time& time,
                                  stamped_3d_t<double>& transform,
-                                 const ros::Duration& timeout) = 0;
+                                 const ros::Duration& timeout) const = 0;
 
     template <typename T>
     bool lookupTransform(const std::string& target_frame,
                          const std::string& source_frame,
                          const ros::Time& time,
-                         stamped_3d_t<T>& transform)
+                         stamped_3d_t<T>& transform) const
     {
         return lookupTransform(target_frame, source_frame, time, transform, {});
     }
@@ -83,7 +83,7 @@ public:
                          const std::string& source_frame,
                          const ros::Time& time,
                          cslibs_math_3d::Transform3<T>& transform,
-                         const ros::Duration& timeout = {})
+                         const ros::Duration& timeout = {}) const
     {
         stamped_3d_t<T> stamped;
         if (!lookupTransform(target_frame, source_frame, time, stamped, timeout))
@@ -96,12 +96,12 @@ public:
     // misc
     virtual bool canTransform(const std::string& target_frame,
                               const std::string& source_frame,
-                              const ros::Time& time) = 0;
+                              const ros::Time& time) const = 0;
 
     virtual bool waitForTransform(const std::string& target_frame,
                                   const std::string& source_frame,
                                   const ros::Time& time,
-                                  const ros::Duration& timeout) = 0;
+                                  const ros::Duration& timeout) const = 0;
 };
 }
 }
