@@ -5,7 +5,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(cmake/cslibs_math_enable_c++17.cmake)
 include(cmake/cslibs_math_extras.cmake)
-include(cmake/cslibs_math_show_headers.cmake)
 include(cmake/cslibs_math_add_unit_test_gtest.cmake)
 include(cmake/cslibs_math_add_unit_test_ros.cmake)
 
@@ -19,7 +18,6 @@ catkin_package(
     CFG_EXTRAS
         cslibs_math_extras.cmake
         cslibs_math_enable_c++17.cmake
-        cslibs_math_show_headers.cmake
         cslibs_math_add_unit_test_gtest.cmake
     DEPENDS
         Eigen3
@@ -33,8 +31,6 @@ include_directories(
 set(TARGET_INCLUDE_DIRS
     include
 )
-
-cslibs_math_show_headers()
 
 cslibs_math_add_unit_test_gtest(mod
     INCLUDE_DIRS

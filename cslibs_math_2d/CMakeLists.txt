@@ -12,8 +12,6 @@ catkin_package(
         cslibs_math
 )
 
-cslibs_math_2d_show_headers()
-
 set(TARGET_INCLUDE_DIRS
     include
     ${catkin_INCLUDE_DIRS}

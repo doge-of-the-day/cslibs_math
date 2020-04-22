@@ -12,8 +12,6 @@ catkin_package(
         cslibs_math
 )
 
-cslibs_math_3d_show_headers()
-
 find_package(tf QUIET)
 if(${tf_FOUND})
     set(TARGET_INCLUDE_DIRS
