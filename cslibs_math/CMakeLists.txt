@@ -4,7 +4,6 @@ project(cslibs_math)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(cmake/cslibs_math_enable_c++17.cmake)
-include(cmake/cslibs_math_extras.cmake)
 include(cmake/cslibs_math_add_unit_test_gtest.cmake)
 include(cmake/cslibs_math_add_unit_test_ros.cmake)
 
@@ -16,11 +15,11 @@ catkin_package(
     INCLUDE_DIRS
         include
     CFG_EXTRAS
-        cslibs_math_extras.cmake
         cslibs_math_enable_c++17.cmake
         cslibs_math_add_unit_test_gtest.cmake
+        cslibs_math_add_unit_test_ros.cmake
     DEPENDS
-        Eigen3
+        EIGEN3
 )
 
 include_directories(
@@ -32,11 +31,21 @@ set(TARGET_INCLUDE_DIRS
     include
 )
 
+if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(TARGET_COMPILE_DEFINITIONS
+        -Wall -WError -Ofast -ffastmath
+    )
+    message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
+endif()
+
+
 cslibs_math_add_unit_test_gtest(mod
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/mod.cpp
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 cslibs_math_add_unit_test_gtest(div
@@ -44,6 +53,8 @@ cslibs_math_add_unit_test_gtest(div
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/div.cpp
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 cslibs_math_add_unit_test_gtest(array
@@ -51,6 +62,8 @@ cslibs_math_add_unit_test_gtest(array
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/array.cpp
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 cslibs_math_add_unit_test_gtest(random
@@ -58,6 +71,8 @@ cslibs_math_add_unit_test_gtest(random
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/random.cpp
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 cslibs_math_add_unit_test_gtest(sqrt
@@ -65,6 +80,8 @@ cslibs_math_add_unit_test_gtest(sqrt
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/sqrt.cpp
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 cslibs_math_add_unit_test_gtest(distribution_serialization
@@ -74,10 +91,12 @@ cslibs_math_add_unit_test_gtest(distribution_serialization
         test/distribution_serialization.cpp
     LINK_LIBRARIES
         yaml-cpp
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 cslibs_math_add_unit_test_ros(distribution
-    LAUNCH_FILES
+    LAUNCH_FILE
         test/test_distribution.test
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
@@ -87,10 +106,12 @@ cslibs_math_add_unit_test_ros(distribution
         yaml-cpp
         ${Boost_LIBRARIES}
         ${catkin_LIBRARIES}
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 cslibs_math_add_unit_test_ros(distribution_float
-    LAUNCH_FILES
+    LAUNCH_FILE
         test/test_distribution_float.test
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
@@ -100,6 +121,8 @@ cslibs_math_add_unit_test_ros(distribution_float
         yaml-cpp
         ${Boost_LIBRARIES}
         ${catkin_LIBRARIES}
+    COMPILE_DEFINITIONS
+        ${TARGET_COMPILE_DEFINITIONS}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/

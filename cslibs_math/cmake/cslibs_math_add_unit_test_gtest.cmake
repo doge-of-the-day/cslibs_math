@@ -1,10 +1,19 @@
-# ${PROJECT_NAME}_add_unit_test_gtest(<NAME_OF_THE_TEST> [<SRCS> ...] [<LIBS> ...])
+# ${PROJECT_NAME}_add_unit_test_gtest(<NAME_OF_THE_TEST>
+#    [<INCLUDE_DIRS> ...]
+#    [<SOURCE_FILES> ...]
+#    [<LINK_LIBRARIES> ...]
+#    [<COMPILE_FLAGS> ...]
+#)
 function(${PROJECT_NAME}_add_unit_test_gtest)
     cmake_parse_arguments(unit_test
-        ""                                          # list of names of the boolean arguments (only defined ones will be true)
-        ""                                          # list of names of mono-valued arguments
-        "INCLUDE_DIRS;SOURCE_FILES;LINK_LIBRARIES"  # list of names of multi-valued arguments (output variables are lists)
-        ${ARGN}                                     # arguments of the function to parse, here we take the all original ones
+        # list of names of the boolean arguments (only defined ones will be true)
+        ""
+        # list of names of mono-valued arguments
+        ""
+        # list of names of multi-valued arguments (output variables are lists)
+        "INCLUDE_DIRS;SOURCE_FILES;LINK_LIBRARIES;COMPILE_DEFINITIONS"
+        # arguments of the function to parse, here we take the all original ones
+        ${ARGN}
     )
 
     if(${catkin_FOUND})
@@ -28,6 +37,10 @@ function(${PROJECT_NAME}_add_unit_test_gtest)
                 ${Boost_LIBRARIES}
                 -pthread
         )
+        target_compile_definitions(${unit_test_NAME}
+            PRIVATE
+                ${unit_test_COMPILE_DEFINITIONS}
+        )
     else()
         set(unit_test_NAME ${PROJECT_NAME}_${ARGV0})
         enable_testing()
@@ -46,6 +59,10 @@ function(${PROJECT_NAME}_add_unit_test_gtest)
                 ${unit_test_LINK_LIBRARIES}
                 ${GTEST_LIBRARIES}
                 -pthread
+        )
+        target_compile_definitions(${unit_test_NAME}
+            PRIVATE
+                ${unit_test_COMPILE_DEFINITIONS}
         )
         add_test(AllTestsIn${unit_test_NAME} ${unit_test_NAME})
     endif()
