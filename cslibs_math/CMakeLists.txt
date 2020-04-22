@@ -35,6 +35,9 @@ if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
     set(TARGET_COMPILE_DEFINITIONS
         -Wall -WError -Ofast -ffastmath
     )
+    # enabling -march=native my result in problems on some machines,
+    # my try -mtune=native
+
     message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
 endif()
 
