@@ -139,7 +139,8 @@ public:
 
     inline Transform2& operator = (const Eigen::Matrix<T,3,1> &eigen)
     {
-        translation_ = eigen.block<2,1>(0,0);
+        translation_(0) = eigen(0,0);
+        translation_(1) = eigen(1,0);
         setYaw(eigen(2));
         return *this;
     }
