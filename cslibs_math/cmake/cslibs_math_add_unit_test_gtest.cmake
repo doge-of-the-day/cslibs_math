@@ -11,7 +11,7 @@ function(${PROJECT_NAME}_add_unit_test_gtest)
         # list of names of mono-valued arguments
         ""
         # list of names of multi-valued arguments (output variables are lists)
-        "INCLUDE_DIRS;SOURCE_FILES;LINK_LIBRARIES;COMPILE_DEFINITIONS"
+        "INCLUDE_DIRS;SOURCE_FILES;LINK_LIBRARIES;COMPILE_OPTIONS"
         # arguments of the function to parse, here we take the all original ones
         ${ARGN}
     )
@@ -37,9 +37,9 @@ function(${PROJECT_NAME}_add_unit_test_gtest)
                 ${Boost_LIBRARIES}
                 -pthread
         )
-        target_compile_definitions(${unit_test_NAME}
+        target_compile_options(${unit_test_NAME}
             PRIVATE
-                ${unit_test_COMPILE_DEFINITIONS}
+                ${unit_test_COMPILE_OPTIONS}
         )
     else()
         set(unit_test_NAME ${PROJECT_NAME}_${ARGV0})
@@ -60,9 +60,9 @@ function(${PROJECT_NAME}_add_unit_test_gtest)
                 ${GTEST_LIBRARIES}
                 -pthread
         )
-        target_compile_definitions(${unit_test_NAME}
+        target_compile_options(${unit_test_NAME}
             PRIVATE
-                ${unit_test_COMPILE_DEFINITIONS}
+                ${unit_test_COMPILE_OPTIONS}
         )
         add_test(AllTestsIn${unit_test_NAME} ${unit_test_NAME})
     endif()

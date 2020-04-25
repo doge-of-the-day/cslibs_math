@@ -34,8 +34,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(TARGET_COMPILE_DEFINITIONS
-        -Wall -WError -Ofast -ffastmath
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
     )
     # enabling -march=native my result in problems on some machines,
     # my try -mtune=native
@@ -49,8 +49,8 @@ cslibs_math_add_unit_test_gtest(mod
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/mod.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_add_unit_test_gtest(div
@@ -58,8 +58,8 @@ cslibs_math_add_unit_test_gtest(div
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/div.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_add_unit_test_gtest(array
@@ -67,8 +67,8 @@ cslibs_math_add_unit_test_gtest(array
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/array.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_add_unit_test_gtest(random
@@ -76,8 +76,8 @@ cslibs_math_add_unit_test_gtest(random
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/random.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_add_unit_test_gtest(sqrt
@@ -85,8 +85,8 @@ cslibs_math_add_unit_test_gtest(sqrt
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/sqrt.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_add_unit_test_gtest(distribution_serialization
@@ -96,8 +96,8 @@ cslibs_math_add_unit_test_gtest(distribution_serialization
         test/distribution_serialization.cpp
     LINK_LIBRARIES
         yaml-cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_add_unit_test_ros(distribution
@@ -111,8 +111,8 @@ cslibs_math_add_unit_test_ros(distribution
         yaml-cpp
         ${Boost_LIBRARIES}
         ${catkin_LIBRARIES}
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_add_unit_test_ros(distribution_float
@@ -126,8 +126,8 @@ cslibs_math_add_unit_test_ros(distribution_float
         yaml-cpp
         ${Boost_LIBRARIES}
         ${catkin_LIBRARIES}
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/

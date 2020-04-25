@@ -12,7 +12,7 @@ function(${PROJECT_NAME}_add_unit_test_ros)
         # list of names of mono-valued arguments
         "LAUNCH_FILE"
         # list of names of multi-valued arguments (output variables are lists)
-        "INCLUDE_DIRS;SOURCE_FILES;LINK_LIBRARIES;COMPILE_DEFINITIONS"
+        "INCLUDE_DIRS;SOURCE_FILES;LINK_LIBRARIES;COMPILE_OPTIONS"
         # arguments of the function to parse, here we take the all original ones
         ${ARGN}
     )
@@ -39,9 +39,9 @@ function(${PROJECT_NAME}_add_unit_test_ros)
                 ${roscpp_LIBRARIES}
                 ${GTEST_LIBRARIES}
         )
-        target_compile_definitions(${unit_test_NAME}
+        target_compile_options(${unit_test_NAME}
             PRIVATE
-                ${unit_test_COMPILE_DEFINITIONS}
+                ${unit_test_COMPILE_OPTIONS}
         )
     endif()
 endfunction()

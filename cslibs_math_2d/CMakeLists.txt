@@ -24,8 +24,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(TARGET_COMPILE_DEFINITIONS
-        -Wall -WError -Ofast -ffastmath
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
     )
     # enabling -march=native my result in problems on some machines,
     # my try -mtune=native
@@ -41,8 +41,8 @@ if(${tf_FOUND})
             ${tf_INCLUDE_DIRS}
         SOURCE_FILES
             test/transform.cpp
-        COMPILE_DEFINITIONS
-            ${TARGET_COMPILE_DEFINITIONS}
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
     )
     cslibs_math_2d_add_unit_test_gtest(vector
         INCLUDE_DIRS
@@ -50,8 +50,8 @@ if(${tf_FOUND})
             ${tf_INCLUDE_DIRS}
         SOURCE_FILES
             test/vector.cpp
-        COMPILE_DEFINITIONS
-            ${TARGET_COMPILE_DEFINITIONS}
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
     )
 endif()
 
@@ -60,8 +60,8 @@ cslibs_math_2d_add_unit_test_gtest(ray_tracing
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/ray_tracing.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 cslibs_math_2d_add_unit_test_gtest(ellipse
@@ -69,8 +69,8 @@ cslibs_math_2d_add_unit_test_gtest(ellipse
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/ellipse_test.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 
@@ -79,8 +79,8 @@ cslibs_math_2d_add_unit_test_gtest(box
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
         test/box.cpp
-    COMPILE_DEFINITIONS
-        ${TARGET_COMPILE_DEFINITIONS}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/

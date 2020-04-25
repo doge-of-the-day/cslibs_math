@@ -30,8 +30,7 @@ TEST(Test_cslibs_math_2d, randomFullEllipseFit)
         }
 
         EllipseFitD fit;
-        if(!fit.fit(points))
-            EXPECT_TRUE(false);
+        EXPECT_TRUE(fit.fit(points));
 
         if( e.equals(fit.solution)){
             ++succ_tests;

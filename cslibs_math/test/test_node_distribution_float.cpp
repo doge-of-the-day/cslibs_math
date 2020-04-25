@@ -27,7 +27,7 @@ TEST(Test_cslibs_math, testDistributionInsertion)
   EXPECT_EQ(test_distribution_200.data.size(), distribution.getN());
 
   distribution.reset();
-  EXPECT_EQ(0, distribution.getN());
+  EXPECT_EQ(0ul, distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_500.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
     Eigen::Matrix<float,2,1> data;
@@ -38,7 +38,7 @@ TEST(Test_cslibs_math, testDistributionInsertion)
   EXPECT_EQ(test_distribution_500.data.size(), distribution.getN());
 
   distribution.reset();
-  EXPECT_EQ(0, distribution.getN());
+  EXPECT_EQ(0ul, distribution.getN());
   for(std::size_t i = 0 ; i < test_distribution_5000.data.size() ; ++i) {
     EXPECT_EQ(i, distribution.getN());
     Eigen::Matrix<float,2,1> data;

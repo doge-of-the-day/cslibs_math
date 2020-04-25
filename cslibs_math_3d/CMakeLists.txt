@@ -19,8 +19,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(TARGET_COMPILE_DEFINITIONS
-        -Wall -WError -Ofast -ffastmath
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
     )
     # enabling -march=native my result in problems on some machines,
     # my try -mtune=native
@@ -40,24 +40,24 @@ if(${tf_FOUND})
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
             test/quaternion.cpp
-        COMPILE_DEFINITIONS
-            ${TARGET_COMPILE_DEFINITIONS}
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
     )
     cslibs_math_3d_add_unit_test_gtest(transform
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
             test/transform.cpp
-        COMPILE_DEFINITIONS
-            ${TARGET_COMPILE_DEFINITIONS}
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
     )
     cslibs_math_3d_add_unit_test_gtest(ray_tracing
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
             test/ray_tracing.cpp
-        COMPILE_DEFINITIONS
-            ${TARGET_COMPILE_DEFINITIONS}
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
     )
 endif()
 
