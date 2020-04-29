@@ -102,7 +102,6 @@ struct convert<cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_expone
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             for (std::size_t j = 0 ; j < Dim ; ++ j)
                 n.push_back(correlated(i, j));
-
         return n;
     }
 
@@ -114,16 +113,17 @@ struct convert<cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_expone
         std::size_t p = 0;
         std::size_t num = n[p++].as<std::size_t>();
 
-        sample_t mean(sample_t::Zero());
-        for (std::size_t i = 0 ; i < Dim ; ++ i)
+        sample_t mean{sample_t::Zero()};
+        for (std::size_t i = 0 ; i < Dim ; ++ i) {
             mean(i) = n[p++].as<T>();
+        }
 
         covariance_t correlated(covariance_t::Zero());
         for (std::size_t i = 0 ; i < Dim ; ++ i)
             for (std::size_t j = 0 ; j < Dim ; ++ j)
                 correlated(i, j) = n[p++].as<T>();
 
-        rhs = cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>(num, mean, correlated);
+        rhs = cslibs_math::statistics::Distribution<T, Dim, lambda_ratio_exponent>{num, mean, correlated};
         return true;
     }
 };

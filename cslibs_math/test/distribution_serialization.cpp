@@ -44,7 +44,7 @@ struct TestDimension {
         rng_t<1>   rng_num_samples(MIN_NUM_SAMPLES, MAX_NUM_SAMPLES);
         rng_t<Dim> rng(min_sample, max_sample);
 
-        using distribution_t = cslibs_math::statistics::Distribution<double,Dim, 3>;
+        using distribution_t = cslibs_math::statistics::Distribution<double,Dim, 0>;
         for (std::size_t i = 0 ; i < REPETITIONS ; ++ i) {
              distribution_t d;
 
@@ -55,7 +55,7 @@ struct TestDimension {
             YAML::Node n(d);
 
             // de-serialization
-            const distribution_t & d_converted = n.as<distribution_t>();
+            const distribution_t d_converted = n.as<distribution_t>();
 
             // tests
             EXPECT_EQ(d.getN(), d_converted.getN());
