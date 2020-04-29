@@ -6,7 +6,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(cmake/cslibs_math_enable_c++17.cmake)
 include(cmake/cslibs_math_add_unit_test_gtest.cmake)
 include(cmake/cslibs_math_add_unit_test_ros.cmake)
-
+include(cmake/cslibs_math_add_benchmark.cmake)
 
 find_package(catkin REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -18,6 +18,7 @@ catkin_package(
         cslibs_math_enable_c++17.cmake
         cslibs_math_add_unit_test_gtest.cmake
         cslibs_math_add_unit_test_ros.cmake
+        cslibs_math_add_benchmark.cmake
     DEPENDS
         EIGEN3
 )
@@ -126,6 +127,15 @@ cslibs_math_add_unit_test_ros(distribution_float
         yaml-cpp
         ${Boost_LIBRARIES}
         ${catkin_LIBRARIES}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+cslibs_math_add_benchmark(benchmark_exp
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        benchmark/benchmark_exp.cpp
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
 )
