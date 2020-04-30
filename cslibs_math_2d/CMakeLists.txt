@@ -64,6 +64,16 @@ if(${tf_FOUND})
             ${TARGET_COMPILE_OPTIONS}
     )
 
+    cslibs_math_2d_add_benchmark(benchmark_transform_2d
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+        ${tf_INCLUDE_DIRS}
+    SOURCE_FILES
+        benchmark/benchmark_transform_2d.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 endif()
 
 cslibs_math_2d_add_unit_test_gtest(ray_tracing
