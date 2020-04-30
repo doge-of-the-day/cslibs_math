@@ -140,5 +140,15 @@ cslibs_math_add_benchmark(benchmark_exp
         ${TARGET_COMPILE_OPTIONS}
 )
 
+cslibs_math_add_benchmark(benchmark_angles
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        benchmark/benchmark_angles.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

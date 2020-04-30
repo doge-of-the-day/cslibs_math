@@ -17,7 +17,7 @@ inline T normalize(const T angle)
 {
     static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
     static const T _1_2_M_PI = 1.0 / _2_M_PI;
-    return angle - _2_M_PI * floor((angle + M_PI) * _1_2_M_PI);
+    return angle - _2_M_PI * std::floor((angle + M_PI) * _1_2_M_PI);
 }
 
 /**
