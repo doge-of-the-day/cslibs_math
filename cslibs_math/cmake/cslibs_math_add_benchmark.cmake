@@ -18,6 +18,7 @@ function(${PROJECT_NAME}_add_benchmark)
 
     set(bench_NAME ${ARGV0})
     find_package(benchmark REQUIRED)
+    find_package(Boost REQUIRED COMPONENTS system)
 
     add_executable(${bench_NAME}
         ${bench_SOURCE_FILES}
@@ -32,6 +33,7 @@ function(${PROJECT_NAME}_add_benchmark)
     target_link_libraries(${bench_NAME}
         PRIVATE
             ${bench_LINK_LIBRARIES}
+            ${Boost_LIBRARIES}
              benchmark::benchmark
             -pthread
     )

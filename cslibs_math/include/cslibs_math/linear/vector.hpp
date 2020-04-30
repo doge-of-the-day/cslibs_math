@@ -4,6 +4,7 @@
 #include <array>
 #include <cmath>
 #include <limits>
+#include <type_traits>
 #include <cstring>
 
 #include <eigen3/Eigen/Dense>
@@ -28,49 +29,47 @@ public:
     using type_t                       = T;
     static constexpr std::size_t Dimension = Dim;
 
-    inline Vector() :
-        data_(vector_t::Zero())
-    {
-    }
+    inline Vector() = default;
+    inline virtual ~Vector() = default;
 
     inline explicit Vector(const T &c) :
-        data_(vector_t::Constant(c))
+        data_{vector_t::Constant(c)}
     {
     }
 
     inline explicit Vector(const arr_t &a) :
-        data_(a.data())
+        data_{a.data()}
     {
     }
 
     inline explicit Vector(vector_t && data) :
-        data_(std::move(data))
+        data_{std::move(data)}
     {
     }
 
     inline explicit Vector(const vector_t & data) :
-        data_(data)
+        data_{data}
     {
     }
 
     inline Vector(const Vector &other) :
-        data_(other.data_)
+        data_{other.data_}
     {
     }
 
     inline Vector(Vector &&other) :
-        data_(std::move(other.data_))
+        data_{std::move(other.data_)}
     {
     }
 
     inline Vector(const Matrix<T, Dim, 1>& m) :
-        data_(m.data())
+        data_{m.data()}
     {
     }
 
     template<typename... args_t, typename = typename std::enable_if<sizeof...(args_t) == Dim>>
     inline explicit Vector(const args_t ... values) :
-        data_(eigen::create<vector_t>(values...))
+        data_{eigen::create<vector_t>(values...)}
     {
         static_assert(Dimension == sizeof...(args_t), "Dimension of the parameters must match the geometric dimension!");
     }
@@ -245,7 +244,7 @@ public:
     }
 
 private:
-    vector_t data_;
+    vector_t data_{vector_t::Zero()};
 } ;
 
 template<typename T, std::size_t Dim>

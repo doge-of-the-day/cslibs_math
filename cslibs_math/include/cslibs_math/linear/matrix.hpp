@@ -46,8 +46,8 @@ public:
     {
     }
 
-    template <std::size_t m = M>
-    inline Matrix(const Vector<T, N>& v, typename std::enable_if<m == 1>::type* = 0) :
+    template <std::size_t m = M, typename std::enable_if<m == 1>::type* = 0>
+    inline Matrix(const Vector<T, N>& v) :
         data_(v.data())
     {
     }
