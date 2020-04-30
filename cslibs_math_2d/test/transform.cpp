@@ -424,7 +424,7 @@ TEST(Test_cslibs_math_2d, testTransformInverse)
     }
 }
 
-TEST(Test_cslibs_math_2d, testArrayAligned)
+TEST(Test_cslibs_math_2d, testTransformArrayAligned)
 {
     cslibs_math_2d::Transform2d t1 = cslibs_math_2d::Transform2d::random();
     cslibs_math_2d::Transform2d t2 = cslibs_math_2d::Transform2d::random();
@@ -457,6 +457,29 @@ TEST(Test_cslibs_math_2d, testArrayAligned)
     test_eq(ts[0], t1);
     test_eq(ts[1], t2);
     test_eq(ts[2], t3);
+}
+
+TEST(Test_cslibs_math_2d, testTransformAssignment)
+{
+    auto test_eq = [](const cslibs_math_2d::Transform2d &ta,
+                      const cslibs_math_2d::Transform2d &tb)
+    {
+        EXPECT_EQ(ta.tx(), tb.tx());
+        EXPECT_EQ(ta.ty(), tb.ty());
+        EXPECT_EQ(ta.yaw(), tb.yaw());
+    };
+
+    cslibs_math_2d::Transform2d assigned;
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+       cslibs_math_2d::Transform2d t = cslibs_math_2d::Transform2d::random();
+        assigned = t;
+        test_eq(assigned, t);
+    }
+    for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
+       cslibs_math_2d::Transform2d t = cslibs_math_2d::Transform2d::random();
+        assigned = std::move(t);
+        test_eq(assigned, t);
+    }
 }
 
 int main(int argc, char *argv[])
