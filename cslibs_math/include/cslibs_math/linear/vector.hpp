@@ -30,7 +30,7 @@ public:
     static constexpr std::size_t Dimension = Dim;
 
     inline Vector() = default;
-    inline virtual ~Vector() = default;
+    inline ~Vector() = default;
 
     inline explicit Vector(const T &c) :
         data_{vector_t::Constant(c)}
@@ -52,15 +52,8 @@ public:
     {
     }
 
-    inline Vector(const Vector &other) :
-        data_{other.data_}
-    {
-    }
-
-    inline Vector(Vector &&other) :
-        data_{std::move(other.data_)}
-    {
-    }
+    inline Vector(const Vector &other) = default;
+    inline Vector(Vector &&other) = default;
 
     inline Vector(const Matrix<T, Dim, 1>& m) :
         data_{m.data()}

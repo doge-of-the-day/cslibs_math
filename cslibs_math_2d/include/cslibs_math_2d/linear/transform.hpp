@@ -23,16 +23,16 @@ class EIGEN_ALIGN16 Transform2 {
 
   inline Transform2() = default;
 
-  inline Transform2(const Vector2<T> &translation, const T yaw, const T sin,
+  inline explicit Transform2(const Vector2<T> &translation, const T yaw, const T sin,
                     const T cos)
       : translation_{translation}, yaw_{yaw}, sin_{sin}, cos_{cos} {}
 
   static inline Transform2 identity() { return Transform2(); }
 
-  inline Transform2(const T x, const T y)
+  inline explicit Transform2(const T x, const T y)
       : translation_{x, y} {}
 
-  inline Transform2(const Vector2<T> &translation)
+  inline explicit Transform2(const Vector2<T> &translation)
       : translation_{translation} {}
 
   inline Transform2(const T yaw) : Transform2(T{0}, T{0}, yaw) {}
@@ -41,7 +41,8 @@ class EIGEN_ALIGN16 Transform2 {
       : translation_{x, y},
         yaw_{yaw},
         sin_{std::sin(yaw_)},
-        cos_{std::cos(yaw_)} {}
+        cos_{std::cos(yaw_)} {
+        }
 
   inline Transform2(const Vector2<T> &translation, const T yaw)
       : translation_{translation},
@@ -77,6 +78,7 @@ class EIGEN_ALIGN16 Transform2 {
   }
 
   inline Transform2 &operator=(const Transform2 &other) = default;
+  inline Transform2 &operator=(Transform2 &&other) = default;
 
   inline Transform2 &operator=(const Eigen::Matrix<T, 3, 1> &eigen) {
     translation_(0) = eigen(0, 0);
@@ -85,13 +87,7 @@ class EIGEN_ALIGN16 Transform2 {
     return *this;
   }
 
-  inline Transform2 &operator=(Transform2 &&other) {
-    yaw_ = other.yaw_;
-    sin_ = other.sin_;
-    cos_ = other.cos_;
-    translation_ = other.translation_;
-    return *this;
-  }
+
 
   inline Transform2 inverse() const {
     return Transform2(
