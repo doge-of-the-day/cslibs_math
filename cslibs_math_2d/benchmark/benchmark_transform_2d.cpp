@@ -231,7 +231,7 @@ static void xy_yaw_double(benchmark::State& state) {
   cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
   for (auto _ : state) {
     const auto yaw = rng.get();
-    const auto t = cslibs_math_2d::Vector2f::random();
+    const auto t = cslibs_math_2d::Vector2d::random();
     const auto x = t(0);
     const auto y = t(1);
     auto start = cslibs_math::utility::tiny_time::clock_t::now();
@@ -496,4 +496,15 @@ BENCHMARK(multiply_transform_float);
 BENCHMARK(multiply_transform_double);
 BENCHMARK(multiply_transform_tf);
 
-BENCHMARK_MAIN()
+
+int main(int argc, char** argv) {
+  ::benchmark::Initialize(&argc, argv);
+  if (::benchmark::ReportUnrecognizedArguments(argc, argv)) return 1;
+  ::benchmark::RunSpecifiedBenchmarks();
+  std::cout << "Byte-Sizes of types : \n"
+            << "  tf::Transform " << sizeof(tf::Transform) << "\n"
+            << "  Transform2f   " << sizeof(cslibs_math_2d::Transform2f) << "\n"
+            << "  Transform2d   " << sizeof(cslibs_math_2d::Transform2d)
+            << std::endl;
+  return 0;
+}

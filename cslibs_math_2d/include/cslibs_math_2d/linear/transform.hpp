@@ -22,12 +22,12 @@ class EIGEN_ALIGN16 Transform2 {
   using allocator_t = Eigen::aligned_allocator<Transform2<T>>;
 
   inline Transform2() = default;
+  inline Transform2(const Transform2 &other) = default;
+  inline Transform2(Transform2 &&other) = default;
 
   inline explicit Transform2(const Vector2<T> &translation, const T yaw, const T sin,
                     const T cos)
       : translation_{translation}, yaw_{yaw}, sin_{sin}, cos_{cos} {}
-
-  static inline Transform2 identity() { return Transform2(); }
 
   inline explicit Transform2(const T x, const T y)
       : translation_{x, y} {}
@@ -35,28 +35,30 @@ class EIGEN_ALIGN16 Transform2 {
   inline explicit Transform2(const Vector2<T> &translation)
       : translation_{translation} {}
 
-  inline Transform2(const T yaw) : Transform2(T{0}, T{0}, yaw) {}
+  inline explicit Transform2(const T yaw) : Transform2(T{0}, T{0}, yaw) {}
 
-  inline Transform2(const T x, const T y, const T yaw)
+  inline explicit Transform2(const T x, const T y, const T yaw)
       : translation_{x, y},
         yaw_{yaw},
         sin_{std::sin(yaw_)},
         cos_{std::cos(yaw_)} {
         }
 
-  inline Transform2(const Vector2<T> &translation, const T yaw)
+  inline explicit Transform2(const Vector2<T> &translation, const T yaw)
       : translation_{translation},
         yaw_{yaw},
         sin_{std::sin(yaw_)},
         cos_{std::cos(yaw_)} {}
 
-  inline Transform2(const Transform2 &other) = default;
-  inline Transform2(Transform2 &&other) = default;
+
 
   inline static Transform2 random() {
     const Eigen::Matrix<T, 3, 1> r = Eigen::Matrix<T, 3, 1>::Random();
     return Transform2(r(0), r(1), r(2));
   }
+
+  static inline Transform2 identity() { return Transform2(); }
+
 
   inline Transform2 &operator*=(const Transform2 &other) {
     if (yaw_ == T{0}) {

@@ -69,6 +69,16 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
+
+    cslibs_math_3d_add_benchmark(benchmark_transform_3d
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+        ${tf_INCLUDE_DIRS}
+    SOURCE_FILES
+        benchmark/benchmark_transform_3d.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+    )
 endif()
 
 install(DIRECTORY include/${PROJECT_NAME}/
