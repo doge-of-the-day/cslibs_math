@@ -5,12 +5,11 @@
 
 namespace cslibs_math {
 namespace common {
-template<typename T>
-int floor(const T x)
-{
-    return x > 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
+template <typename T>
+int floor(const T x) {
+  return x > 0 ? static_cast<int>(x) : static_cast<int>(x) - 1;
 }
-}
-}
+}  // namespace common
+}  // namespace cslibs_math
 
-#endif // CSLIBS_MATH_FLOOR_HPP
+#endif  // CSLIBS_MATH_FLOOR_HPP

@@ -5,16 +5,15 @@
 
 namespace cslibs_math {
 namespace common {
-template<typename T>
-T div(const T a, const T b)
-{
-    static_assert(std::is_integral<T>::value, "Integral required.");
+template <typename T>
+T div(const T a, const T b) {
+  static_assert(std::is_integral<T>::value, "Integral required.");
 
-    assert(b > T());
-    const T d = a / b;
-    return a < 1 ? (d*b != a ? d - 1 : d) : d;
+  assert(b > T());
+  const T d = a / b;
+  return a < 1 ? (d * b != a ? d - 1 : d) : d;
 }
-}
-}
+}  // namespace common
+}  // namespace cslibs_math
 
-#endif // CSLIBS_MATH_DIV_HPP
+#endif  // CSLIBS_MATH_DIV_HPP

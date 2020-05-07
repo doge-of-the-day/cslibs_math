@@ -13,11 +13,10 @@ namespace angle {
  * @return
  */
 template <typename T>
-inline T normalize(const T angle)
-{
-    static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
-    static const T _1_2_M_PI = 1.0 / _2_M_PI;
-    return angle - _2_M_PI * std::floor((angle + M_PI) * _1_2_M_PI);
+inline T normalize(const T angle) {
+  static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
+  static const T _1_2_M_PI = 1.0 / _2_M_PI;
+  return angle - _2_M_PI * std::floor((angle + M_PI) * _1_2_M_PI);
 }
 
 /**
@@ -26,11 +25,10 @@ inline T normalize(const T angle)
  * @return
  */
 template <typename T>
-inline T normalize2Pi(const T angle)
-{
-    static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
-    static const T _1_2_M_PI = 1.0 / _2_M_PI;
-    return angle - _2_M_PI * floor(angle * _1_2_M_PI);
+inline T normalize2Pi(const T angle) {
+  static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
+  static const T _1_2_M_PI = 1.0 / _2_M_PI;
+  return angle - _2_M_PI * floor(angle * _1_2_M_PI);
 }
 
 /**
@@ -40,16 +38,15 @@ inline T normalize2Pi(const T angle)
  * @return
  */
 template <typename T>
-inline T difference(T a, T b)
-{
-    static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
-    auto norm = [](T v) { return std::atan2(std::sin(v), std::cos(v)); };
-    a = norm(a);
-    b = norm(b);
+inline T difference(T a, T b) {
+  static const T _2_M_PI = 2.0 * static_cast<T>(M_PI);
+  auto norm = [](T v) { return std::atan2(std::sin(v), std::cos(v)); };
+  a = norm(a);
+  b = norm(b);
 
-    T d1 = a - b;
-    T d2 = (_2_M_PI - std::fabs(d1)) * (d1 > 0 ? -1 : 1);
-    return std::fabs(d1) < std::fabs(d2) ? d1 : d2;
+  T d1 = a - b;
+  T d2 = (_2_M_PI - std::fabs(d1)) * (d1 > 0 ? -1 : 1);
+  return std::fabs(d1) < std::fabs(d2) ? d1 : d2;
 }
 
 /**
@@ -58,10 +55,9 @@ inline T difference(T a, T b)
  * @return      - angle in radian
  */
 template <typename T>
-inline T toRad(const T deg)
-{
-    static const T R_T_A = static_cast<T>(M_PI / 180.0);       /// DEG to RAD
-    return deg * R_T_A;
+inline T toRad(const T deg) {
+  static const T R_T_A = static_cast<T>(M_PI / 180.0);  /// DEG to RAD
+  return deg * R_T_A;
 }
 
 /**
@@ -70,10 +66,9 @@ inline T toRad(const T deg)
  * @return      - the angle in degree
  */
 template <typename T>
-inline T fromRad(const T rad)
-{
-    static const T A_T_R = static_cast<T>(M_1_PI * 180.0);      /// RAD ot DEG
-    return rad * A_T_R;
+inline T fromRad(const T rad) {
+  static const T A_T_R = static_cast<T>(M_1_PI * 180.0);  /// RAD ot DEG
+  return rad * A_T_R;
 }
 
 /**
@@ -83,9 +78,8 @@ inline T fromRad(const T rad)
  * @return      - the angle in its complex representation
  */
 template <typename T>
-inline std::complex<T> toComplex(const T rad)
-{
-    return std::complex<T>(std::cos(rad), std::sin(rad));
+inline std::complex<T> toComplex(const T rad) {
+  return std::complex<T>(std::cos(rad), std::sin(rad));
 }
 /**
  * @brief fromComplex converts an angle from its complex representation to
@@ -94,12 +88,11 @@ inline std::complex<T> toComplex(const T rad)
  * @return        - the angle in radian
  */
 template <typename T>
-inline T fromComplex(const std::complex<T> &complex)
-{
-    return std::atan2(complex.imag(), complex.real());
+inline T fromComplex(const std::complex<T> &complex) {
+  return std::atan2(complex.imag(), complex.real());
 }
-}
-}
-}
+}  // namespace angle
+}  // namespace common
+}  // namespace cslibs_math
 
-#endif // CSLIBS_MATH_ANGLE_HPP
+#endif  // CSLIBS_MATH_ANGLE_HPP
