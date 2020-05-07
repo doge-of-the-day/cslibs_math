@@ -35,7 +35,7 @@ if(${tf_FOUND})
         ${catkin_INCLUDE_DIRS}
         ${tf_INCLUDE_DIRS}
     )
-    cslibs_math_3d_add_unit_test_gtest(quaternion
+    cslibs_math_3d_add_unit_test_gtest(test_quaternion
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -43,7 +43,7 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
-    cslibs_math_3d_add_unit_test_gtest(transform
+    cslibs_math_3d_add_unit_test_gtest(test_transform
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -51,7 +51,7 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
-    cslibs_math_3d_add_unit_test_gtest(ray_tracing
+    cslibs_math_3d_add_unit_test_gtest(test_ray_tracing
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -71,15 +71,24 @@ if(${tf_FOUND})
     )
 
     cslibs_math_3d_add_benchmark(benchmark_transform_3d
-    INCLUDE_DIRS
-        ${TARGET_INCLUDE_DIRS}
-        ${tf_INCLUDE_DIRS}
-    SOURCE_FILES
-        benchmark/benchmark_transform_3d.cpp
-    COMPILE_OPTIONS
-        ${TARGET_COMPILE_OPTIONS}
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+            ${tf_INCLUDE_DIRS}
+        SOURCE_FILES
+            benchmark/benchmark_transform_3d.cpp
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
     )
 endif()
+
+cslibs_math_3d_add_unit_test_gtest(test_point
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        test/point.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

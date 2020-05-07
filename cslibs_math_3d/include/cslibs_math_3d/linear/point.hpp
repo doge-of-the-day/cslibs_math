@@ -10,7 +10,7 @@ using Point3 = Vector3<T>;
 using Point3d = Point3<double>;
 using Point3f = Point3<float>;
 
-template <typename T>
+template <typename T, typename Tc=T>
 class EIGEN_ALIGN16 PointRGB3
 {
 public:
@@ -18,51 +18,29 @@ public:
     using allocator_t = Eigen::aligned_allocator<PointRGB3<T>>;
 
     using point_t = Point3<T>;
-    using color_t = cslibs_math::color::Color<T>;
+    using color_t = cslibs_math::color::Color<Tc>;
     using type_t  = T;
 
-    inline PointRGB3():
-        a_(1.0)
-    {
-    }
+    inline PointRGB3() = default;
+    inline PointRGB3(const PointRGB3 &other) = default;
 
-    inline PointRGB3(const PointRGB3 &other) :
-        point_(other.point_),
-        a_(other.a_),
-        color_(other.color_)
-    {
-    }
+    inline PointRGB3(PointRGB3 &&other) = default;
 
-    inline PointRGB3(PointRGB3 &&other) :
-        point_(std::move(other.point_)),
-        a_(std::move(other.a_)),
-        color_(std::move(other.color_))
-    {
-    }
-
-    inline PointRGB3& operator=(const PointRGB3 &other)
-    {
-        point_ = other.point_;
-        a_ = other.a_;
-        color_ = other.color_;
-        return *this;
-    }
-
+    inline PointRGB3& operator=(const PointRGB3 &other)= default;
     inline PointRGB3(const point_t &pos) :
-        point_(pos),
-        a_(1.0)
+        point_{pos}
     {
     }
 
-    inline PointRGB3(const double& v) :
-        PointRGB3(point_t(v,v,v))
+    inline PointRGB3(const T &v) :
+        point_{v}
     {
     }
 
     inline PointRGB3(const point_t &pos, const T& a, const color_t& c) :
-        point_(pos),
-        a_(a),
-        color_(c)
+        point_{pos},
+        a_{a},
+        color_{c}
     {
     }
 
@@ -73,7 +51,7 @@ public:
         return point_;
     }
 
-    inline float getAlpha() const
+    inline Tc getAlpha() const
     {
         return a_;
     }
@@ -88,7 +66,7 @@ public:
         point_ = point;
     }
 
-    inline void setAlpha(T a)
+    inline void setAlpha(const Tc a)
     {
         a_ = a;
     }
@@ -112,22 +90,22 @@ public:
 
     inline static PointRGB3 inf()
     {
-        return PointRGB3(point_t::inf());
+        return PointRGB3{point_t::inf()};
     }
 
     inline static PointRGB3 max()
     {
-        return PointRGB3(point_t::max());
+        return PointRGB3{point_t::max()};
     }
 
     inline static PointRGB3 min()
     {
-        return PointRGB3(point_t::min());
+        return PointRGB3{point_t::min()};
     }
 
 private:
     point_t point_;
-    T       a_;
+    Tc      a_{Tc{1}};
     color_t color_;
 };
 
