@@ -18,11 +18,11 @@ struct pow<1ul, T> {
 
 template <unsigned int E, typename T = double>
 struct pow {
-  inline static constexpr  T eval(const T value) {
+  inline static constexpr T eval(const T value) {
     return value * (pow<E - 1ul, T>::eval(value));
   }
 };
-}
+}  // namespace detail
 
 template <unsigned int E, typename T = double>
 inline constexpr T pow(const T value) {
@@ -31,7 +31,7 @@ inline constexpr T pow(const T value) {
 
 template <unsigned int E, typename T = double>
 inline constexpr T pow2() {
-  return detail::pow<E, T>::eval(T{2});
+  return pow<E, T>(T{2});
 }
 }  // namespace common
 }  // namespace cslibs_math

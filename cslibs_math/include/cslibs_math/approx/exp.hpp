@@ -5,13 +5,29 @@
 
 namespace cslibs_math {
 namespace approx {
-template<unsigned int Accuracy_T, typename T = double>
-inline constexpr T exp(const T value)
-{
-    const auto x = T{1} + value / common::pow2<Accuracy_T, T>();
-    return common::pow<Accuracy_T + 1ul>(x);
+namespace detail {
+template <unsigned int I, typename T = double>
+struct square {
+  inline static constexpr T eval(const T value) {
+    return square<I - 1ul, T>::eval(value * value);
+  }
+};
+template <typename T>
+struct square<0ul, T> {
+  inline static constexpr T eval(const T value) { return 1.0; }
+};
+template <typename T>
+struct square<1ul, T> {
+  inline static constexpr T eval(const T value) { return value * value; }
+};
+}  // namespace detail
+
+template <unsigned int Accuracy_T, typename T>
+inline constexpr T exp(const T value) {
+  return detail::square<Accuracy_T, T>::eval(
+      T{1.0} + value / common::pow2<Accuracy_T, T>());
 }
-}  // namespace common
+}  // namespace approx
 }  // namespace cslibs_math
 
 #endif  // CSLIBS_MATH_EXP_HPP

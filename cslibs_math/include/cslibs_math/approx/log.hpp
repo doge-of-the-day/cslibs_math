@@ -1,22 +1,15 @@
 #ifndef CSLIBS_MATH_LOG_HPP
 #define CSLIBS_MATH_LOG_HPP
 
-#include <limits>
+#include <cmath>
 
 namespace cslibs_math {
 namespace approx {
-// template <typename T>
-// constexpr T sqrtNewtonRaphson(T x, T curr, T prev) {
-//   return curr == prev ? curr
-//                       : sqrtNewtonRaphson(x, 0.5 * (curr + x / curr), curr);
-// }
-
-// template <typename T>
-// constexpr T sqrt(T x) {
-//   return x >= 0 && x < std::numeric_limits<T>::infinity()
-//              ? sqrtNewtonRaphson<T>(x, x, 0)
-//              : std::numeric_limits<T>::quiet_NaN();
-// }
+double log2_fast(double d) {
+     int exponent;
+     double fraction = std::frexp(d, &exponent);
+     return (exponent-1) + 2.3 * (fraction - 0.5);
+}
 }  // namespace common
 }  // namespace cslibs_math
 
