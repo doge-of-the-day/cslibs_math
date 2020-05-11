@@ -49,7 +49,16 @@ cslibs_math_add_unit_test_gtest(test_mod
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
-        test/mod.cpp
+        test/test_mod.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+cslibs_math_add_unit_test_gtest(test_pow
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        test/test_pow.cpp
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
 )
@@ -58,7 +67,7 @@ cslibs_math_add_unit_test_gtest(test_div
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
-        test/div.cpp
+        test/test_div.cpp
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
 )
@@ -67,7 +76,7 @@ cslibs_math_add_unit_test_gtest(test_array
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
-        test/array.cpp
+        test/test_array.cpp
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
 )
@@ -76,7 +85,7 @@ cslibs_math_add_unit_test_gtest(test_random
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
-        test/random.cpp
+        test/test_random.cpp
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
 )
@@ -85,7 +94,7 @@ cslibs_math_add_unit_test_gtest(test_sqrt
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
-        test/sqrt.cpp
+        test/test_sqrt.cpp
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
 )
@@ -94,7 +103,7 @@ cslibs_math_add_unit_test_gtest(test_distribution_serialization
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
-        test/distribution_serialization.cpp
+        test/test_distribution_serialization.cpp
     LINK_LIBRARIES
         yaml-cpp
     COMPILE_OPTIONS
