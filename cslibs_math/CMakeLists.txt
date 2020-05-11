@@ -63,6 +63,15 @@ cslibs_math_add_unit_test_gtest(test_pow
         ${TARGET_COMPILE_OPTIONS}
 )
 
+cslibs_math_add_unit_test_gtest(test_exp
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        test/test_exp.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 cslibs_math_add_unit_test_gtest(test_div
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
