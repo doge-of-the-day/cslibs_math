@@ -38,8 +38,6 @@ class EIGEN_ALIGN16 Mean<T, 1> {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
   using allocator_t = Eigen::aligned_allocator<Mean<T, 1>>;
 
-  Mean() : mean_(T()), n_(0) {}
-
   inline void add(const T &sample) {
     const std::size_t _n = n_ + 1;
     mean_ = (mean_ * static_cast<T>(n_) + sample) / static_cast<T>(_n);

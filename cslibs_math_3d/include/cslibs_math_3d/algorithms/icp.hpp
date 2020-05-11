@@ -20,10 +20,10 @@ class EIGEN_ALIGN16 Result {
                          const Termination termination = ITERATIONS,
                          const covariance_t covariance = covariance_t::Zero(),
                          const transform_t &transform = transform_t())
-      : iterations_(iterations),
-        termination_(termination),
-        covariance_(covariance),
-        transform_(transform) {}
+      : iterations_{iterations},
+        termination_{termination},
+        covariance_{covariance},
+        transform_{transform} {}
 
   inline std::size_t iterations() const { return iterations_; }
 

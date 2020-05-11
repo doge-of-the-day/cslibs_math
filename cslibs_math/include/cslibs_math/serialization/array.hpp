@@ -10,52 +10,43 @@ namespace serialization {
 namespace array {
 template <typename T, std::size_t Dim>
 struct binary {
-    inline static std::size_t read(std::ifstream      &in,
-                                   std::array<T, Dim> &array)
-    {
-        for(std::size_t i = 0 ; i < Dim ; ++i) {
-            array[i] = io<T>::read(in);
-        }
-        return Dim * sizeof(T);
+  inline static std::size_t read(std::ifstream &in, std::array<T, Dim> &array) {
+    for (std::size_t i = 0; i < Dim; ++i) {
+      array[i] = io<T>::read(in);
     }
+    return Dim * sizeof(T);
+  }
 
-    inline static void write(const std::array<T, Dim> &array,
-                             std::ofstream &out)
-    {
-        for(std::size_t i = 0 ; i < Dim ; ++i) {
-            io<T>::write(array[i], out);
-        }
+  inline static void write(const std::array<T, Dim> &array,
+                           std::ofstream &out) {
+    for (std::size_t i = 0; i < Dim; ++i) {
+      io<T>::write(array[i], out);
     }
+  }
 };
-}
-}
-}
+}  // namespace array
+}  // namespace serialization
+}  // namespace cslibs_math
 
 namespace YAML {
 template <typename T, std::size_t Dim>
-struct convert<std::array<T, Dim>>
-{
-    static Node encode(const std::array<T, Dim> &rhs)
-    {
-        Node n;
+struct convert<std::array<T, Dim>> {
+  static Node encode(const std::array<T, Dim> &rhs) {
+    Node n;
 
-        for (std::size_t i = 0 ; i < Dim ; ++ i)
-            n.push_back(rhs[i]);
+    for (std::size_t i = 0; i < Dim; ++i) n.push_back(rhs[i]);
 
-        return n;
-    }
+    return n;
+  }
 
-    static bool decode(const Node& n, std::array<T, Dim> &rhs)
-    {
-        if (!n.IsSequence() || n.size() != Dim)
-            return false;
+  static bool decode(const Node &n, std::array<T, Dim> &rhs) {
+    if (!n.IsSequence() || n.size() != Dim) return false;
 
-        for (std::size_t i = 0 ; i < Dim ; ++ i)
-            rhs[i] = n[i].as<T>();
+    for (std::size_t i = 0; i < Dim; ++i) rhs[i] = n[i].as<T>();
 
-        return true;
-    }
+    return true;
+  }
 };
-}
+}  // namespace YAML
 
-#endif // CSLIBS_MATH_SERIALIZATION_ARRAY_HPP
+#endif  // CSLIBS_MATH_SERIALIZATION_ARRAY_HPP

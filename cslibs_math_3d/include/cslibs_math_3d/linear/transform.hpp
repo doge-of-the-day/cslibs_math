@@ -48,7 +48,7 @@ class EIGEN_ALIGN16 Transform3 {
     return Transform3(r[0], r[1], r[2], r[3], r[4], r[5]);
   }
 
-  static inline Transform3 identity() { return Transform3(); }
+  inline static Transform3 identity() { return Transform3(); }
 
   inline Transform3 &operator*=(const Transform3 &other) {
     translation_ += rotation_ * other.translation_;

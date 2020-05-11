@@ -250,7 +250,7 @@ class EIGEN_ALIGN16 Quaternion {
   inline Quaternion(data_t &&data)
       : data_{data[0], data[1], data[2], data[3]} {}
 
-  static inline void normalize(const data_t &a, data_t &a_normalized) {
+  inline static void normalize(const data_t &a, data_t &a_normalized) {
     const T n = 1.0 / std::sqrt(dot(a, a));
     a_normalized[0] = a[0] * n;
     a_normalized[1] = a[1] * n;
@@ -258,7 +258,7 @@ class EIGEN_ALIGN16 Quaternion {
     a_normalized[3] = a[3] * n;
   }
 
-  static inline void invert(const data_t &a, data_t &a_inverted) {
+  inline static void invert(const data_t &a, data_t &a_inverted) {
     const T n = 1.0 / dot(a, a);
     a_inverted[0] = -a[0] * n;
     a_inverted[1] = -a[1] * n;
@@ -266,18 +266,18 @@ class EIGEN_ALIGN16 Quaternion {
     a_inverted[3] = a[3] * n;
   }
 
-  static inline void conjugate(const data_t &q, data_t &q_conjugated) {
+  inline static void conjugate(const data_t &q, data_t &q_conjugated) {
     q_conjugated[0] = -q[0];
     q_conjugated[1] = -q[1];
     q_conjugated[2] = -q[2];
     q_conjugated[3] = q[3];
   }
 
-  static inline T dot(const data_t &a, const data_t &b) {
+  inline static T dot(const data_t &a, const data_t &b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
   }
 
-  static inline void multiply(const data_t &a, const data_t &b, data_t &r) {
+  inline static void multiply(const data_t &a, const data_t &b, data_t &r) {
     r[0] = a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1];
     r[1] = a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0];
     r[2] = a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3];
@@ -289,21 +289,21 @@ class EIGEN_ALIGN16 Quaternion {
     r[3] = a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2];*/
   }
 
-  static inline void add(const data_t &a, const data_t &b, data_t &r) {
+  inline static void add(const data_t &a, const data_t &b, data_t &r) {
     r[0] = a[0] + b[0];
     r[1] = a[1] + b[1];
     r[2] = a[2] + b[2];
     r[3] = a[3] + b[3];
   }
 
-  static inline void sub(const data_t &a, const data_t &b, data_t &r) {
+  inline static void sub(const data_t &a, const data_t &b, data_t &r) {
     r[0] = a[0] - b[0];
     r[1] = a[1] - b[1];
     r[2] = a[2] - b[2];
     r[3] = a[3] - b[3];
   }
 
-  static inline void assign(const data_t &a, data_t &b) {
+  inline static void assign(const data_t &a, data_t &b) {
     b[0] = a[0];
     b[1] = a[1];
     b[2] = a[2];

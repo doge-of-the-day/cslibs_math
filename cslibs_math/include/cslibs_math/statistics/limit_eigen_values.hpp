@@ -31,7 +31,7 @@ struct LimitEigenValues {
   using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
   using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
-  static inline void apply(matrix_t &matrix_io) {
+  inline static void apply(matrix_t &matrix_io) {
     Eigen::EigenSolver<matrix_t> solver;
     solver.compute(matrix_io);
     const auto eigen_values = solver.eigenvalues().real();
@@ -54,7 +54,7 @@ struct LimitEigenValues<T, Dim, 0ul> {
   using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
   using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
-  static inline void apply(matrix_t &) {}
+  inline static void apply(matrix_t &) {}
 };
 
 template <typename T, std::size_t Dim>
@@ -63,7 +63,7 @@ struct LimitEigenValuesByZero {
   using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
   using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
-  static inline void apply(matrix_t &matrix_io) {
+  inline static void apply(matrix_t &matrix_io) {
     Eigen::EigenSolver<matrix_t> solver;
     solver.compute(matrix_io);
     const auto eigen_values = solver.eigenvalues().real();

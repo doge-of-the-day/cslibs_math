@@ -28,8 +28,8 @@ class EIGEN_ALIGN16 Uniform {
   Uniform() = delete;
   Uniform(const Uniform &other) = delete;
 
-  Uniform(const sample_t &min, const sample_t &max, const unsigned int seed = 0)
-      : rng_(min, max, seed) {}
+  inline explicit Uniform(const sample_t &min, const sample_t &max, const unsigned int seed = 0)
+      : rng_{min, max, seed} {}
 
   inline sample_t get() {
     sample_t sample = rng_.get();

@@ -35,7 +35,7 @@ endif()
 
 find_package(tf QUIET)
 if(${tf_FOUND})
-    cslibs_math_2d_add_unit_test_gtest(transform
+    cslibs_math_2d_add_unit_test_gtest(test_transform
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
             ${tf_INCLUDE_DIRS}
@@ -44,7 +44,7 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
-    cslibs_math_2d_add_unit_test_gtest(vector
+    cslibs_math_2d_add_unit_test_gtest(test_vector
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
             ${tf_INCLUDE_DIRS}
@@ -54,7 +54,7 @@ if(${tf_FOUND})
             ${TARGET_COMPILE_OPTIONS}
     )
 
-    cslibs_math_2d_add_benchmark(benchmark_vector_2d
+    cslibs_math_2d_add_benchmark(benchmark_vector
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
             ${tf_INCLUDE_DIRS}
@@ -64,7 +64,7 @@ if(${tf_FOUND})
             ${TARGET_COMPILE_OPTIONS}
     )
 
-    cslibs_math_2d_add_benchmark(benchmark_transform_2d
+    cslibs_math_2d_add_benchmark(benchmark_transform
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
         ${tf_INCLUDE_DIRS}
@@ -76,7 +76,7 @@ if(${tf_FOUND})
 
 endif()
 
-cslibs_math_2d_add_unit_test_gtest(ray_tracing
+cslibs_math_2d_add_unit_test_gtest(test_ray_tracing
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -85,7 +85,7 @@ cslibs_math_2d_add_unit_test_gtest(ray_tracing
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_2d_add_unit_test_gtest(ellipse
+cslibs_math_2d_add_unit_test_gtest(test_ellipse
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -94,7 +94,7 @@ cslibs_math_2d_add_unit_test_gtest(ellipse
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_2d_add_unit_test_gtest(box
+cslibs_math_2d_add_unit_test_gtest(test_box
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES

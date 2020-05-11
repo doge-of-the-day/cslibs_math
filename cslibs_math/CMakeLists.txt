@@ -45,7 +45,7 @@ if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
 endif()
 
 
-cslibs_math_add_unit_test_gtest(mod
+cslibs_math_add_unit_test_gtest(test_mod
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -54,7 +54,7 @@ cslibs_math_add_unit_test_gtest(mod
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(div
+cslibs_math_add_unit_test_gtest(test_div
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -63,7 +63,7 @@ cslibs_math_add_unit_test_gtest(div
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(array
+cslibs_math_add_unit_test_gtest(test_array
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -72,7 +72,7 @@ cslibs_math_add_unit_test_gtest(array
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(random
+cslibs_math_add_unit_test_gtest(test_random
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -81,7 +81,7 @@ cslibs_math_add_unit_test_gtest(random
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(sqrt
+cslibs_math_add_unit_test_gtest(test_sqrt
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -90,7 +90,7 @@ cslibs_math_add_unit_test_gtest(sqrt
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(distribution_serialization
+cslibs_math_add_unit_test_gtest(test_distribution_serialization
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
@@ -101,7 +101,7 @@ cslibs_math_add_unit_test_gtest(distribution_serialization
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_ros(distribution
+cslibs_math_add_unit_test_ros(test_distribution
     LAUNCH_FILE
         test/test_distribution.test
     INCLUDE_DIRS
@@ -116,7 +116,7 @@ cslibs_math_add_unit_test_ros(distribution
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_ros(distribution_float
+cslibs_math_add_unit_test_ros(test_distribution_float
     LAUNCH_FILE
         test/test_distribution_float.test
     INCLUDE_DIRS

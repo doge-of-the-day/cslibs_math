@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#include <cslibs_math/common/sqrt.hpp>
+#include <cslibs_math/approx/sqrt.hpp>
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigen>
@@ -28,7 +28,7 @@ class EIGEN_ALIGN16 WeightedDistribution {
   using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
   using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
-  static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
+  static constexpr T sqrt_2_M_PI = cslibs_math::approx::sqrt(2.0 * M_PI);
 
   WeightedDistribution() = default;
 
@@ -308,7 +308,7 @@ class WeightedDistribution<T, 1, lambda_ratio_exponent> {
   using Ptr =
       std::shared_ptr<WeightedDistribution<T, 1, lambda_ratio_exponent>>;
 
-  static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
+  static constexpr T sqrt_2_M_PI = cslibs_math::approx::sqrt(2.0 * M_PI);
 
   inline WeightedDistribution() = default;
 

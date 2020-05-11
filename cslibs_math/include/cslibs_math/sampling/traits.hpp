@@ -16,14 +16,14 @@ struct Radian {
    * @brief Check if this semantic type needs normalization.
    * @return
    */
-  static inline bool requiresNormalization() { return true; }
+  inline static bool requiresNormalization() { return true; }
 
   /**
    * @brief Apply semantic specific normalization.
    * @param rad - radian value
    */
   template <typename T>
-  static inline void normalize(T &rad) {
+  inline static void normalize(T &rad) {
     rad = cslibs_math::common::angle::normalize(rad);
   }
 };
@@ -37,13 +37,13 @@ struct Metric {
    * @brief Check if this semantic type needs normalization.
    * @return
    */
-  static inline bool requiresNormalization() { return false; }
+  inline static bool requiresNormalization() { return false; }
 
   /**
    * @brief The normalization in this case is the identity.
    */
   template <typename T>
-  static inline void normalize(T &) {}
+  inline static void normalize(T &) {}
 };
 
 /**

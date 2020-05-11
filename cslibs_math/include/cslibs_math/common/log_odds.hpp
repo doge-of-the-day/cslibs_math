@@ -10,9 +10,9 @@ namespace common {
 
 template <typename T>
 struct LogOdds {
-  static inline T to(const T p) { return std::log(p / (1.0 - p)); }
+  inline static T to(const T p) { return std::log(p / (1.0 - p)); }
 
-  static inline T from(const T l) { return 1.0 / (1.0 + std::exp(-l)); }
+  inline static T from(const T l) { return 1.0 / (1.0 + std::exp(-l)); }
 };
 
 }  // namespace common

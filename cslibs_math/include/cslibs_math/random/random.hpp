@@ -22,9 +22,9 @@ class RandomGenerator {
   typedef std::shared_ptr<RandomGenerator> Ptr;
 
  protected:
-  RandomGenerator() : random_device_(), random_engine_(random_device_()) {}
+  RandomGenerator() : random_engine_{random_device_()} {}
 
-  RandomGenerator(const unsigned int seed) : random_engine_(seed) {}
+  RandomGenerator(const unsigned int seed) : random_engine_{seed} {}
 
   RandomGenerator(const RandomGenerator &other) = delete;
 
@@ -51,7 +51,7 @@ class EIGEN_ALIGN16 Uniform : public RandomGenerator<Generator> {
   Uniform(const sample_t &min, const sample_t &max) { set(min, max); }
 
   Uniform(const sample_t &min, const sample_t &max, const unsigned int seed)
-      : RandomGenerator<Generator>(seed) {
+      : RandomGenerator<Generator>{seed} {
     set(min, max);
   }
 
@@ -98,7 +98,7 @@ class EIGEN_ALIGN16 Uniform<T, 1, Generator>
   Uniform(const T min, const T max) { set(min, max); }
 
   Uniform(const T min, const T max, const unsigned int seed)
-      : RandomGenerator<Generator>(seed) {
+      : RandomGenerator<Generator>{seed} {
     set(min, max);
   }
 
@@ -140,13 +140,13 @@ class EIGEN_ALIGN16 Normal : public RandomGenerator<Generator> {
 
   Normal() = delete;
 
-  Normal(const sample_t &mean, const matrix_t &covariance) {
+  inline explicit Normal(const sample_t &mean, const matrix_t &covariance) {
     set(mean, covariance);
   }
 
-  Normal(const sample_t &mean, const matrix_t &covariance,
-         const unsigned int seed)
-      : RandomGenerator<Generator>(seed) {
+  inline explicit Normal(const sample_t &mean, const matrix_t &covariance,
+                         const unsigned int seed)
+      : RandomGenerator<Generator>{seed} {
     set(mean, covariance);
   }
 
@@ -199,10 +199,10 @@ class EIGEN_ALIGN16 Normal<T, 1, Generator>
 
   Normal() = delete;
 
-  Normal(const T mean, const T _sigma) { set(mean, _sigma); }
+  inline explicit Normal(const T mean, const T _sigma) { set(mean, _sigma); }
 
-  Normal(const T mean, const T _sigma, const unsigned int seed)
-      : RandomGenerator<Generator>(seed) {
+  inline explicit Normal(const T mean, const T _sigma, const unsigned int seed)
+      : RandomGenerator<Generator>{seed} {
     set(mean, _sigma);
   }
 

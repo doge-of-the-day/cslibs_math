@@ -3,7 +3,7 @@
 
 #include <assert.h>
 
-#include <cslibs_math/common/sqrt.hpp>
+#include <cslibs_math/approx/sqrt.hpp>
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigen>
@@ -30,7 +30,7 @@ class EIGEN_ALIGN16 StableDistribution {
 
   /// @attention this may cause problems with debug compiles
   static constexpr T sqrt_2_M_PI =
-      static_cast<T>(cslibs_math::common::sqrt(2.0 * M_PI));
+      static_cast<T>(cslibs_math::approx::sqrt(2.0 * M_PI));
 
   inline StableDistribution() = default;
 
@@ -214,12 +214,12 @@ class EIGEN_ALIGN16 StableDistribution<T, 1, lambda_ratio_exponent> {
       Eigen::aligned_allocator<StableDistribution<T, 1, lambda_ratio_exponent>>;
   using Ptr = std::shared_ptr<StableDistribution<T, 1, lambda_ratio_exponent>>;
 
-  static constexpr T sqrt_2_M_PI = cslibs_math::common::sqrt(2.0 * M_PI);
+  static constexpr T sqrt_2_M_PI = cslibs_math::approx::sqrt(2.0 * M_PI);
 
   inline StableDistribution() = default;
 
   inline StableDistribution(std::size_t n, T mean, T scatter)
-      : mean_(mean), scatter_(scatter), n_(n), dirty_(true) {}
+      : mean_{mean}, scatter_{scatter}, n_{n}, dirty_{true} {}
 
   inline StableDistribution(const StableDistribution &other) = default;
   inline StableDistribution(StableDistribution &&other) = default;

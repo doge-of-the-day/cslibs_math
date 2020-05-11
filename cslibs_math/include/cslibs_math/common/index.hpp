@@ -69,7 +69,7 @@ struct Index : public std::array<int, _Nm> {
    * @param b - second index
    * @return the maximum
    */
-  static inline Index max(const Index &a, const Index &b) {
+  inline static Index max(const Index &a, const Index &b) {
     Index r;
     for (std::size_t __n = 0; __n < _Nm; ++__n) {
       base_t::_AT_Type::_S_ref(r._M_elems, __n) =
@@ -85,7 +85,7 @@ struct Index : public std::array<int, _Nm> {
    * @param b - second index
    * @return the minimum
    */
-  static inline Index min(const Index &a, const Index &b) {
+  inline static Index min(const Index &a, const Index &b) {
     Index r;
     for (std::size_t __n = 0; __n < _Nm; ++__n) {
       base_t::_AT_Type::_S_ref(r._M_elems, __n) =

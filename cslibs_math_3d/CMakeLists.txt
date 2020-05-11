@@ -60,7 +60,7 @@ if(${tf_FOUND})
             ${TARGET_COMPILE_OPTIONS}
     )
 
-    cslibs_math_3d_add_benchmark(benchmark_vector_3d
+    cslibs_math_3d_add_benchmark(benchmark_vector
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
             ${tf_INCLUDE_DIRS}
@@ -70,7 +70,7 @@ if(${tf_FOUND})
             ${TARGET_COMPILE_OPTIONS}
     )
 
-    cslibs_math_3d_add_benchmark(benchmark_transform_3d
+    cslibs_math_3d_add_benchmark(benchmark_transform
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
             ${tf_INCLUDE_DIRS}

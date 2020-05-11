@@ -4,7 +4,7 @@
 #include <limits>
 
 namespace cslibs_math {
-namespace common {
+namespace approx {
 template <typename T>
 constexpr T sqrtNewtonRaphson(T x, T curr, T prev) {
   return curr == prev ? curr

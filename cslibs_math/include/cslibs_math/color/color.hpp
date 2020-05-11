@@ -10,7 +10,7 @@ namespace color {
 template <typename T>
 struct Color {
   inline Color() = default;
-  inline Color(T _r, T _g, T _b) : r{_r}, g{_g}, b{_b} {}
+  inline Color(const T _r, const T _g, const T _b) : r{_r}, g{_g}, b{_b} {}
 
   inline Color(const Color& other) = default;
   inline Color(Color&& other) = default;

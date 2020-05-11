@@ -26,10 +26,10 @@ class EIGEN_ALIGN16 Normal {
   Normal() = delete;
   Normal(const Normal &other) = delete;
 
-  Normal(const typename rng_t::sample_t &pose,
-         const typename rng_t::matrix_t &covariance,
-         const unsigned int seed = 0)
-      : rng_(pose, covariance, seed) {}
+  inline explicit Normal(const typename rng_t::sample_t &pose,
+                         const typename rng_t::matrix_t &covariance,
+                         const unsigned int seed = 0)
+      : rng_{pose, covariance, seed} {}
 
   inline typename rng_t::sample_t get() {
     typename rng_t::sample_t sample = rng_.get();

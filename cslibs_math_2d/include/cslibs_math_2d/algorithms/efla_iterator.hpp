@@ -10,7 +10,7 @@ namespace algorithms {
 template <typename Tp = float>
 class EIGEN_ALIGN16 EFLAIterator
 {
-public:    
+public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     using Ptr           = std::shared_ptr<EFLAIterator<Tp>>;
 
@@ -29,9 +29,9 @@ public:
 
     inline explicit EFLAIterator(const index_t &start,
                                  const index_t &end) :
-        start_(start),
-        end_(end),
-        steep_(std::abs(end[1] - start[1]) > std::abs(end[0] - start[0]))
+        start_{start},
+        end_{end},
+        steep_{std::abs(end[1] - start[1]) > std::abs(end[0] - start[0])}
     {
         if (steep_) {
             std::swap(start_[0], start_[1]);

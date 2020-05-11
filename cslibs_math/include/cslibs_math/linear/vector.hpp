@@ -146,7 +146,7 @@ class EIGEN_ALIGN16 Vector {
     return arr;
   }
 
-  static inline Vector inf() {
+  inline static Vector inf() {
     return Vector(std::numeric_limits<T>::infinity());
   }
 
