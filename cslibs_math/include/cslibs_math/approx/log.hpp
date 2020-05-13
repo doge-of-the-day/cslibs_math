@@ -5,9 +5,14 @@
 
 namespace cslibs_math {
 namespace approx {
-double log2_fast(double d) {
+inline double log2(const double d) {
      int exponent;
      double fraction = std::frexp(d, &exponent);
+     return (exponent-1) + 2.3 * (fraction - 0.5);
+}
+inline float log2(const float f) {
+     int exponent;
+     float fraction = std::frexpf(f, &exponent);
      return (exponent-1) + 2.3 * (fraction - 0.5);
 }
 }  // namespace common

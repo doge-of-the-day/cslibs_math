@@ -17,28 +17,30 @@ function(${PROJECT_NAME}_add_benchmark)
     )
 
     set(bench_NAME ${ARGV0})
-    find_package(benchmark REQUIRED)
-    find_package(Boost REQUIRED COMPONENTS system)
+    find_package(benchmark QUIET)
+    if(${benchmark_FOUND})
+	    find_package(Boost REQUIRED COMPONENTS system)
 
-    add_executable(${bench_NAME}
-        ${bench_SOURCE_FILES}
-    )
+	    add_executable(${bench_NAME}
+	        ${bench_SOURCE_FILES}
+	    )
 
-    target_include_directories(${bench_NAME}
-        PRIVATE
-            ${bench_INCLUDE_DIRS}
-            ${benchmark_INCLUDE_DIRS}
-    )
+	    target_include_directories(${bench_NAME}
+	        PRIVATE
+	            ${bench_INCLUDE_DIRS}
+	            ${benchmark_INCLUDE_DIRS}
+	    )
 
-    target_link_libraries(${bench_NAME}
-        PRIVATE
-            ${bench_LINK_LIBRARIES}
-            ${Boost_LIBRARIES}
-             benchmark::benchmark
-            -pthread
-    )
-    target_compile_options(${bench_NAME}
-        PRIVATE
-            ${bench_COMPILE_OPTIONS}
-    )
+	    target_link_libraries(${bench_NAME}
+	        PRIVATE
+	            ${bench_LINK_LIBRARIES}
+	            ${Boost_LIBRARIES}
+	             benchmark::benchmark
+	            -pthread
+	    )
+	    target_compile_options(${bench_NAME}
+	        PRIVATE
+	            ${bench_COMPILE_OPTIONS}
+	    )
+	endif()
 endfunction()
