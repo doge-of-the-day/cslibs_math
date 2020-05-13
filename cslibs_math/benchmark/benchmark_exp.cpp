@@ -33,6 +33,20 @@ static void std_exp2(benchmark::State& state) {
   }
 }
 
+static void std_exp10(benchmark::State& state) {
+  cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
+  for (auto _ : state) {
+    const auto x = rng.get();
+    auto start = cslibs_math::utility::tiny_time::clock_t::now();
+    benchmark::DoNotOptimize(std::exp10(x));
+    auto elapsed_seconds =
+        std::chrono::duration_cast<std::chrono::duration<double>>(
+            cslibs_math::utility::tiny_time::clock_t::now() - start);
+
+    state.SetIterationTime(elapsed_seconds.count());
+  }
+}
+
 
 static void c_exp(benchmark::State& state) {
   cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
@@ -165,6 +179,7 @@ static void c_log(benchmark::State& state) {
 
 BENCHMARK(std_exp);
 BENCHMARK(std_exp2);
+BENCHMARK(std_exp10);
 BENCHMARK(approx_exp_8);
 BENCHMARK(approx_exp_10);
 BENCHMARK(approx_exp_20);
