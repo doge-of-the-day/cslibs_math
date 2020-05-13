@@ -12,7 +12,7 @@ inline double log2(const double d) {
 }
 inline float log2(const float f) {
      int exponent;
-     float fraction = std::frexpf(f, &exponent);
+     float fraction = std::frexp(f, &exponent);
      return (exponent-1) + 2.3 * (fraction - 0.5);
 }
 }  // namespace common
