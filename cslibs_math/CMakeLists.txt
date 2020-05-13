@@ -111,46 +111,62 @@ cslibs_math_add_unit_test_gtest(test_sqrt
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(test_distribution_serialization
+cslibs_math_add_unit_test_gtest(test_fractional
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
-        test/test_distribution_serialization.cpp
-    LINK_LIBRARIES
-        yaml-cpp
+        test/test_fractional.cpp
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_ros(test_distribution
-    LAUNCH_FILE
-        test/test_distribution.test
-    INCLUDE_DIRS
-        ${TARGET_INCLUDE_DIRS}
-    SOURCE_FILES
-        test/test_node_distribution.cpp
-    LINK_LIBRARIES
-        yaml-cpp
-        ${Boost_LIBRARIES}
-        ${catkin_LIBRARIES}
-    COMPILE_OPTIONS
-        ${TARGET_COMPILE_OPTIONS}
-)
+find_package(yaml-cpp QUIET)
+if(${YAML_CPP_FOUND})
+    cslibs_math_add_unit_test_gtest(test_distribution_serialization
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+            ${YAML_CPP_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/test_distribution_serialization.cpp
+        LINK_LIBRARIES
+            yaml-cpp
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
+    )
 
-cslibs_math_add_unit_test_ros(test_distribution_float
-    LAUNCH_FILE
-        test/test_distribution_float.test
-    INCLUDE_DIRS
-        ${TARGET_INCLUDE_DIRS}
-    SOURCE_FILES
-        test/test_node_distribution_float.cpp
-    LINK_LIBRARIES
-        yaml-cpp
-        ${Boost_LIBRARIES}
-        ${catkin_LIBRARIES}
-    COMPILE_OPTIONS
-        ${TARGET_COMPILE_OPTIONS}
-)
+
+    cslibs_math_add_unit_test_ros(test_distribution
+        LAUNCH_FILE
+            test/test_distribution.test
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+            ${YAML_CPP_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/test_node_distribution.cpp
+        LINK_LIBRARIES
+            yaml-cpp
+            ${Boost_LIBRARIES}
+            ${catkin_LIBRARIES}
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
+    )
+
+    cslibs_math_add_unit_test_ros(test_distribution_float
+        LAUNCH_FILE
+            test/test_distribution_float.test
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+            ${YAML_CPP_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/test_node_distribution_float.cpp
+        LINK_LIBRARIES
+            yaml-cpp
+            ${Boost_LIBRARIES}
+            ${catkin_LIBRARIES}
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
+    )
+endif()
 
 
 cslibs_math_add_benchmark(benchmark_exp
