@@ -2,7 +2,6 @@
 
 #include <cslibs_math/random/random.hpp>
 #include <cslibs_math/approx/exp.hpp>
-#include <cslibs_math/approx/log.hpp>
 #include <cslibs_math/external/fastmath.hpp>
 #include <cslibs_math/utility/tiny_time.hpp>
 
@@ -191,20 +190,6 @@ static void std_log2(benchmark::State& state) {
   }
 }
 
-static void approx_log2(benchmark::State& state) {
-  cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
-  for (auto _ : state) {
-    const auto x = rng.get();
-    auto start = cslibs_math::utility::tiny_time::clock_t::now();
-    benchmark::DoNotOptimize(cslibs_math::approx::log2(x));
-    auto elapsed_seconds =
-        std::chrono::duration_cast<std::chrono::duration<double>>(
-            cslibs_math::utility::tiny_time::clock_t::now() - start);
-
-    state.SetIterationTime(elapsed_seconds.count());
-  }
-}
-
 static void c_log(benchmark::State& state) {
   cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
   for (auto _ : state) {
@@ -247,7 +232,6 @@ BENCHMARK(approx_exp_40);
 
 BENCHMARK(std_log);
 BENCHMARK(std_log2);
-BENCHMARK(approx_log2);
 BENCHMARK(c_log);
 BENCHMARK(fmath_logf);
 

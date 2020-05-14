@@ -44,10 +44,6 @@ if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
     message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
 endif()
 
-add_executable(write_fraction_exponent_log2 
-    benchmark/write_fraction_exponent_log2.cpp
-)
-
 cslibs_math_add_unit_test_gtest(test_mod
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
