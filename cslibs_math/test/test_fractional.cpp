@@ -53,6 +53,19 @@ TEST(Test_cslibs_math, testMult) {
   }
 }
 
+TEST(Test_cslibs_math, testDiv) {
+  rng_t rng(0.0, 100.0);
+  for (std::size_t i = 0; i < REPETITIONS; ++i) {
+    const auto a = rng.get();
+    const auto b = rng.get();
+  	Fractionald fra(a);
+  	Fractionald frb(b);
+  	const auto f = fra / frb;
+
+	EXPECT_EQ(a / b, f.value());
+  }
+}
+
 TEST(Test_cslibs_math, testAdd) {
   rng_t rng(0.0, 100.0);
   for (std::size_t i = 0; i < REPETITIONS; ++i) {
@@ -66,6 +79,18 @@ TEST(Test_cslibs_math, testAdd) {
   }
 }
 
+TEST(Test_cslibs_math, testSub) {
+  rng_t rng(0.0, 100.0);
+  for (std::size_t i = 0; i < REPETITIONS; ++i) {
+    const auto a = rng.get();
+    const auto b = rng.get();
+  	Fractionald fra(a);
+  	Fractionald frb(b);
+  	const auto f = fra - frb;
+
+	EXPECT_EQ(a - b, f.value());
+  }
+}
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);

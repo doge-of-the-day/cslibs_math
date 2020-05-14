@@ -165,6 +165,16 @@ cslibs_math_add_benchmark(benchmark_exp
         ${TARGET_COMPILE_OPTIONS}
 )
 
+
+cslibs_math_add_benchmark(benchmark_fractional
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        benchmark/benchmark_fractional.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 cslibs_math_add_benchmark(benchmark_angles
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
