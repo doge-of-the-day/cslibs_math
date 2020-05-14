@@ -25,16 +25,25 @@ static void fractional_constructor_default(benchmark::State& state) {
 }
 
 const auto SAMPLES = 100000;
+const auto SAMPLING_ITERATIONS = 30;
 
 static void applicationFractional(benchmark::State& state) {
   auto task = [&state]() {
     cslibs_math::random::Uniform<double, 1> rng(0.0, 1.0);
     cslibs_math::utility::tiny_time::duration_t elapsed;
 
+    const auto sample = [&rng]() {
+      Fractionald s(1.0);
+      for(auto i = 0 ; i < SAMPLING_ITERATIONS ; ++i){
+        s = s * Fractionald(rng.get());
+      }
+      return s;
+    };
+
     Fractionald sum;
     std::vector<Fractionald> samples;
     for (auto i = 0; i < SAMPLES; ++i) {
-      const auto x = rng.get();
+      const auto x = sample();
       auto start = cslibs_math::utility::tiny_time::clock_t::now();
       auto& sample = samples.emplace_back(Fractionald(x));
       sum = sum + sample;
@@ -76,10 +85,18 @@ static void applicationLog(benchmark::State& state) {
       return x + std::log1p(std::exp(y - x));
     };
 
+    const auto sample = [&rng]() {
+      auto s(1.0);
+      for(auto i = 0 ; i < SAMPLING_ITERATIONS ; ++i){
+        s += std::log(rng.get());
+      }
+      return s;
+    };
+
     double sum{0};
     std::vector<double> samples;
     for (auto i = 0; i < SAMPLES; ++i) {
-      const auto x = rng.get();
+      const auto x = sample();
       auto start = cslibs_math::utility::tiny_time::clock_t::now();
       auto& sample = samples.emplace_back(std::log(x));
       sum = add(sum, sample);
@@ -115,10 +132,18 @@ static void applicationDefault(benchmark::State& state) {
     cslibs_math::random::Uniform<double, 1> rng(0.0, 1.0);
     cslibs_math::utility::tiny_time::duration_t elapsed;
 
+    const auto sample = [&rng]() {
+      auto s(1.0);
+      for(auto i = 0 ; i < SAMPLING_ITERATIONS ; ++i){
+        s *= rng.get();
+      }
+      return s;
+    };
+
     double sum{0};
     std::vector<double> samples;
     for (auto i = 0; i < SAMPLES; ++i) {
-      const auto x = rng.get();
+      const auto x = sample();
       auto start = cslibs_math::utility::tiny_time::clock_t::now();
       auto& sample = samples.emplace_back(x);
       sum += sample;
