@@ -25,7 +25,7 @@ static void fractional_constructor_default(benchmark::State& state) {
 }
 
 const auto SAMPLES = 100000;
-const auto SAMPLING_ITERATIONS = 30;
+const auto SAMPLING_ITERATIONS = 60;
 
 static void applicationFractional(benchmark::State& state) {
   auto task = [&state]() {
