@@ -73,9 +73,8 @@ public:
             error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDx;
-            //(this->*iterate_)();
-
-            iteration_ = (std::abs(end[0] - index_[0]) - 2) >> 1;
+            (this->*iterate_)();
+            iteration_ = (std::abs(end[0] - index_[0]) - 1) >> 1;
 /*
             if (index_[0] < end[0])
                 --max_[0];
@@ -98,8 +97,8 @@ public:
             error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDy;
-            //(this->*iterate_)();
-            iteration_ = (std::abs(end[1] - index_[1]) - 2) >> 1;
+            (this->*iterate_)();
+            iteration_ = (std::abs(end[1] - index_[1]) - 1) >> 1;
 /*
             if (index_[1] < end[1])
                 --max_[1];
@@ -122,8 +121,8 @@ public:
             error_[1] += (step_[1] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDz;
-            //(this->*iterate_)();
-            iteration_ = (std::abs(end[2] - index_[2]) - 2) >> 1;
+            (this->*iterate_)();
+            iteration_ = (std::abs(end[2] - index_[2]) - 1) >> 1;
 /*
             if (index_[2] < end[2])
                 --max_[2];
@@ -192,11 +191,11 @@ private:
         error_[0] += error_inc_[0];
         error_[1] += error_inc_[1];
         index_[0] += step_[0];
-        while (error_[0] > 0) {
+        if (error_[0] > 0) {
             index_[1] += step_[1];
             --error_[0];
         }
-        while (error_[1] > 0) {
+        if (error_[1] > 0) {
             index_[2] += step_[2];
             --error_[1];
         }
@@ -209,11 +208,11 @@ private:
         error_[0] += error_inc_[0];
         error_[1] += error_inc_[1];
         index_[1] += step_[1];
-        while (error_[0] > 0) {
+        if (error_[0] > 0) {
             index_[0] += step_[0];
             --error_[0];
         }
-        while (error_[1] > 0) {
+        if (error_[1] > 0) {
             index_[2] += step_[2];
             --error_[1];
         }
