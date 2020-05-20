@@ -191,11 +191,11 @@ private:
         error_[0] += error_inc_[0];
         error_[1] += error_inc_[1];
         index_[0] += step_[0];
-        if (error_[0] > 0) {
+        while (error_[0] > 0) {
             index_[1] += step_[1];
             --error_[0];
         }
-        if (error_[1] > 0) {
+        while (error_[1] > 0) {
             index_[2] += step_[2];
             --error_[1];
         }
@@ -208,11 +208,11 @@ private:
         error_[0] += error_inc_[0];
         error_[1] += error_inc_[1];
         index_[1] += step_[1];
-        if (error_[0] > 0) {
+        while (error_[0] > 0) {
             index_[0] += step_[0];
             --error_[0];
         }
-        if (error_[1] > 0) {
+        while (error_[1] > 0) {
             index_[2] += step_[2];
             --error_[1];
         }

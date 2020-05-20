@@ -149,7 +149,7 @@ private:
     {
         error_    += error_inc_;
         index_[0] += step_[0];
-        if (error_ > 0) {
+        while (error_ > 0) {
             index_[1] += step_[1];
             --error_;
         }
@@ -161,7 +161,7 @@ private:
     {
         error_    += error_inc_;
         index_[1] += step_[1];
-        if (error_ > 0) {
+        while (error_ > 0) {
             index_[0] += step_[0];
             --error_;
         }
