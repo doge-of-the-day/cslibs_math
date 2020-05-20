@@ -226,17 +226,31 @@ public:
     inline covariance_t getCovariance() const
     {
         auto update_return_covariance = [this](){
-            update(); return information_matrix_.inverse();
+            update(); return (sample_count_ > 1 ?
+                                  covariance_t(scatter_ / static_cast<T>(W_ - W_sq_ / W_)) :
+                                  covariance_t::Zero());
+                    //information_matrix_.inverse();
         };
-        return (dirty() && valid()) ? update_return_covariance() : information_matrix_.inverse();
+        return (dirty() && valid()) ? update_return_covariance() :
+                                      (sample_count_ > 1 ?
+                                           covariance_t(scatter_ / static_cast<T>(W_ - W_sq_ / W_)) :
+                                           covariance_t::Zero());
+                                      //information_matrix_.inverse();
     }
 
     inline void getCovariance(covariance_t &covariance) const
     {
         auto update_return_covariance = [this](){
-            update(); return covariance_t(information_matrix_.inverse());
+            update(); return (sample_count_ > 1 ?
+                                  covariance_t(scatter_ / static_cast<T>(W_ - W_sq_ / W_)) :
+                                  covariance_t::Zero());
+                    //information_matrix_.inverse();
         };
-        covariance = (dirty() && valid()) ? update_return_covariance() : covariance_t(information_matrix_.inverse());
+        covariance = (dirty() && valid()) ? update_return_covariance() :
+                                            (sample_count_ > 1 ?
+                                                 covariance_t(scatter_ / static_cast<T>(W_ - W_sq_ / W_)) :
+                                                 covariance_t::Zero());
+                                      //information_matrix_.inverse();
     }
 
     inline covariance_t getInformationMatrix() const
@@ -264,7 +278,7 @@ public:
                 update();
 
             Eigen::EigenSolver<covariance_t> solver;
-            solver.compute(information_matrix_.inverse());
+            solver.compute(information_matrix_.inverse().eval());
             eigen_vectors = solver.eigenvectors().real();
             eigen_values  = abs ? eigen_values_t(solver.eigenvalues().real().cwiseAbs()) : solver.eigenvalues().real();
             return true;
@@ -407,7 +421,7 @@ private:
 
         //LimitEigenValues<T, Dim, lambda_ratio_exponent>::apply(covariance_);
 
-        information_matrix_ = /*covariance_*/information_matrix_.inverse();
+        information_matrix_ = /*covariance_*/information_matrix_.inverse().eval();
 //        determinant_        = covariance_.determinant();
 
 //        dirty_              = false;
