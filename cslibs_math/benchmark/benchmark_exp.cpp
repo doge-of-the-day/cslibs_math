@@ -134,6 +134,7 @@ static void approx_exp_10(benchmark::State& state) {
 
 
 static void approx_exp_20(benchmark::State& state) {
+#if !defined(__INTEL_COMPILER) // this does not work with intel
   cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
   for (auto _ : state) {
     const auto x = rng.get();
@@ -145,9 +146,11 @@ static void approx_exp_20(benchmark::State& state) {
 
     state.SetIterationTime(elapsed_seconds.count());
   }
+#endif
 }
 
 static void approx_exp_40(benchmark::State& state) {
+#if !defined(__INTEL_COMPILER) // this does not work with intel
   cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
   for (auto _ : state) {
     const auto x = rng.get();
@@ -159,6 +162,7 @@ static void approx_exp_40(benchmark::State& state) {
 
     state.SetIterationTime(elapsed_seconds.count());
   }
+#endif
 }
 
 
