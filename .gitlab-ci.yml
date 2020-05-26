@@ -7,7 +7,8 @@ before_script:
                          libeigen3-dev
                          python-catkin-tools
                          libtinyxml-dev
-                         libbenchmark-dev
+                         sudo -y'
+  - 'apt-get -qq install libbenchmark-dev
                          sudo -y'
 
   # Run ssh-agent (inside the build environment)
