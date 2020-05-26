@@ -71,10 +71,20 @@ class Log {
     return l;
   }
 
+  inline Log& operator *= (const Log log) {
+      value_ += log.value_;
+      return *this;
+  }
+
   inline Log operator/(const Log log) const {
     Log l;
     l.value_ = value_ - log.value_;
     return l;
+  }
+
+    inline Log& operator/=(const Log log) {
+    value_ -= log.value_;
+    return *this;
   }
 
   inline Log operator+(const Log log) const {
@@ -83,10 +93,24 @@ class Log {
     return l;
   }
 
+  inline Log& operator+=(const Log log) {
+    value_ += Base_T::log1p(Base_T::exp(log.value_ - value_));
+    return *this;
+  }
+
   inline Log operator-(const Log log) const {
     Log l;
     l.value_ = value_ + Base_T::log1m(Base_T::exp(log.value_ - value_));
     return l;
+  }
+
+  inline Log operator-=(const Log log) {
+    value_ += Base_T::log1m(Base_T::exp(log.value_ - value_));
+    return *this;
+  }
+
+  inline bool valid() const{
+      return !std::isinf(value_);
   }
 
   inline T value() const { return value(); }
