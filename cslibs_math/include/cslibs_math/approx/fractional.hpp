@@ -14,7 +14,7 @@ class Fractional {
   static_assert(std::is_floating_point<T>::value,
                 "Type must be floating point.");
 
-  Fractional() = default;
+  inline Fractional() = default;
   explicit Fractional(const T value)
       : fraction_{std::frexp(value, &exponent_)} {}
   explicit Fractional(const T fraction, const int exponent)

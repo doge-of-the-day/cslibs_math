@@ -107,6 +107,15 @@ cslibs_math_add_unit_test_gtest(test_fractional
         ${TARGET_COMPILE_OPTIONS}
 )
 
+cslibs_math_add_unit_test_gtest(test_log
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+        test/test_log.cpp
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 find_package(yaml-cpp QUIET)
 if(${YAML_CPP_FOUND})
     cslibs_math_add_unit_test_gtest(test_distribution_serialization

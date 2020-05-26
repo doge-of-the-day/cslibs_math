@@ -4,6 +4,7 @@
 
 #include <cslibs_math/common/equal.hpp>
 #include <cslibs_math/approx/fractional.hpp>
+#include <cslibs_math/approx/log.hpp>
 #include <cslibs_math/random/random.hpp>
 #include <cslibs_math/utility/tiny_time.hpp>
 #include <iomanip>
