@@ -121,12 +121,12 @@ class EIGEN_ALIGN16 Bresenham {
   }
   inline bool doneDz() const { return iteration_ >= delta_abs_[2]; }
 
-  index_t index_{0, 0, 0};
-  index_t end_{0, 0, 0};
-  index_t step_{0, 0, 0};
-  index_t delta_{0, 0, 0};
-  index_t delta_abs_{0, 0, 0};
-  index_t delta_abs_times_2_{0, 0, 0};
+  index_t index_{{0,0,0}};
+  index_t end_{{0,0,0}};
+  index_t step_{{0,0,0}};
+  index_t delta_{{0,0,0}};
+  index_t delta_abs_{{0,0,0}};
+  index_t delta_abs_times_2_{{0,0,0}};
   error_t error_{0, 0};
   Bresenham &(Bresenham::*iterate_)();
   bool (Bresenham::*done_)() const;

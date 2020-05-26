@@ -26,7 +26,7 @@ class EIGEN_ALIGN16 Quaternion {
   }
 
   inline explicit Quaternion(const T x, const T y, const T z, const T w)
-      : data_{x, y, z, w} {}
+      : data_{{x, y, z, w}} {}
 
   inline explicit Quaternion(const T angle, const Vector3<T> &axis) {
     T sa = std::sin(0.5 * angle);
@@ -242,13 +242,13 @@ class EIGEN_ALIGN16 Quaternion {
   }
 
  private:
-  data_t data_{T{0}, T{0}, T{0}, T{1}};  // [x,y,z,w]
+  data_t data_{{T{0}, T{0}, T{0}, T{1}}};  // [x,y,z,w]
 
   inline Quaternion(const data_t &data)
-      : data_{data[0], data[1], data[2], data[3]} {}
+      : data_{{data[0], data[1], data[2], data[3]}} {}
 
   inline Quaternion(data_t &&data)
-      : data_{data[0], data[1], data[2], data[3]} {}
+      : data_{{data[0], data[1], data[2], data[3]}} {}
 
   inline static void normalize(const data_t &a, data_t &a_normalized) {
     const T n = 1.0 / std::sqrt(dot(a, a));

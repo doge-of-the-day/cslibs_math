@@ -67,8 +67,8 @@ class EIGEN_ALIGN16 Bresenham {
     return *this;
   }
 
-  index_t index_{0, 0};
-  index_t end_{0, 0};
+  index_t index_{{0, 0}};
+  index_t end_{{0, 0}};
   index_t step_;
   index_t delta_;
 
