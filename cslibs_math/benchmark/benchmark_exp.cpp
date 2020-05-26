@@ -2,7 +2,6 @@
 
 #include <cslibs_math/random/random.hpp>
 #include <cslibs_math/approx/exp.hpp>
-#include <cslibs_math/external/fastmath.hpp>
 #include <cslibs_math/utility/tiny_time.hpp>
 
 static void std_exp(benchmark::State& state) {
@@ -68,34 +67,6 @@ static void c_exp10(benchmark::State& state) {
     const auto x = rng.get();
     auto start = cslibs_math::utility::tiny_time::clock_t::now();
     benchmark::DoNotOptimize(exp10(x));
-    auto elapsed_seconds =
-        std::chrono::duration_cast<std::chrono::duration<double>>(
-            cslibs_math::utility::tiny_time::clock_t::now() - start);
-
-    state.SetIterationTime(elapsed_seconds.count());
-  }
-}
-
-static void fmath_exp(benchmark::State& state) {
-  cslibs_math::random::Uniform<double, 1> rng(-100.0, +100.0);
-  for (auto _ : state) {
-    const auto x = rng.get();
-    auto start = cslibs_math::utility::tiny_time::clock_t::now();
-    benchmark::DoNotOptimize(fmath::expd(x));
-    auto elapsed_seconds =
-        std::chrono::duration_cast<std::chrono::duration<double>>(
-            cslibs_math::utility::tiny_time::clock_t::now() - start);
-
-    state.SetIterationTime(elapsed_seconds.count());
-  }
-}
-
-static void fmath_expf(benchmark::State& state) {
-  cslibs_math::random::Uniform<float, 1> rng(-100.0f, +100.0f);
-  for (auto _ : state) {
-    const auto x = rng.get();
-    auto start = cslibs_math::utility::tiny_time::clock_t::now();
-    benchmark::DoNotOptimize(fmath::exp(x));
     auto elapsed_seconds =
         std::chrono::duration_cast<std::chrono::duration<double>>(
             cslibs_math::utility::tiny_time::clock_t::now() - start);
@@ -208,27 +179,12 @@ static void c_log(benchmark::State& state) {
   }
 }
 
-static void fmath_logf(benchmark::State& state) {
-  cslibs_math::random::Uniform<float, 1> rng(-100.0f, +100.0f);
-  for (auto _ : state) {
-    const auto x = rng.get();
-    auto start = cslibs_math::utility::tiny_time::clock_t::now();
-    benchmark::DoNotOptimize(fmath::log(x));
-    auto elapsed_seconds =
-        std::chrono::duration_cast<std::chrono::duration<double>>(
-            cslibs_math::utility::tiny_time::clock_t::now() - start);
-
-    state.SetIterationTime(elapsed_seconds.count());
-  }
-}
 
 BENCHMARK(std_exp);
 BENCHMARK(std_exp2);
 BENCHMARK(c_exp);
 BENCHMARK(c_exp2);
 BENCHMARK(c_exp10);
-BENCHMARK(fmath_exp);
-BENCHMARK(fmath_expf);
 BENCHMARK(approx_exp_8);
 BENCHMARK(approx_exp_10);
 BENCHMARK(approx_exp_20);
@@ -237,6 +193,5 @@ BENCHMARK(approx_exp_40);
 BENCHMARK(std_log);
 BENCHMARK(std_log2);
 BENCHMARK(c_log);
-BENCHMARK(fmath_logf);
 
 BENCHMARK_MAIN()
