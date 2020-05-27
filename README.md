@@ -2,7 +2,7 @@
 This library contains different math utility classes for e.g. multidimensional statistics and linear algebra. The code is open-source ([BSD License](LICENSE)) and has been tested under Ubuntu 16.04 with ROS Kinetic. Please note that this project is part of ongoing research and that there will be changes in the future.
 
 ## Structure
-This project is divided up into the following subpackages:
+This project is divided up into the following sub-packages:
 
 * [cslibs\_math](cslibs_math/):<br>
     This package contains basic mathematical utilities.
@@ -16,9 +16,11 @@ This project is divided up into the following subpackages:
 * [cslibs\_math\_ros](cslibs_math_ros/):<br>
     This package contains functionality to convert ROS data types to ``cslibs_math`` types. This involves [tf](cslibs_math_ros/include/cslibs_math_ros/tf/), [geometry\_msgs](cslibs_math_ros/include/cslibs_math_ros/geometry_msgs/) and [sensor_msgs](cslibs_math_ros/include/cslibs_math_ros/sensor_msgs/).
 
+## Preliminaries
+Officially these packages support ROS Melodic and Kinetic.
+For the latter, see to install GCC-7 since C+17 features are required.
+
 ## Usage
-
-
 
 ### Dependencies
 This library depends on the following packages of our research group:
