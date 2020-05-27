@@ -8,8 +8,6 @@ before_script:
                          python-catkin-tools
                          libtinyxml-dev
                          sudo -y'
-  - 'if [ "$(apt-cache search --names-only libbenchmark-dev)" != "" ] ; then apt-get -qq install libbenchmark-dev
-                         sudo -y ; fi'
 
   # Run ssh-agent (inside the build environment)
   - eval $(ssh-agent -s)
@@ -56,6 +54,7 @@ melodic:
   stage: build
   image: ros:melodic
   script:
+    - sudo apt-get install libbenchmark-dev
     - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
     - rosdep install -y -r -i --from-paths src
     - catkin build
