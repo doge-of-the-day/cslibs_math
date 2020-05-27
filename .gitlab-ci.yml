@@ -8,8 +8,8 @@ before_script:
                          python-catkin-tools
                          libtinyxml-dev
                          sudo -y'
-  - 'apt-get -qq install libbenchmark-dev
-                         sudo -y'
+  - $('apt-get -qq install libbenchmark-dev
+                         sudo -y')
 
   # Run ssh-agent (inside the build environment)
   - eval $(ssh-agent -s)
