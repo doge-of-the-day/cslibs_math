@@ -9,7 +9,7 @@ before_script:
                          libtinyxml-dev
                          sudo -y'
   - 'if [ "$(apt-cache search --names-only libbenchmark-dev)" != "" ] ; then apt-get -qq install libbenchmark-dev
-                         sudo -y ; fi
+                         sudo -y ; fi'
 
   # Run ssh-agent (inside the build environment)
   - eval $(ssh-agent -s)
