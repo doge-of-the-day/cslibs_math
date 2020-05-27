@@ -54,7 +54,7 @@ melodic:
   stage: build
   image: ros:melodic
   script:
-    - sudo apt-get install libbenchmark-dev
+    - sudo apt-get install libbenchmark-dev -y
     - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
     - rosdep install -y -r -i --from-paths src
     - catkin build
