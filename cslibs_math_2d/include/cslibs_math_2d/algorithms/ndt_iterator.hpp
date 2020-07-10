@@ -69,7 +69,7 @@ public:
             error_    += (step_[1] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDx;
-            //(this->*iterate_)();
+            (this->*iterate_)();
             iteration_ = (std::abs(end[0] - index_[0]) - 1) >> 1;
 
 /*            if (index_[0] < end[0])
@@ -90,7 +90,7 @@ public:
             error_    += (step_[0] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDy;
-            //(this->*iterate_)();
+            (this->*iterate_)();
             iteration_ = (std::abs(end[1] - index_[1]) - 1) >> 1;
 
 /*            if (index_[1] < end[1])
