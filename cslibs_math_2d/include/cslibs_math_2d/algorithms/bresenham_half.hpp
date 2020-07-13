@@ -52,6 +52,7 @@ public:
         step_[0]  = index_[0] < end_[0] ? 1 : -1;
         step_[1]  = index_[1] < end_[1] ? 1 : -1;
 
+        iteration_ = (std::abs(end_[0] - index_[0]) - 1);
         if (!done())
             iterate();
 
@@ -59,7 +60,7 @@ public:
         step_[1] *= 2;
         delta_[0] *= 2;
         delta_[1] *= 2;
-        iterations_ = (std::abs(end_[0] - index_[0]) - 1) >> 1;
+        iteration_ >>= 1;
     }
 
     inline virtual ~BresenhamHalf()
@@ -95,7 +96,7 @@ public:
 
     inline bool done() const
     {
-        return (iterations_ < 0);//index_[0] == end_[0] && index_[1] == end_[1];
+        return (iteration_ < 0);//index_[0] == end_[0] && index_[1] == end_[1];
     }
 
 private:
@@ -107,7 +108,7 @@ private:
             index_[1] += step_[1];
             error_    -= delta_[0];
         }
-        --iterations_;
+        --iteration_;
         return *this;
     }
 
@@ -116,7 +117,7 @@ private:
     index_t step_;
     index_t delta_;
 
-    int     iterations_;
+    int     iteration_;
     bool    steep_;
     int     error_;
 };
