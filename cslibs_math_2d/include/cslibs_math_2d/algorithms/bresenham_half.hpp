@@ -55,7 +55,7 @@ public:
         iterate();
     }
 
-    inline virtual ~Bresenham()
+    inline virtual ~BresenhamHalf()
     {
     }
 
