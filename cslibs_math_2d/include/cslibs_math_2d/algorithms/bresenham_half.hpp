@@ -52,7 +52,7 @@ public:
         step_[0]  = index_[0] < end_[0] ? 1 : -1;
         step_[1]  = index_[1] < end_[1] ? 1 : -1;
 
-        iteration_ = (std::abs(end_[0] - index_[0]));
+        iteration_ = (std::abs(end_[0] - index_[0]) -1);
         if (!done())
             iterate();
 
