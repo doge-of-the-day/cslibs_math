@@ -8,7 +8,7 @@
 
 namespace cslibs_math_2d {
 namespace algorithms {
-template <typename T> // ignore
+template <typename Tp> // ignore
 class EIGEN_ALIGN16 BresenhamHalf
 {
 public:
