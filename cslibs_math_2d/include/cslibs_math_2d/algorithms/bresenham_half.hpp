@@ -96,7 +96,7 @@ public:
 
     inline bool done() const
     {
-        return (iteration_ < 0);//index_[0] == end_[0] && index_[1] == end_[1];
+        return (iteration_ <= 0);//index_[0] == end_[0] && index_[1] == end_[1];
     }
 
 private:
