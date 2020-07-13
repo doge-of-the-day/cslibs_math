@@ -52,8 +52,8 @@ public:
         step_[0]  = index_[0] < end_[0] ? 1 : -1;
         step_[1]  = index_[1] < end_[1] ? 1 : -1;
 
-        if (!done())
-            iterate();
+        //if (!done())
+        //    iterate();
     }
 
     inline virtual ~BresenhamHalf()
@@ -77,14 +77,14 @@ public:
 
     inline BresenhamHalf& operator++()
     {
-        if (!done())
+        /*if (!done())
             iterate();
         if (!done())
             iterate();
 
         return *this;
 
-        //return done() ? *this : iterate();
+        //*/return done() ? *this : iterate();
     }
 
     inline bool done() const
