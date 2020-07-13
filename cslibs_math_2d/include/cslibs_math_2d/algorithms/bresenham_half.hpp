@@ -77,7 +77,7 @@ public:
 
     inline BresenhamHalf& operator++()
     {
-        /*if (!done())
+        if (!done())
             iterate();
         if (!done())
             iterate();

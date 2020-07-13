@@ -44,16 +44,7 @@ public:
           const T& m = std::fmod(x/resolution, T(1.));
           return (m >= T(0.) ? m : (m+T(1.)));
         };
-        /*
-        // estimate min/max
-        auto minmax = [this,end](const std::size_t &i) {
-            const auto& p = std::minmax(index_[i],end[i]);
-            min_[i] = p.first;
-            max_[i] = p.second;
-        };
-        for (std::size_t i=0; i<3; ++i)
-            minmax(i);
-*/
+
         // Bresenham delta and steps
         step_      = std::compare(index_, end);
         const T dx = std::fabs(p1(0) - p0(0));
@@ -65,23 +56,14 @@ public:
         if (dx > dy && dx > dz) {
             error_inc_[0] = dy/dx;
             error_inc_[1] = dz/dx;
-            error_[0]  = (0.5 - /*std::fmod(p0(0),resolution)*/mod(p0(0))) * error_inc_[0]
-                         + /*std::fmod(p0(1),resolution)*/mod(p0(1)) - 0.5;
+            error_[0]  = (0.5 - mod(p0(0))) * error_inc_[0] + mod(p0(1)) - 0.5;
             error_[0] += (step_[1] > 0) ? -0.5 : 0.5;
-            error_[1]  = (0.5 - /*std::fmod(p0(0),resolution)*/mod(p0(0))) * error_inc_[1]
-                         + /*std::fmod(p0(2),resolution)*/mod(p0(2)) - 0.5;
+            error_[1]  = (0.5 - mod(p0(0))) * error_inc_[1] + mod(p0(2)) - 0.5;
             error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDx;
             (this->*iterate_)();
             iteration_ = (std::abs(end[0] - index_[0]) - 1) >> 1;
-/*
-            if (index_[0] < end[0])
-                --max_[0];
-            else
-                ++min_[0];*/
-//            min_[0] = std::min(index_[0],end[0]-1);
-//            max_[0] = std::max(index_[0],end[0]-1);
 
             error_inc_[0] *= 2;
             error_inc_[1] *= 2;
@@ -89,23 +71,14 @@ public:
         } else if (dy > dx && dy > dz) {
             error_inc_[0] = dx/dy;
             error_inc_[1] = dz/dy;
-            error_[0]  = (0.5 - /*std::fmod(p0(1),resolution)*/mod(p0(1))) * error_inc_[0]
-                         + /*std::fmod(p0(0),resolution)*/mod(p0(0)) - 0.5;
+            error_[0]  = (0.5 - mod(p0(1))) * error_inc_[0] + mod(p0(0)) - 0.5;
             error_[0] += (step_[0] > 0) ? -0.5 : 0.5;
-            error_[1]  = (0.5 - /*std::fmod(p0(1),resolution)*/mod(p0(1))) * error_inc_[1]
-                         + /*std::fmod(p0(2),resolution)*/mod(p0(2)) - 0.5;
+            error_[1]  = (0.5 - mod(p0(1))) * error_inc_[1] + mod(p0(2)) - 0.5;
             error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDy;
             (this->*iterate_)();
             iteration_ = (std::abs(end[1] - index_[1]) - 1) >> 1;
-/*
-            if (index_[1] < end[1])
-                --max_[1];
-            else
-                ++min_[1];*/
-//            min_[1] = std::min(index_[1],end[1]-1);
-//            max_[1] = std::max(index_[1],end[1]-1);
 
             error_inc_[0] *= 2;
             error_inc_[1] *= 2;
@@ -113,40 +86,19 @@ public:
         } else {
             error_inc_[0] = dx/dz;
             error_inc_[1] = dy/dz;
-            error_[0]  = (0.5 - /*std::fmod(p0(2),resolution)*/mod(p0(2))) * error_inc_[0]
-                         + /*std::fmod(p0(0),resolution)*/mod(p0(0)) - 0.5;
+            error_[0]  = (0.5 - mod(p0(2))) * error_inc_[0] + mod(p0(0)) - 0.5;
             error_[0] += (step_[0] > 0) ? -0.5 : 0.5;
-            error_[1]  = (0.5 - /*std::fmod(p0(2),resolution)*/mod(p0(2))) * error_inc_[1]
-                         + /*std::fmod(p0(1),resolution)*/mod(p0(1)) - 0.5;
+            error_[1]  = (0.5 - mod(p0(2))) * error_inc_[1] + mod(p0(1)) - 0.5;
             error_[1] += (step_[1] > 0) ? -0.5 : 0.5;
 
             iterate_   = &NDTIterator::iterateDz;
             (this->*iterate_)();
             iteration_ = (std::abs(end[2] - index_[2]) - 1) >> 1;
-/*
-            if (index_[2] < end[2])
-                --max_[2];
-            else
-                ++min_[2];*/
-//            min_[2] = std::min(index_[2],end[2]-1);
-//            max_[2] = std::max(index_[2],end[2]-1);
 
             error_inc_[0] *= 2;
             error_inc_[1] *= 2;
             step_[2]   *= 2;
         }
-/*
-        // two steps at once
-        step_[0] *= 2;
-        step_[1] *= 2;
-        step_[2] *= 2;
-
-        // shift midpoint rule to center of next pixel
-        // divide error by two (or multiply error incs by two)
-        error_[0] -= 0.5;
-        error_[1] -= 0.5;
-        error_[0] /= 2;
-        error_[1] /= 2;*/
     }
 
     inline int x() const
@@ -176,13 +128,7 @@ public:
 
     inline bool done() const
     {
-        return (iteration_ < 0)/* ||
-               (index_[0] < min_[0]) ||
-               (index_[0] > max_[0]) ||
-               (index_[1] < min_[1]) ||
-               (index_[1] > max_[1]) ||
-               (index_[2] < min_[2]) ||
-               (index_[2] > max_[2])*/;
+        return (iteration_ < 0);
     }
 
 private:
@@ -237,15 +183,13 @@ private:
         return *this;
     }
 
-//    index_t min_;
-//    index_t max_;
     index_t index_;
     index_t step_;
     error_t error_;
     error_t error_inc_;
     int     iteration_;
 
-    NDTIterator&    (NDTIterator::*iterate_)();
+    NDTIterator& (NDTIterator::*iterate_)();
 };
 }
 }
