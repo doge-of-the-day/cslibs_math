@@ -52,8 +52,8 @@ public:
         step_[0]  = index_[0] < end_[0] ? 1 : -1;
         step_[1]  = index_[1] < end_[1] ? 1 : -1;
 
-        if (!done())
-            iterate();
+        //if (!done())
+        //    iterate();
     }
 
     inline virtual ~BresenhamHalf()
@@ -77,7 +77,7 @@ public:
 
     inline BresenhamHalf& operator++()
     {
-        if (!done())
+        /*if (!done())
             iterate();
         if (!done())
             iterate();
@@ -97,7 +97,7 @@ private:
     {
         index_[0] += step_[0];
         error_    += delta_[1];
-        if (2 * error_ >= delta_[0]) {
+        while (2 * error_ >= delta_[0]) {
             index_[1] += step_[1];
             error_    -= delta_[0];
         }
