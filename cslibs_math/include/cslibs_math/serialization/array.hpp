@@ -28,6 +28,7 @@ struct binary {
 }  // namespace serialization
 }  // namespace cslibs_math
 
+#if CSLIBS_MATH_YAML_CPP_VERSION_MINOR < 6
 namespace YAML {
 template <typename T, std::size_t Dim>
 struct convert<std::array<T, Dim>> {
@@ -48,5 +49,5 @@ struct convert<std::array<T, Dim>> {
   }
 };
 }  // namespace YAML
-
+#endif
 #endif  // CSLIBS_MATH_SERIALIZATION_ARRAY_HPP
