@@ -248,4 +248,4 @@ BENCHMARK(norm2_float);
 BENCHMARK(norm2_double);
 BENCHMARK(norm2_tf);
 
-BENCHMARK_MAIN()
+BENCHMARK_MAIN();

@@ -404,4 +404,4 @@ BENCHMARK(dot_float);
 BENCHMARK(dot_double);
 BENCHMARK(dot_tf);
 
-BENCHMARK_MAIN()
+BENCHMARK_MAIN();

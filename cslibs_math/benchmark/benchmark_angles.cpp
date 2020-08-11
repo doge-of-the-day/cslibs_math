@@ -85,4 +85,4 @@ BENCHMARK(normalize_atan2);
 BENCHMARK(normalize_while);
 BENCHMARK(normalize_cslibs_math);
 
-BENCHMARK_MAIN()
+BENCHMARK_MAIN();

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(cslibs_math_ros)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -16,7 +16,7 @@ find_package(geometry_msgs  QUIET)
 catkin_package(
     INCLUDE_DIRS
         include
-    DEPENDS
+    CATKIN_DEPENDS
         cslibs_math
         cslibs_math_2d
         cslibs_math_3d

@@ -236,4 +236,4 @@ BENCHMARK(applicationLog);
 BENCHMARK(applicationPlainLog);
 BENCHMARK(applicationDefault);
 
-BENCHMARK_MAIN()
+BENCHMARK_MAIN();

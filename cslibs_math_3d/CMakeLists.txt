@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(cslibs_math_3d)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -59,11 +59,9 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
-
     cslibs_math_3d_add_benchmark(benchmark_vector
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
-            ${tf_INCLUDE_DIRS}
         SOURCE_FILES
             benchmark/benchmark_vector_3d.cpp
         COMPILE_OPTIONS
@@ -73,7 +71,6 @@ if(${tf_FOUND})
     cslibs_math_3d_add_benchmark(benchmark_transform
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
-            ${tf_INCLUDE_DIRS}
         SOURCE_FILES
             benchmark/benchmark_transform_3d.cpp
         COMPILE_OPTIONS
