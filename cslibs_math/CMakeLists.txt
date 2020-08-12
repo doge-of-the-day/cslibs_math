@@ -3,8 +3,8 @@ project(cslibs_math)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-include(cmake/cslibs_math_cfg_extras.cmake)
 include(cmake/cslibs_math_enable_c++17.cmake)
+include(cmake/cslibs_math_extras.cmake)
 include(cmake/cslibs_math_add_unit_test_gtest.cmake)
 include(cmake/cslibs_math_add_unit_test_ros.cmake)
 include(cmake/cslibs_math_add_benchmark.cmake)
@@ -16,8 +16,8 @@ catkin_package(
     INCLUDE_DIRS
         include
     CFG_EXTRAS
-        cslibs_math_cfg_extras.cmake
         cslibs_math_enable_c++17.cmake
+        cslibs_math_extras.cmake
         cslibs_math_add_unit_test_gtest.cmake
         cslibs_math_add_unit_test_ros.cmake
         cslibs_math_add_benchmark.cmake
