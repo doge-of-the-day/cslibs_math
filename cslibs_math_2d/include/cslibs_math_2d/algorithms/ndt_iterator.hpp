@@ -51,8 +51,7 @@ public:
         // execute one step into target direction
         if (dx > dy) {
             error_inc_ = dy/dx;
-            error_     = (0.5 - mod(p0(0))) * error_inc_ + mod(p0(1)) - 0.5;
-            error_    += (step_[1] > 0) ? -0.5 : 0.5;
+            error_     = (0.5 - mod(p0(0))) * error_inc_ * step_[1] + mod(p0(1)) - (step_[1] > 0) ? 1 : 0;
 
             iterate_   = &NDTIterator::iterateDx;
             (this->*iterate_)();
@@ -63,8 +62,7 @@ public:
 
         } else {
             error_inc_ = dx/dy;
-            error_     = (0.5 - mod(p0(1))) * error_inc_ + mod(p0(0)) - 0.5;
-            error_    += (step_[0] > 0) ? -0.5 : 0.5;
+            error_     = (0.5 - mod(p0(1))) * error_inc_ * step_[0] + mod(p0(0)) - (step_[0] > 0) ? 1 : 0;
 
             iterate_   = &NDTIterator::iterateDy;
             (this->*iterate_)();
@@ -97,7 +95,7 @@ public:
 
     inline bool done() const
     {
-        return (iteration_ < 0);
+        return (iteration_ <= 0);
     }
 
 private:

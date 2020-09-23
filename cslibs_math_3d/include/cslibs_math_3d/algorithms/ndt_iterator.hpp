@@ -56,10 +56,8 @@ public:
         if (dx > dy && dx > dz) {
             error_inc_[0] = dy/dx;
             error_inc_[1] = dz/dx;
-            error_[0]  = (0.5 - mod(p0(0))) * error_inc_[0] + mod(p0(1)) - 0.5;
-            error_[0] += (step_[1] > 0) ? -0.5 : 0.5;
-            error_[1]  = (0.5 - mod(p0(0))) * error_inc_[1] + mod(p0(2)) - 0.5;
-            error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
+            error_[0]  = (0.5 - mod(p0(0))) * error_inc_[0] * step_[1] + mod(p0(1)) - (step_[1] > 0) ? 1 : 0;
+            error_[1]  = (0.5 - mod(p0(0))) * error_inc_[1] * step_[2] + mod(p0(2)) - (step_[2] > 0) ? 1 : 0;
 
             iterate_   = &NDTIterator::iterateDx;
             (this->*iterate_)();
@@ -71,10 +69,8 @@ public:
         } else if (dy > dx && dy > dz) {
             error_inc_[0] = dx/dy;
             error_inc_[1] = dz/dy;
-            error_[0]  = (0.5 - mod(p0(1))) * error_inc_[0] + mod(p0(0)) - 0.5;
-            error_[0] += (step_[0] > 0) ? -0.5 : 0.5;
-            error_[1]  = (0.5 - mod(p0(1))) * error_inc_[1] + mod(p0(2)) - 0.5;
-            error_[1] += (step_[2] > 0) ? -0.5 : 0.5;
+            error_[0]  = (0.5 - mod(p0(1))) * error_inc_[0] * step_[0] + mod(p0(0)) - (step_[0] > 0) ? 1 : 0;
+            error_[1]  = (0.5 - mod(p0(1))) * error_inc_[1] * step_[2] + mod(p0(2)) - (step_[2] > 0) ? 1 : 0;
 
             iterate_   = &NDTIterator::iterateDy;
             (this->*iterate_)();
@@ -86,10 +82,8 @@ public:
         } else {
             error_inc_[0] = dx/dz;
             error_inc_[1] = dy/dz;
-            error_[0]  = (0.5 - mod(p0(2))) * error_inc_[0] + mod(p0(0)) - 0.5;
-            error_[0] += (step_[0] > 0) ? -0.5 : 0.5;
-            error_[1]  = (0.5 - mod(p0(2))) * error_inc_[1] + mod(p0(1)) - 0.5;
-            error_[1] += (step_[1] > 0) ? -0.5 : 0.5;
+            error_[0]  = (0.5 - mod(p0(2))) * error_inc_[0] * step_[0] + mod(p0(0)) - (step_[0] > 0) ? 1 : 0;
+            error_[1]  = (0.5 - mod(p0(2))) * error_inc_[1] * step_[1] + mod(p0(1)) - (step_[1] > 0) ? 1 : 0;
 
             iterate_   = &NDTIterator::iterateDz;
             (this->*iterate_)();
@@ -128,7 +122,7 @@ public:
 
     inline bool done() const
     {
-        return (iteration_ < 0);
+        return (iteration_ <= 0);
     }
 
 private:
