@@ -44,29 +44,33 @@ public:
 
         // Bresenham delta and steps
         step_      = std::compare(index_, end);
-        const T dx = std::fabs(p1(0) - p0(0));
-        const T dy = std::fabs(p1(1) - p0(1));
+        const T dx = (p1(0) - p0(0));
+        const T dy = (p1(1) - p0(1));
 
         // calculate initial error, set dominant direction and
         // execute one step into target direction
-        if (dx > dy) {
+        if (std::fabs(dx) > std::fabs(dy)) {
             error_inc_ = dy/dx;
-            error_     = (0.5 - mod(p0(0))) * error_inc_ * step_[1] + mod(p0(1)) - (step_[1] > 0) ? 1 : 0;
+            bool grad  = (error_inc_ > 0);
+            error_     = (grad ? 1 : -1) * ((0.5 - mod(p0(0))) * error_inc_ + mod(p0(1)) - (grad ? 1 : 0));
+            error_inc_ = std::fabs(error_inc_);
 
             iterate_   = &NDTIterator::iterateDx;
             (this->*iterate_)();
-            iteration_ = (std::abs(end[0] - index_[0]) - 1) >> 1;
+            iteration_ = (std::abs(end[0] - index_[0]) >> 1);
 
             error_inc_ *= 2;
             step_[0]   *= 2;
 
         } else {
             error_inc_ = dx/dy;
-            error_     = (0.5 - mod(p0(1))) * error_inc_ * step_[0] + mod(p0(0)) - (step_[0] > 0) ? 1 : 0;
+            bool grad  = (error_inc_ > 0);
+            error_     = (grad ? 1 : -1) * ((0.5 - mod(p0(1))) * error_inc_ + mod(p0(0)) - (grad ? 1 : 0));
+            error_inc_ = std::fabs(error_inc_);
 
             iterate_   = &NDTIterator::iterateDy;
             (this->*iterate_)();
-            iteration_ = (std::abs(end[1] - index_[1]) - 1) >> 1;
+            iteration_ = (std::abs(end[1] - index_[1]) >> 1);
 
             error_inc_ *= 2;
             step_[1]   *= 2;
