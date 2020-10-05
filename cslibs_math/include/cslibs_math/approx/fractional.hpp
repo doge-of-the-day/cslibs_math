@@ -34,6 +34,20 @@ class Fractional {
 }  // namespace cslibs_math
 
 template <typename T>
+inline cslibs_math::approx::Fractional<T> operator == (
+    const cslibs_math::approx::Fractional<T> &a,
+    const cslibs_math::approx::Fractional<T> &b) {
+  return a.fraction() == b.fraction() && a.exponent() == b.exponent();
+}
+
+template <typename T>
+inline cslibs_math::approx::Fractional<T> operator < (
+    const cslibs_math::approx::Fractional<T> &a,
+    const cslibs_math::approx::Fractional<T> &b) {
+  return a.fraction() < b.fraction() && a.exponent() <= b.exponent();
+}
+
+template <typename T>
 inline cslibs_math::approx::Fractional<T> operator*(
     const cslibs_math::approx::Fractional<T> &a,
     const cslibs_math::approx::Fractional<T> &b) {
