@@ -36,68 +36,45 @@ public:
         const index_t end({{static_cast<int>(std::floor(p1(0) / resolution)),
                             static_cast<int>(std::floor(p1(1) / resolution))}});
 
-        // estimate min/max
-        auto minmax = [this,end](const std::size_t &i) {
-            const auto& p = std::minmax(index_[i],end[i]);
-            min_[i] = p.first;
-            max_[i] = p.second;
+        // mod function
+        auto mod = [&resolution](const T& x) {
+          const T& m = std::fmod(x/resolution, T(1.));
+          return (m >= T(0.) ? m : (m+T(1.)));
         };
-        for (std::size_t i=0; i<2; ++i)
-            minmax(i);
-//        min_[0] = std::min(index_[0],end[0]);
-//        max_[0] = std::max(index_[0],end[0]);
-//        min_[1] = std::min(index_[1],end[1]);
-//        max_[1] = std::max(index_[1],end[1]);
 
         // Bresenham delta and steps
         step_      = std::compare(index_, end);
-        const T dx = std::fabs(p1(0) - p0(0));
-        const T dy = std::fabs(p1(1) - p0(1));
+        const T dx = (p1(0) - p0(0));
+        const T dy = (p1(1) - p0(1));
 
         // calculate initial error, set dominant direction and
         // execute one step into target direction
-        if (dx > dy) {
+        if (std::fabs(dx) > std::fabs(dy)) {
             error_inc_ = dy/dx;
-            error_     = (0.5 - std::fmod(p0(0),resolution)) * error_inc_
-                         + std::fmod(p0(1),resolution) - 0.5;
-            error_    += (step_[1] > 0) ? -0.5 : 0.5;
+            bool grad  = (error_inc_ > 0);
+            error_     = (grad ? 1 : -1) * ((0.5 - mod(p0(0))) * error_inc_ + mod(p0(1)) - (grad ? 1 : 0));
+            error_inc_ = std::fabs(error_inc_);
 
             iterate_   = &NDTIterator::iterateDx;
-            iteration_ = (std::abs(end[0] - index_[0]) - 2) >> 1;
+            (this->*iterate_)();
+            iteration_ = (std::abs(end[0] - index_[0]) >> 1);
 
-            if (index_[0] < end[0])
-                --max_[0];
-            else
-                ++min_[0];
- //           minmax(0,index_[0],end[0]-1);
-//            min_[0] = std::min(index_[0],end[0]-1);
-//            max_[0] = std::max(index_[0],end[0]-1);
+            error_inc_ *= 2;
+            step_[0]   *= 2;
+
         } else {
             error_inc_ = dx/dy;
-            error_     = (0.5 - std::fmod(p0(1),resolution)) * error_inc_
-                         + std::fmod(p0(0),resolution) - 0.5;
-            error_    += (step_[0] > 0) ? -0.5 : 0.5;
+            bool grad  = (error_inc_ > 0);
+            error_     = (grad ? 1 : -1) * ((0.5 - mod(p0(1))) * error_inc_ + mod(p0(0)) - (grad ? 1 : 0));
+            error_inc_ = std::fabs(error_inc_);
 
             iterate_   = &NDTIterator::iterateDy;
-            iteration_ = (std::abs(end[1] - index_[1]) - 2) >> 1;
+            (this->*iterate_)();
+            iteration_ = (std::abs(end[1] - index_[1]) >> 1);
 
-            if (index_[1] < end[1])
-                --max_[1];
-            else
-                ++min_[1];
-//            minmax(1,index_[1],end[1]-1);
-//            min_[1] = std::min(index_[1],end[1]-1);
-//            max_[1] = std::max(index_[1],end[1]-1);
+            error_inc_ *= 2;
+            step_[1]   *= 2;
         }
-
-        // two steps at once
-        step_[0] *= 2;
-        step_[1] *= 2;
-
-        // shift midpoint rule to center of next pixel
-        // divide error by two (or multiply error incs by two)
-        error_ -= 0.5;
-        error_ /= 2;
     }
 
     inline int x() const
@@ -122,11 +99,7 @@ public:
 
     inline bool done() const
     {
-        return (iteration_ < 0) ||
-               (index_[0] < min_[0]) ||
-               (index_[0] > max_[0]) ||
-               (index_[1] < min_[1]) ||
-               (index_[1] > max_[1]);
+        return (iteration_ <= 0);
     }
 
 private:
@@ -134,7 +107,7 @@ private:
     {
         error_    += error_inc_;
         index_[0] += step_[0];
-        if (error_ > 0) {
+        while (error_ > 0) {
             index_[1] += step_[1];
             --error_;
         }
@@ -146,7 +119,7 @@ private:
     {
         error_    += error_inc_;
         index_[1] += step_[1];
-        if (error_ > 0) {
+        while (error_ > 0) {
             index_[0] += step_[0];
             --error_;
         }
@@ -154,15 +127,13 @@ private:
         return *this;
     }
 
-    index_t min_;
-    index_t max_;
     index_t index_;
     index_t step_;
     T       error_;
     T       error_inc_;
     int     iteration_;
 
-    NDTIterator&    (NDTIterator::*iterate_)();
+    NDTIterator& (NDTIterator::*iterate_)();
 };
 }
 }
