@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>cslibs_math</name>
-  <version>0.0.6</version>
+  <version>0.0.7</version>
   <description>
     The cslibs_math package provides different math utility classes for e.g. multidimensional
     statistics and linear algebra.

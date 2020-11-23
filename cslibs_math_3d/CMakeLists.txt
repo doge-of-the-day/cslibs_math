@@ -35,7 +35,7 @@ if(${tf_FOUND})
         ${catkin_INCLUDE_DIRS}
         ${tf_INCLUDE_DIRS}
     )
-    cslibs_math_3d_add_unit_test_gtest(test_quaternion
+    cslibs_math_3d_add_unit_test_gtest(test_quaternion_3d
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -43,7 +43,7 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
-    cslibs_math_3d_add_unit_test_gtest(test_transform
+    cslibs_math_3d_add_unit_test_gtest(test_transform_3d
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -51,7 +51,7 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
-    cslibs_math_3d_add_unit_test_gtest(test_ray_tracing
+    cslibs_math_3d_add_unit_test_gtest(test_ray_tracing_3d
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -59,7 +59,7 @@ if(${tf_FOUND})
         COMPILE_OPTIONS
             ${TARGET_COMPILE_OPTIONS}
     )
-    cslibs_math_3d_add_benchmark(benchmark_vector
+    cslibs_math_3d_add_benchmark(benchmark_vector_3d
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -68,7 +68,7 @@ if(${tf_FOUND})
             ${TARGET_COMPILE_OPTIONS}
     )
 
-    cslibs_math_3d_add_benchmark(benchmark_transform
+    cslibs_math_3d_add_benchmark(benchmark_transform_3d
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}
         SOURCE_FILES
@@ -78,7 +78,7 @@ if(${tf_FOUND})
     )
 endif()
 
-cslibs_math_3d_add_unit_test_gtest(test_point
+cslibs_math_3d_add_unit_test_gtest(test_point_3d
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     SOURCE_FILES
