@@ -201,7 +201,7 @@ inline cslibs_math::linear::Vector<T, 2> operator*(
     const cslibs_math_3d::Transform3<T> &t,
     const cslibs_math::linear::Vector<T, 2> &v) {
   const cslibs_math_3d::Vector3<T> r =
-      t * cslibs_math_3d::Vector3<T>(v(0), v(1), v(2));
+      t * cslibs_math_3d::Vector3<T>(v(0), v(1), T{0});
   return cslibs_math::linear::Vector<T, 2>(r(0), r(1));
 }
 
