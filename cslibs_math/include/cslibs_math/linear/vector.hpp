@@ -20,9 +20,11 @@ class EIGEN_ALIGN16 Vector {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+  static_assert(Dim < static_cast<unsigned int>(std::numeric_limits<int>::max()), "Dimension must be smaller than the maximum signed integer value.");
+
   using allocator_t = Eigen::aligned_allocator<Vector>;
-  using vector_t = Eigen::Matrix<T, Dim, 1>;
-  using vector_transposed_t = Eigen::Matrix<T, 1, Dim>;
+  using vector_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using vector_transposed_t = Eigen::Matrix<T, 1, static_cast<int>(Dim)>;
   using arr_t = std::array<T, Dim>;
   using type_t = T;
   static constexpr std::size_t Dimension = Dim;
