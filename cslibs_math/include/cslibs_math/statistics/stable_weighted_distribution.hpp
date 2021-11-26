@@ -31,8 +31,6 @@ class EIGEN_ALIGN16 StableWeightedDistribution {
   using eigen_values_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
   using eigen_vectors_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
 
-  static constexpr T sqrt_2_M_PI = cslibs_math::approx::sqrt(2.0 * M_PI);
-
   StableWeightedDistribution() = default;
 
   inline StableWeightedDistribution(std::size_t sample_count, T w, T w_sq,
