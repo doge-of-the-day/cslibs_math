@@ -5,6 +5,7 @@
 
 #include <cslibs_math/approx/sqrt.hpp>
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
+#include <cslibs_math/common/pow.hpp>
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigen>
 #include <iostream>

@@ -122,8 +122,8 @@ if(${PROJECT_NAME}_test_approximations)
     )
 endif()
 
-find_package(yaml-cpp QUIET)
-if(${YAML_CPP_FOUND})
+find_package(yaml-cpp REQUIRED)
+if(${yaml-cpp_FOUND})
     cslibs_math_add_unit_test_gtest(test_distribution_serialization
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}

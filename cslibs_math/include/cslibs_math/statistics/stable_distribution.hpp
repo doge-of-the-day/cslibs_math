@@ -62,7 +62,7 @@ class EIGEN_ALIGN16 StableDistribution {
   inline void add(const sample_t &p) {
     const sample_t _mean = mean_;
     const std::size_t _n = n_ + 1;
-    mean_ = (mean_ * static_cast<T>(n_) + p) / static_cast<T>(_n);
+    mean_ += (p - _mean) / static_cast<T>(_n);
     scatter_ += (p - _mean) * (p - mean_).transpose();
     n_ = _n;
 
