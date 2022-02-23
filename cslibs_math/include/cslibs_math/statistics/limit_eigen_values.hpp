@@ -24,12 +24,14 @@ template <typename T, std::size_t Dim, std::size_t lambda_ratio_exponent>
  * which build a local orthonormal system.
  */
 struct LimitEigenValues {
+  static_assert(Dim < static_cast<std::size_t>(std::numeric_limits<int>::max()), "'Dim' cannot exceed integer maximum.");
+
   const static constexpr T lambda_ratio =
       LambdaRatio<T, lambda_ratio_exponent>::value;
 
-  using matrix_t = Eigen::Matrix<T, Dim, Dim>;
-  using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
-  using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
+  using matrix_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
+  using eigen_values_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using eigen_vectors_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
 
   inline static void apply(matrix_t &matrix_io) {
     Eigen::EigenSolver<matrix_t> solver;
@@ -50,18 +52,22 @@ struct LimitEigenValues {
 
 template <typename T, std::size_t Dim>
 struct LimitEigenValues<T, Dim, 0ul> {
-  using matrix_t = Eigen::Matrix<T, Dim, Dim>;
-  using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
-  using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
+  static_assert(Dim < static_cast<std::size_t>(std::numeric_limits<int>::max()), "'Dim' cannot exceed integer maximum.");
+
+  using matrix_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
+  using eigen_values_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using eigen_vectors_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
 
   inline static void apply(matrix_t &) {}
 };
 
 template <typename T, std::size_t Dim>
 struct LimitEigenValuesByZero {
-  using matrix_t = Eigen::Matrix<T, Dim, Dim>;
-  using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
-  using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
+  static_assert(Dim < static_cast<std::size_t>(std::numeric_limits<int>::max()), "'Dim' cannot exceed integer maximum.");
+
+  using matrix_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
+  using eigen_values_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using eigen_vectors_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
 
   inline static void apply(matrix_t &matrix_io) {
     Eigen::EigenSolver<matrix_t> solver;

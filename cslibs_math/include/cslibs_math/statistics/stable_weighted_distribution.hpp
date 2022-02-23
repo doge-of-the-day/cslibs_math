@@ -17,18 +17,19 @@ template <typename T, std::size_t Dim, std::size_t lambda_ratio_exponent = 0>
 class EIGEN_ALIGN16 StableWeightedDistribution {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+  static_assert(Dim < static_cast<std::size_t>(std::numeric_limits<int>::max()), "'Dim' cannot exceed integer maximum.");
+
   using allocator_t = Eigen::aligned_allocator<
       StableWeightedDistribution<T, Dim, lambda_ratio_exponent>>;
 
   using Ptr = std::shared_ptr<
       StableWeightedDistribution<T, Dim, lambda_ratio_exponent>>;
-  using sample_t = Eigen::Matrix<T, Dim, 1>;
-  using sample_transposed_t = Eigen::Matrix<T, 1, Dim>;
-  using covariance_t = Eigen::Matrix<T, Dim, Dim>;
-  using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
-  using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
-
-  static constexpr T sqrt_2_M_PI = cslibs_math::approx::sqrt(2.0 * M_PI);
+  using sample_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using sample_transposed_t = Eigen::Matrix<T, 1, static_cast<int>(Dim)>;
+  using covariance_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
+  using eigen_values_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using eigen_vectors_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
 
   StableWeightedDistribution() = default;
 

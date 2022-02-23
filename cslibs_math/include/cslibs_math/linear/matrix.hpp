@@ -17,13 +17,16 @@ class EIGEN_ALIGN16 Matrix {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
+  static_assert(N < static_cast<unsigned int>(std::numeric_limits<int>::max()), "N must be smaller than the maximum signed integer value.");
+  static_assert(M < static_cast<unsigned int>(std::numeric_limits<int>::max()), "M must be smaller than the maximum signed integer value.");
+
   using allocator_t = Eigen::aligned_allocator<Matrix>;
-  using vector_t = Eigen::Matrix<T, N, 1ul>;
-  using matrix_t = Eigen::Matrix<T, N, M>;
+  using vector_t = Eigen::Matrix<T, static_cast<int>(N), 1>;
+  using matrix_t = Eigen::Matrix<T, static_cast<int>(N), static_cast<int>(M)>;
 
   using type_t = T;
-  const static std::size_t ROWS = N;
-  const static std::size_t COLS = M;
+  const static int ROWS = static_cast<int>(N);
+  const static int COLS = static_cast<int>(M);
 
   inline Matrix() = default;
   inline Matrix(const T &c) : data_{matrix_t::Constant(c)} {}
@@ -67,7 +70,8 @@ class EIGEN_ALIGN16 Matrix {
 
   template <std::size_t X>
   inline Matrix<T, N, X> operator*(const Matrix<T, M, X> &m) const {
-    return Matrix<T, N, X>{Eigen::Matrix<T, N, X>{(data_ * m.data()).eval()}};
+    static_assert(X < static_cast<unsigned int>(std::numeric_limits<int>::max()), "X must be smaller than the maximum signed integer value.");
+    return Matrix<T, N, X>{Eigen::Matrix<T, static_cast<int>(N), static_cast<int>(X)>{(data_ * m.data()).eval()}};
   }
 
   inline Matrix operator/(const T s) const {
@@ -153,21 +157,21 @@ class EIGEN_ALIGN16 Matrix {
   inline matrix_t &data() { return data_; }
 
   inline const Matrix<T, M, N> inverse() const {
-    return Matrix<T, M, N>{Eigen::Matrix<T, M, N>{(data_.inverse()).eval()}};
+    return Matrix<T, M, N>{Eigen::Matrix<T, static_cast<int>(M), static_cast<int>(N)>{(data_.inverse()).eval()}};
   }
 
   inline Matrix<T, M, N> inverse() {
-    return Matrix<T, M, N>{Eigen::Matrix<T, M, N>{(data_.inverse()).eval()}};
+    return Matrix<T, M, N>{Eigen::Matrix<T, static_cast<int>(M), static_cast<int>(N)>{(data_.inverse()).eval()}};
   }
 
   inline Matrix<T, M, N> transpose() {
     return Matrix<T, M, N>{
-        static_cast<Eigen::Matrix<T, M, N>>((data_.transpose()).eval())};
+        static_cast<Eigen::Matrix<T, static_cast<int>(M), static_cast<int>(N)>>((data_.transpose()).eval())};
   }
 
   inline Matrix<T, M, N> transpose() const {
     return Matrix<T, M, N>{
-        static_cast<Eigen::Matrix<T, M, N>>((data_.transpose()).eval())};
+        static_cast<Eigen::Matrix<T, static_cast<int>(M), static_cast<int>(N)>>((data_.transpose()).eval())};
   }
 
   inline T determinant() { return data_.determinant(); }

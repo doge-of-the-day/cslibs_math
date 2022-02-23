@@ -41,7 +41,6 @@ class EIGEN_ALIGN16 Quaternion {
   inline Quaternion(Quaternion &&other) = default;
   inline Quaternion &operator=(const Quaternion &other) = default;
   inline Quaternion &operator=(Quaternion &&other) = default;
-  ;
 
   inline static Quaternion fromAngleAxis(const Vector3<T> &angle_axis) {
     auto scale = 0.5;

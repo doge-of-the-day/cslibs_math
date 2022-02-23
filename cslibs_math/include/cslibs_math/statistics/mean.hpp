@@ -8,11 +8,13 @@ namespace statistics {
 template <typename T, std::size_t Dim>
 class EIGEN_ALIGN16 Mean {
  public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-  using allocator_t = Eigen::aligned_allocator<Mean<T, Dim>>;
+  static_assert(Dim < static_cast<std::size_t>(std::numeric_limits<int>::max()), "'Dim' cannot exceed integer maximum.");
 
-  using Ptr = std::shared_ptr<Mean<T, Dim>>;
-  using sample_t = Eigen::Matrix<T, Dim, 1>;
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  using allocator_t = Eigen::aligned_allocator<Mean<T, static_cast<int>(Dim)>>;
+
+  using Ptr = std::shared_ptr<Mean<T, static_cast<int>(Dim)>>;
+  using sample_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
 
   inline Mean() = default;
   inline Mean(const Mean &other) = default;

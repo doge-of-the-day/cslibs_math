@@ -5,6 +5,7 @@
 
 #include <cslibs_math/approx/sqrt.hpp>
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
+#include <cslibs_math/common/pow.hpp>
 #include <eigen3/Eigen/Core>
 #include <eigen3/Eigen/Eigen>
 #include <iostream>
@@ -17,18 +18,21 @@ template <typename T, std::size_t Dim, std::size_t lambda_ratio_exponent = 0>
 class EIGEN_ALIGN16 WeightedDistribution {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  static_assert(Dim < static_cast<std::size_t>(std::numeric_limits<int>::max()), "'Dim' cannot exceed integer maximum.");
+
   using allocator_t = Eigen::aligned_allocator<
       WeightedDistribution<T, Dim, lambda_ratio_exponent>>;
 
   using Ptr =
       std::shared_ptr<WeightedDistribution<T, Dim, lambda_ratio_exponent>>;
-  using sample_t = Eigen::Matrix<T, Dim, 1>;
-  using sample_transposed_t = Eigen::Matrix<T, 1, Dim>;
-  using covariance_t = Eigen::Matrix<T, Dim, Dim>;
-  using eigen_values_t = Eigen::Matrix<T, Dim, 1>;
-  using eigen_vectors_t = Eigen::Matrix<T, Dim, Dim>;
 
-  static constexpr T sqrt_2_M_PI = cslibs_math::approx::sqrt(2.0 * M_PI);
+  using sample_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using sample_transposed_t = Eigen::Matrix<T, 1, static_cast<int>(Dim)>;
+  using covariance_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
+  using eigen_values_t = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+  using eigen_vectors_t = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
+
+  static constexpr T pow_2_M_PI_DIM = static_cast<T>(cslibs_math::common::pow<Dim, T>(2.0 * M_PI));
 
   WeightedDistribution() = default;
 
@@ -193,7 +197,7 @@ class EIGEN_ALIGN16 WeightedDistribution {
   inline T denominator() const {
     auto update_return = [this]() {
       if (dirty_) update();
-      return 1.0 / (determinant_ * sqrt_2_M_PI);
+      return normalizer_;
     };
     return valid() ? update_return() : T();
   }
@@ -206,8 +210,7 @@ class EIGEN_ALIGN16 WeightedDistribution {
           -0.5 *
           static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) *
                          information_matrix_ * q);
-      const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
-      return denominator * std::exp(exponent);
+      return normalizer_ * std::exp(exponent);
     };
     return valid() ? update_sample() : T();
   }
@@ -220,8 +223,7 @@ class EIGEN_ALIGN16 WeightedDistribution {
           -0.5 *
           static_cast<T>(static_cast<sample_transposed_t>(q.transpose()) *
                          information_matrix_ * q);
-      const T denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
-      return denominator * std::exp(exponent);
+      return normalizer_ * std::exp(exponent);
     };
     return valid() ? update_sample() : T();
   }
@@ -266,6 +268,7 @@ class EIGEN_ALIGN16 WeightedDistribution {
   mutable eigen_values_t eigen_values_{eigen_values_t::Zero()};
   mutable eigen_vectors_t eigen_vectors_{eigen_vectors_t::Zero()};
   mutable T determinant_{0};
+  mutable T normalizer_{0};
 
   mutable bool dirty_{false};
   mutable bool dirty_eigenvalues_{false};
@@ -283,6 +286,7 @@ class EIGEN_ALIGN16 WeightedDistribution {
 
     information_matrix_ = covariance_.inverse();
     determinant_ = covariance_.determinant();
+    normalizer_ = 1.0 / std::sqrt(pow_2_M_PI_DIM * determinant_);
 
     dirty_ = false;
   }

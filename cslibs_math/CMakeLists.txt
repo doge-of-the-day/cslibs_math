@@ -55,15 +55,6 @@ cslibs_math_add_unit_test_gtest(test_mod
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(test_pow
-    INCLUDE_DIRS
-        ${TARGET_INCLUDE_DIRS}
-    SOURCE_FILES
-        test/test_pow.cpp
-    COMPILE_OPTIONS
-        ${TARGET_COMPILE_OPTIONS}
-)
-
 cslibs_math_add_unit_test_gtest(test_div
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
@@ -109,17 +100,30 @@ cslibs_math_add_unit_test_gtest(test_fractional
         ${TARGET_COMPILE_OPTIONS}
 )
 
-cslibs_math_add_unit_test_gtest(test_log
-    INCLUDE_DIRS
-        ${TARGET_INCLUDE_DIRS}
-    SOURCE_FILES
-        test/test_log.cpp
-    COMPILE_OPTIONS
-        ${TARGET_COMPILE_OPTIONS}
-)
 
-find_package(yaml-cpp QUIET)
-if(${YAML_CPP_FOUND})
+set(${PROJECT_NAME}_test_approximations false)
+if(${PROJECT_NAME}_test_approximations)
+    cslibs_math_add_unit_test_gtest(test_pow
+        INCLUDE_DIRS
+            ${TARGET_INCLUDE_DIRS}
+        SOURCE_FILES
+            test/test_pow.cpp
+        COMPILE_OPTIONS
+            ${TARGET_COMPILE_OPTIONS}
+    )
+
+    cslibs_math_add_unit_test_gtest(test_log
+    INCLUDE_DIRS
+    ${TARGET_INCLUDE_DIRS}
+    SOURCE_FILES
+    test/test_log.cpp
+    COMPILE_OPTIONS
+    ${TARGET_COMPILE_OPTIONS}
+    )
+endif()
+
+find_package(yaml-cpp REQUIRED)
+if(${yaml-cpp_FOUND})
     cslibs_math_add_unit_test_gtest(test_distribution_serialization
         INCLUDE_DIRS
             ${TARGET_INCLUDE_DIRS}

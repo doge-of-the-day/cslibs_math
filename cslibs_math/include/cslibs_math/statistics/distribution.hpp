@@ -10,37 +10,28 @@
 
 #include <cslibs_math/statistics/limit_eigen_values.hpp>
 #include <cslibs_math/approx/sqrt.hpp>
+#include <cslibs_math/common/pow.hpp>
 
 namespace cslibs_math {
 namespace statistics {
 template<typename T, std::size_t Dim, std::size_t lambda_ratio_exponent = 0>
 class EIGEN_ALIGN16 Distribution {
 public:
+    static_assert(Dim < static_cast<unsigned int>(std::numeric_limits<int>::max()), "M must be smaller than the maximum signed integer value.");
+
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    using allocator_t         = Eigen::aligned_allocator<Distribution<T, Dim, lambda_ratio_exponent>>;
+    using allocator_t         = Eigen::aligned_allocator<Distribution<T, static_cast<int>(Dim), lambda_ratio_exponent>>;
 
     using Ptr                 = std::shared_ptr<Distribution<T, Dim, lambda_ratio_exponent>>;
-    using sample_t            = Eigen::Matrix<T, Dim, 1>;
-    using sample_transposed_t = Eigen::Matrix<T, 1, Dim>;
-    using covariance_t        = Eigen::Matrix<T, Dim, Dim>;
-    using eigen_values_t      = Eigen::Matrix<T, Dim, 1>;
-    using eigen_vectors_t     = Eigen::Matrix<T, Dim, Dim>;
+    using sample_t            = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+    using sample_transposed_t = Eigen::Matrix<T, 1, static_cast<int>(Dim)>;
+    using covariance_t        = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
+    using eigen_values_t      = Eigen::Matrix<T, static_cast<int>(Dim), 1>;
+    using eigen_vectors_t     = Eigen::Matrix<T, static_cast<int>(Dim), static_cast<int>(Dim)>;
 
-    static constexpr T sqrt_2_M_PI = static_cast<T>(cslibs_math::approx::sqrt(2.0 * M_PI));
+    static constexpr T pow_2_M_PI_DIM = static_cast<T>(cslibs_math::common::pow<Dim, T>(2.0 * M_PI));
 
-    inline Distribution() :
-        mean_(sample_t::Zero()),
-        correlated_(covariance_t::Zero()),
-        n_(0),
-        covariance_(covariance_t::Zero()),
-        information_matrix_(covariance_t::Zero()),
-        eigen_values_(eigen_values_t::Zero()),
-        eigen_vectors_(eigen_vectors_t::Zero()),
-        determinant_(T()),  // zero initialization
-        dirty_(false),
-        dirty_eigenvalues_(false)
-    {
-    }
+    inline Distribution() = default;
 
     inline Distribution(
             std::size_t  n,
@@ -49,79 +40,15 @@ public:
         mean_(mean),
         correlated_(correlated),
         n_(n),
-        covariance_(covariance_t::Zero()),
-        information_matrix_(covariance_t::Zero()),
-        eigen_values_(eigen_values_t::Zero()),
-        eigen_vectors_(eigen_vectors_t::Zero()),
-        determinant_(T()),
-        dirty_(true),
-        dirty_eigenvalues_(true)
+        dirty_{true},
+        dirty_eigenvalues_{true}
     {
     }
 
-    inline Distribution(const Distribution &other) :
-        mean_(other.mean_),
-        correlated_(other.correlated_),
-        n_(other.n_),
-        covariance_(other.covariance_),
-        information_matrix_(other.information_matrix_),
-        eigen_values_(other.eigen_values_),
-        eigen_vectors_(other.eigen_vectors_),
-        determinant_(other.determinant_),
-        dirty_(other.dirty_),
-        dirty_eigenvalues_(other.dirty_eigenvalues_)
-    {
-    }
-
-    inline Distribution& operator=(const Distribution &other)
-    {
-        mean_                 = other.mean_;
-        correlated_           = other.correlated_;
-        n_                    = other.n_;
-
-        covariance_           = other.covariance_;
-        information_matrix_   = other.information_matrix_;
-        eigen_values_         = other.eigen_values_;
-        eigen_vectors_        = other.eigen_vectors_;
-        determinant_          = other.determinant_;
-
-        dirty_                = other.dirty_;
-        dirty_eigenvalues_    = other.dirty_eigenvalues_;
-        return *this;
-    }
-
-    inline Distribution(Distribution &&other)
-    {
-        mean_                 = std::move(other.mean_);
-        correlated_           = std::move(other.correlated_);
-        n_                    = other.n_;
-
-        covariance_           = std::move(other.covariance_);
-        information_matrix_   = std::move(other.information_matrix_);
-        eigen_values_         = std::move(other.eigen_values_);
-        eigen_vectors_        = std::move(other.eigen_vectors_);
-        determinant_          = other.determinant_;
-
-        dirty_                = other.dirty_;
-        dirty_eigenvalues_    = other.dirty_eigenvalues_;
-    }
-
-    inline Distribution& operator=(Distribution &&other)
-    {
-        mean_                 = std::move(other.mean_);
-        correlated_           = std::move(other.correlated_);
-        n_                    = other.n_;
-
-        covariance_           = std::move(other.covariance_);
-        information_matrix_   = std::move(other.information_matrix_);
-        eigen_values_         = std::move(other.eigen_values_);
-        eigen_vectors_        = std::move(other.eigen_vectors_);
-        determinant_          = other.determinant_;
-
-        dirty_                = other.dirty_;
-        dirty_eigenvalues_    = other.dirty_eigenvalues_;
-        return *this;
-    }
+    inline Distribution(const Distribution &other) = default;
+    inline Distribution& operator=(const Distribution &other) = default;
+    inline Distribution(Distribution &&other) = default;
+    inline Distribution& operator=(Distribution &&other) = default;
 
     inline void reset()
     {
@@ -134,6 +61,7 @@ public:
         eigen_vectors_      = eigen_vectors_t::Zero();
         eigen_values_       = eigen_values_t::Zero();
         determinant_        = T();
+        normalizer_        = T();
 
         dirty_              = true;
         dirty_eigenvalues_  = true;
@@ -210,7 +138,7 @@ public:
     }
 
     inline void getCovariance(covariance_t &covariance) const
-    {        
+    {
         auto update_return_covariance = [this](){
             update(); return covariance_t(covariance_);
         };
@@ -271,7 +199,7 @@ public:
     {
         auto update_return = [this](){
             if (dirty_) update();
-            return 1.0 / (determinant_ * sqrt_2_M_PI);
+            return normalizer_;
         };
         return valid() ? update_return() : T(); // T() = zero
     }
@@ -282,8 +210,7 @@ public:
             if (dirty_) update();
             const auto& q = p - mean_;
             const auto& exponent = - 0.5 * q.transpose() * information_matrix_ * q;
-            const auto& denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
-            return denominator * std::exp(exponent);
+            return normalizer_ * std::exp(exponent);
         };
         return valid() ? update_sample() : T(); // T() = zero
     }
@@ -295,8 +222,7 @@ public:
             if (dirty_) update();
             q = p - mean_;
             const auto& exponent = - 0.5 * q.transpose() * information_matrix_ * q;
-            const auto& denominator = 1.0 / (determinant_ * sqrt_2_M_PI);
-            return denominator * std::exp(exponent);
+            return normalizer_ * std::exp(exponent);
         };
         return valid() ? update_sample() : T(); // T() = zero
     }
@@ -340,18 +266,19 @@ public:
     }
 
 private:
-    sample_t                     mean_;
-    covariance_t                 correlated_;
-    std::size_t                  n_;
+    sample_t                     mean_{sample_t::Zero()};
+    covariance_t                 correlated_{covariance_t::Zero()};
+    std::size_t                  n_{0};
 
-    mutable covariance_t         covariance_;
-    mutable covariance_t         information_matrix_;
-    mutable eigen_values_t       eigen_values_;
-    mutable eigen_vectors_t      eigen_vectors_;
-    mutable T                    determinant_;
+    mutable covariance_t         covariance_{covariance_t::Zero()};
+    mutable covariance_t         information_matrix_{covariance_t::Zero()};
+    mutable eigen_values_t       eigen_values_{eigen_values_t::Zero()};
+    mutable eigen_vectors_t      eigen_vectors_{eigen_vectors_t::Zero()};
+    mutable T                    determinant_{0};
+    mutable T                    normalizer_{0};
 
-    mutable bool                 dirty_;
-    mutable bool                 dirty_eigenvalues_;
+    mutable bool                 dirty_{false};
+    mutable bool                 dirty_eigenvalues_{false};
 
     inline void update() const
     {
@@ -367,6 +294,7 @@ private:
 
         information_matrix_ = covariance_.inverse();
         determinant_        = covariance_.determinant();
+        normalizer_        = 1.0 / std::sqrt(pow_2_M_PI_DIM * determinant_);
 
         dirty_              = false;
     }
